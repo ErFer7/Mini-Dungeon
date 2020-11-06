@@ -3,7 +3,7 @@ import DungeonManager
 
 pygame.display.init()
 
-DungeonManager.DungeonGenerator(2)
+DungeonManager.DungeonGenerator(100, 100)
 
 if pygame.display.get_init():
 
