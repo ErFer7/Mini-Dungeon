@@ -1,14 +1,22 @@
-# V 0.0.3
+# V 0.0.5
+# Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
+# Github: https://github.com/ErFer7/Mini-Dungeon
 
+import os
 import sys
 import pygame
 # import DungeonManager
 
+# Inicialização
 pygame.init()
+fpsClock = pygame.time.Clock()
+myfont = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 30)
+
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
 
-myfont = pygame.font.SysFont('Arial', 30)
-textsurface = myfont.render("MINI DUNGEON - V 0.0.3", False, (0, 0, 0))
+wallImg = pygame.image.load(os.path.join("Sprites", "Stone wall.png"))
+
+textsurface = myfont.render("MINI DUNGEON - V 0.0.5", False, (0, 0, 0))
 red = (255, 0, 0)
 rect = pygame.Rect(200, 150, 100, 50)
 
@@ -26,10 +34,8 @@ while True:
     
     mousePos = pygame.mouse.get_pos()
 
-    display.fill((255, 255, 255))
-    surf = pygame.Surface((100, 50))
-    pygame.draw.rect(surf, red, rect)
-    display.blit(surf, mousePos)
+    #display.fill((255, 255, 255))
+    display.blit(wallImg, mousePos)
     display.blit(textsurface,(0,0))
     pygame.display.update()
-    pygame.time.delay(1)
+    fpsClock.tick(60)
