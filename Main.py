@@ -1,11 +1,11 @@
-# V 0.0.7
+# V 0.0.8
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
 import os
 import sys
 import pygame
-# import DungeonManager
+import DungeonManager
 import GraphicsManager
 
 from enum import Enum
@@ -23,6 +23,7 @@ class GameState(Enum):
 gameState = GameState.MENU
 mousePosX = 0
 mousePosY = 0
+rooms = []
 
 # Funções
 def UpdateEvents():
@@ -42,15 +43,16 @@ def UpdateEvents():
 
             gameState = GameState.EXITING
 
-        #if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() - 125) / 2 and mousePosY <= (display.get_height() + 125) / 2):
+        if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() - 125) / 2 and mousePosY <= (display.get_height() + 125) / 2):
 
-            #gameState = GameState.INGAME
+            gameState = GameState.INGAME
         
         if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() * 1.5 - 125) / 2 and mousePosY <= (display.get_height() * 1.5 + 125) / 2):
 
             gameState = GameState.EXITING
 
 def BuildMenu():
+
     sprites = pygame.sprite.RenderPlain()
     
     for i in range(ceil(display.get_height() / 256)):
@@ -67,7 +69,7 @@ def BuildMenu():
     quitButton = GraphicsManager.Button((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quitButtonBorder, quitButton))
 
-    versionTxt = font.render("V 0.0.7", False, (255, 255, 255))
+    versionTxt = font.render("V 0.0.8", False, (255, 255, 255))
     titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
     titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
     playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
@@ -80,6 +82,15 @@ def BuildMenu():
     display.blit(titleTxt, ((display.get_width() - titleTxt.get_rect().width) / 2, (display.get_height() * 0.5 - titleTxt.get_rect().height) / 2))
     display.blit(playTxt, ((display.get_width() - playTxt.get_rect().width) / 2, (display.get_height() - playTxt.get_rect().height) / 2))
     display.blit(quitTxt, ((display.get_width() - quitTxt.get_rect().width) / 2, (display.get_height() * 1.5 - quitTxt.get_rect().height) / 2))
+
+    pygame.display.update()
+
+def BuildLoadingScreen():
+
+    display.fill((10, 10, 10))
+
+    loadingTxt = titleFont.render("Carregando...", False, (255, 223, 0))
+    display.blit(loadingTxt, ((display.get_width() - loadingTxt.get_rect().width) / 2, (display.get_height() - loadingTxt.get_rect().height) / 2))
 
     pygame.display.update()
 
@@ -107,9 +118,15 @@ while gameState != GameState.EXITING:
         pygame.display.update()
         fpsClock.tick(60)
     
+    if gameState == GameState.INGAME:
+        
+        BuildLoadingScreen()
+        rooms = DungeonManager.GenerateDungeon(2, 2)
+
     while gameState == GameState.INGAME:
 
         # GAMEPLAY
+        gameState = GameState.EXITING   # <<< TESTES
         pygame.display.update()
         fpsClock.tick(60)
 

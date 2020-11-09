@@ -8,7 +8,19 @@ class Direction(Enum):
     RIGHT = 3
     LEFT = 4
 
-def DungeonGenerator(width = 2, heigth = 2):
+class Room():
+    
+    width = 0
+    heigth = 0
+    doors = []
+
+    def __init__(self, width, heigth, *doors):
+
+        self.width = width
+        self.heigth = heigth
+        self.doors = doors
+
+def GenerateDungeon(width = 2, heigth = 2):
 
     # Cima, Baixo, Direita e Esquerda
     roomsMat = []
@@ -94,4 +106,13 @@ def DungeonGenerator(width = 2, heigth = 2):
 
                 position[0] -= 1
     
-    print(roomsMat)
+    rooms = []
+
+    for i in range(heigth):
+
+        rooms.append([])
+        for _ in range(width):
+
+            rooms[i].append(Room(randint(10, 20), randint(10, 20), roomsMat[heigth][width]))
+
+    return rooms
