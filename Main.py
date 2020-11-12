@@ -1,4 +1,6 @@
-# V 0.0.8
+# -*- coding: utf-8 -*-
+
+# V 0.0.9
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -7,6 +9,7 @@ import sys
 import pygame
 import DungeonManager
 import GraphicsManager
+import Entities
 
 from enum import Enum
 from math import ceil
@@ -26,11 +29,12 @@ mousePosY = 0
 rooms = []
 
 # Funções
-def UpdateEvents():
+def UpdateEvents(player = None):
 
     global gameState
     global mousePosX
     global mousePosY
+    global playerMotionVector
 
     events = pygame.event.get()
 
@@ -43,13 +47,45 @@ def UpdateEvents():
 
             gameState = GameState.EXITING
 
-        if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() - 125) / 2 and mousePosY <= (display.get_height() + 125) / 2):
+        if gameState == GameState.MENU:
 
-            gameState = GameState.INGAME
-        
-        if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() * 1.5 - 125) / 2 and mousePosY <= (display.get_height() * 1.5 + 125) / 2):
+            if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() - 125) / 2 and mousePosY <= (display.get_height() + 125) / 2):
 
-            gameState = GameState.EXITING
+                gameState = GameState.INGAME
+            
+            if event.type == pygame.MOUSEBUTTONDOWN and (mousePosX >= (display.get_width() - 400) / 2 and mousePosX <= (display.get_width() + 400) / 2) and (mousePosY >= (display.get_height() * 1.5 - 125) / 2 and mousePosY <= (display.get_height() * 1.5 + 125) / 2):
+
+                gameState = GameState.EXITING
+        elif gameState == GameState.INGAME:
+
+            # Otimizar no futuro
+            if event.type == pygame.KEYDOWN:
+                
+                if event.key == pygame.K_a:
+
+                    playerMotionVector[0] = -1
+                elif event.key == pygame.K_d:
+
+                    playerMotionVector[0] = 1
+                
+                if event.key == pygame.K_s:
+
+                    playerMotionVector[1] = 1
+                elif event.key == pygame.K_w:
+
+                    playerMotionVector[1] = -1
+            
+            if event.type == pygame.KEYUP:
+
+                if event.key == pygame.K_a or event.key == pygame.K_d:
+
+                    playerMotionVector[0] = 0
+                
+                if event.key == pygame.K_s or event.key == pygame.K_w:
+
+                    playerMotionVector[1] = 0
+            
+            player.Move(playerMotionVector[0] * player.speed, playerMotionVector[1] * player.speed)
 
 def BuildMenu():
 
@@ -59,17 +95,17 @@ def BuildMenu():
 
         for j in range(ceil(display.get_width() / 256)):
 
-            sprites.add(GraphicsManager.StoneWall(j * 256, i * 256))
+            sprites.add(GraphicsManager.StoneWallSprite(j * 256, i * 256))
 
-    playButtonBorder = GraphicsManager.Button((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
-    playButton = GraphicsManager.Button((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
+    playButtonBorder = GraphicsManager.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
+    playButton = GraphicsManager.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((playButtonBorder, playButton))
 
-    quitButtonBorder = GraphicsManager.Button((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
-    quitButton = GraphicsManager.Button((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
+    quitButtonBorder = GraphicsManager.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
+    quitButton = GraphicsManager.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quitButtonBorder, quitButton))
 
-    versionTxt = font.render("V 0.0.8", False, (255, 255, 255))
+    versionTxt = font.render("V 0.0.9", False, (255, 255, 255))
     titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
     titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
     playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
@@ -122,11 +158,20 @@ while gameState != GameState.EXITING:
         
         BuildLoadingScreen()
         rooms = DungeonManager.GenerateDungeon(2, 2)
+        player = Entities.Player(50, 50)
+        display.fill((10, 10, 10))
+
+    # Remover no futuro <<<< TESTES
+    playerMotionVector = [0, 0]
 
     while gameState == GameState.INGAME:
 
-        # GAMEPLAY
-        gameState = GameState.EXITING   # <<< TESTES
+        UpdateEvents(player)
+
+        rooms[0][0].sprites.draw(display)
+        player.sprites.draw(display)
+        pygame.display.update()
+
         pygame.display.update()
         fpsClock.tick(60)
 
