@@ -1,36 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-import GraphicsManager
+import Graphics
 
 class Entity():
 
     position = [0, 0]
-
     speed = 1.0
-    # health = 100
-    # mana = 0
-    # armor = 0
-    # force = 0
-    # dexterity = 0
-    # inteligence = 0
 
-    # inventory = []
-    # armorInventory = []
-    # hands = []
+    sprites: pygame.sprite.RenderPlain()
+
+    def __init__(self, position):
+
+        self.position = position
+        self.sprites = pygame.sprite.RenderPlain()
 
 class Player(Entity):
 
-    sprites = pygame.sprite.RenderPlain()
+    def __init__(self, position):
 
-    def __init__(self, posX, posY):
+        super().__init__(position)
 
-        super().__init__()
-
-        self.position[0] = posX
-        self.position[1] = posY
         self.speed = 5.0
-        self.sprites.add(GraphicsManager.PlayerSprite(posX, posY))
+        self.sprites.add(Graphics.PlayerSprite(self.position[0], self.position[1]))
     
     def Move(self, x, y):
 

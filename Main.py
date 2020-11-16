@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# V 0.0.9
+# V 0.1
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
+# Módulos
 import os
 import sys
 import pygame
-import DungeonManager
-import GraphicsManager
+import Dungeons
+import Graphics
 import Entities
 
 from enum import Enum
 from math import ceil
+from random import seed
+from time import time_ns
 
 # Enumeradores
 class GameState(Enum):
@@ -95,17 +98,17 @@ def BuildMenu():
 
         for j in range(ceil(display.get_width() / 256)):
 
-            sprites.add(GraphicsManager.StoneWallSprite(j * 256, i * 256))
+            sprites.add(Graphics.StoneWallSprite(j * 256, i * 256))
 
-    playButtonBorder = GraphicsManager.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
-    playButton = GraphicsManager.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
+    playButtonBorder = Graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
+    playButton = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((playButtonBorder, playButton))
 
-    quitButtonBorder = GraphicsManager.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
-    quitButton = GraphicsManager.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
+    quitButtonBorder = Graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
+    quitButton = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quitButtonBorder, quitButton))
 
-    versionTxt = font.render("V 0.0.9", False, (255, 255, 255))
+    versionTxt = font.render("V 0.1", False, (255, 255, 255))
     titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
     titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
     playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
@@ -131,6 +134,8 @@ def BuildLoadingScreen():
     pygame.display.update()
 
 # Inicialização
+seed(time_ns())
+
 pygame.init()
 
 fpsClock = pygame.time.Clock()
@@ -144,8 +149,10 @@ display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
 # Loop principal
 while gameState != GameState.EXITING:
 
+    # Constrói o menu
     BuildMenu()
 
+    # Loop do menu
     while gameState == GameState.MENU:
         
         # MENU
@@ -157,8 +164,7 @@ while gameState != GameState.EXITING:
     if gameState == GameState.INGAME:
         
         BuildLoadingScreen()
-        rooms = DungeonManager.GenerateDungeon(2, 2)
-        player = Entities.Player(50, 50)
+        rooms, playerInitRoom = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
         display.fill((10, 10, 10))
 
     # Remover no futuro <<<< TESTES
@@ -166,12 +172,9 @@ while gameState != GameState.EXITING:
 
     while gameState == GameState.INGAME:
 
-        UpdateEvents(player)
-
-        rooms[0][0].sprites.draw(display)
-        player.sprites.draw(display)
-        pygame.display.update()
-
+        UpdateEvents(rooms[playerInitRoom[0]][playerInitRoom[1]].entities[0])
+        rooms[playerInitRoom[0]][playerInitRoom[1]].sprites.draw(display)
+        rooms[playerInitRoom[0]][playerInitRoom[1]].entities[0].sprites.draw(display)
         pygame.display.update()
         fpsClock.tick(60)
 
