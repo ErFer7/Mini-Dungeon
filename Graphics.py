@@ -69,21 +69,9 @@ class FloorSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY, floorType):
 
         super().__init__()
-        self.image = pygame.Surface([48, 48])
+        self.image = pygame.Surface([32, 32])
 
-        if floorType == "╔":
-
-            self.image.fill((0, 255, 0))
-        elif floorType == "╗":
-
-            self.image.fill((0, 255, 0))
-        elif floorType == "╚":
-
-            self.image.fill((0, 255, 0))
-        elif floorType == "╝":
-
-            self.image.fill((0, 255, 0))
-        elif floorType == "<":
+        if floorType == "<":
 
             self.image.fill((0, 0, 255))
         elif floorType == ">":
@@ -95,18 +83,6 @@ class FloorSprite(pygame.sprite.Sprite):
         elif floorType == "v":
 
             self.image.fill((0, 0, 255))
-        elif floorType == "┘":
-
-            self.image.fill((0, 0, 125))
-        elif floorType == "└":
-
-            self.image.fill((0, 0, 125))
-        elif floorType == "┐":
-
-            self.image.fill((0, 0, 125))
-        elif floorType == "┌":
-
-            self.image.fill((0, 0, 125))
         else:
 
             self.image.fill((125, 125, 125))
@@ -120,7 +96,7 @@ class WallSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY):
 
         super().__init__()
-        self.image = pygame.Surface([48, 48])
+        self.image = pygame.Surface([32, 32])
         self.rect = self.image.get_rect()
         self.rect.x = posX
         self.rect.y = posY
@@ -128,13 +104,16 @@ class WallSprite(pygame.sprite.Sprite):
 
 class DoorSprite(pygame.sprite.Sprite):
 
-    def __init__(self, posX, posY):
+    direction = 0
+
+    def __init__(self, posX, posY, direction):
 
         super().__init__()
-        self.image = pygame.Surface([48, 48])
+        self.image = pygame.Surface([32, 32])
         self.rect = self.image.get_rect()
         self.rect.x = posX
         self.rect.y = posY
+        self.direction = direction
         self.image.fill((255, 0, 0))
 
 class PlayerSprite(pygame.sprite.Sprite):
@@ -142,7 +121,7 @@ class PlayerSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY):
 
         super().__init__()
-        self.image = pygame.Surface([48, 48])
+        self.image = pygame.Surface([24, 24])
         self.rect = self.image.get_rect()
         self.rect.x = posX
         self.rect.y = posY

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.1
+# V 0.2
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -11,6 +11,7 @@ import pygame
 import Dungeons
 import Graphics
 import Entities
+import Physics
 
 from enum import Enum
 from math import ceil
@@ -37,7 +38,6 @@ def UpdateEvents(player = None):
     global gameState
     global mousePosX
     global mousePosY
-    global playerMotionVector
 
     events = pygame.event.get()
 
@@ -61,34 +61,7 @@ def UpdateEvents(player = None):
                 gameState = GameState.EXITING
         elif gameState == GameState.INGAME:
 
-            # Otimizar no futuro
-            if event.type == pygame.KEYDOWN:
-                
-                if event.key == pygame.K_a:
-
-                    playerMotionVector[0] = -1
-                elif event.key == pygame.K_d:
-
-                    playerMotionVector[0] = 1
-                
-                if event.key == pygame.K_s:
-
-                    playerMotionVector[1] = 1
-                elif event.key == pygame.K_w:
-
-                    playerMotionVector[1] = -1
-            
-            if event.type == pygame.KEYUP:
-
-                if event.key == pygame.K_a or event.key == pygame.K_d:
-
-                    playerMotionVector[0] = 0
-                
-                if event.key == pygame.K_s or event.key == pygame.K_w:
-
-                    playerMotionVector[1] = 0
-            
-            player.Move(playerMotionVector[0] * player.speed, playerMotionVector[1] * player.speed)
+            player.Control(event)
 
 def BuildMenu():
 
@@ -108,7 +81,7 @@ def BuildMenu():
     quitButton = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quitButtonBorder, quitButton))
 
-    versionTxt = font.render("V 0.1", False, (255, 255, 255))
+    versionTxt = font.render("V 0.2", False, (255, 255, 255))
     titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
     titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
     playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
@@ -164,18 +137,29 @@ while gameState != GameState.EXITING:
     if gameState == GameState.INGAME:
         
         BuildLoadingScreen()
-        rooms, playerInitRoom = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
+        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
         display.fill((10, 10, 10))
 
-    # Remover no futuro <<<< TESTES
-    playerMotionVector = [0, 0]
-
     while gameState == GameState.INGAME:
+        
+        display.fill((0, 0, 0))
+        display.blit(font.render("{0:.2f} FPS".format(fpsClock.get_fps()), False, (255, 255, 255)), (0, 0))
 
-        UpdateEvents(rooms[playerInitRoom[0]][playerInitRoom[1]].entities[0])
-        rooms[playerInitRoom[0]][playerInitRoom[1]].sprites.draw(display)
-        rooms[playerInitRoom[0]][playerInitRoom[1]].entities[0].sprites.draw(display)
+        UpdateEvents(rooms[rIndex[0]][rIndex[1]].entities[0])
+        Physics.UpdatePhysics(rooms[rIndex[0]][rIndex[1]].entities, rooms[rIndex[0]][rIndex[1]], rIndex)
+
+        rooms[rIndex[0]][rIndex[1]].sprites.draw(display)
+        rooms[rIndex[0]][rIndex[1]].collisionSprites.draw(display)
+        rooms[rIndex[0]][rIndex[1]].triggerSprites.draw(display)
+
+        for entity in rooms[rIndex[0]][rIndex[1]].entities:
+
+            entity.sprites.update(entity.position[0], entity.position[1])
+
+        rooms[rIndex[0]][rIndex[1]].entities[0].sprites.draw(display)
+
         pygame.display.update()
+
         fpsClock.tick(60)
 
 pygame.quit()

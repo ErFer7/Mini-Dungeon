@@ -21,11 +21,15 @@ class Room():
     playerSpawnPosition = []
     entities = []
 
+    collisionSprites: pygame.sprite.RenderPlain()
+    triggerSprites: pygame.sprite.RenderPlain()
     sprites: pygame.sprite.RenderPlain()
 
     def __init__(self, doors, file, screenSize):
 
         self.doors = doors[:]
+        self.collisionSprites = pygame.sprite.RenderPlain()
+        self.triggerSprites = pygame.sprite.RenderPlain()
         self.sprites = pygame.sprite.RenderPlain()
 
         _position = [0, 0]
@@ -33,7 +37,7 @@ class Room():
         _stage = 0
         _doorsChars = "0123"
 
-        with open(file, 'r', encoding = "utf-8") as roomFile:
+        with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as roomFile:
             
             roomTxt = roomFile.readlines()
 
@@ -50,36 +54,36 @@ class Room():
 
                         w, h = map(int, line.split())
 
-                        _position[0] = (screenSize[1] - h * 48) / 2
-                        _position[1] = (screenSize[0] - w * 48) / 2
+                        _position[0] = (screenSize[1] - h * 32) / 2
+                        _position[1] = (screenSize[0] - w * 32) / 2
                     elif _stage == 2:
 
                         for char in line:
 
                             if char == '#':
 
-                                self.sprites.add(Graphics.WallSprite(_position[1], _position[0]))
+                                self.collisionSprites.add(Graphics.WallSprite(_position[1], _position[0]))
                             elif char in _doorsChars:
 
                                 if self.doors[int(char)]:
 
-                                    self.sprites.add(Graphics.DoorSprite(_position[1], _position[0]))
+                                    self.triggerSprites.add(Graphics.DoorSprite(_position[1], _position[0], int(char)))
                                 else:
 
-                                    self.sprites.add(Graphics.WallSprite(_position[1], _position[0]))
+                                    self.collisionSprites.add(Graphics.WallSprite(_position[1], _position[0]))
                             elif char != "\n":
                                 
                                 self.sprites.add(Graphics.FloorSprite(_position[1], _position[0], char))
                             
-                            _position[1] += 48
+                            _position[1] += 32
                         
-                        _position[0] += 48
-                        _position[1] = (screenSize[0] - w * 48) / 2
+                        _position[0] += 32
+                        _position[1] = (screenSize[0] - w * 32) / 2
                     else:
 
                         if line.startswith("Player"):
 
-                            self.playerSpawnPosition = [int(line.split()[1]) * 48, int(line.split()[2]) * 48]
+                            self.playerSpawnPosition = [int(line.split()[1]) * 32, int(line.split()[2]) * 32]
                 
 def GenerateDungeon(screenSize, width = 2, heigth = 2):
 
@@ -174,7 +178,7 @@ def GenerateDungeon(screenSize, width = 2, heigth = 2):
         rooms.append([])
         for j in range(width):
 
-            rooms[i].append(Room(structure[i][j], os.path.join("Rooms", "Test.room"), screenSize))
+            rooms[i].append(Room(structure[i][j], choice(os.listdir("Rooms")), screenSize))
     
     playerX = randint(0, width - 1)
     playerY = randint(0, heigth - 1)
