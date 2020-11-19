@@ -9,8 +9,8 @@ class Entity():
     direction = [0, 0]
     velocity = [0.0, 0.0]
 
-    drag = 0.1
-    speed = 10.0
+    drag = 0.25
+    speed = 1.0
 
     simulating = False
 

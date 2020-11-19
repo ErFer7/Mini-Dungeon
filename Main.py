@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.2
+# V 0.11
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -137,7 +137,7 @@ while gameState != GameState.EXITING:
     if gameState == GameState.INGAME:
         
         BuildLoadingScreen()
-        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
+        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 50, 50)
         display.fill((10, 10, 10))
 
     while gameState == GameState.INGAME:

@@ -25,67 +25,27 @@ class ButtonSprite(pygame.sprite.Sprite):
         self.image.fill(color)
 
 # EM TESTES
-
-# class Floor(pygame.sprite.Sprite):
-
-#     def __init__(self, posX, posY, floorType):
-
-#         super().__init__()
-
-#         if floorType == "╔":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Top left corner.png"))
-#         elif floorType == "╗":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Top right corner.png"))
-#         elif floorType == "╚":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Botton left corner.png"))
-#         elif floorType == "╝":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Botton right corner.png"))
-#         elif floorType == "<":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Left.png"))
-#         elif floorType == ">":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Right.png"))
-#         elif floorType == "^":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Top.png"))
-#         elif floorType == "v":
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor - Botton.png"))
-#         else:
-
-#             self.image = pygame.image.load(os.path.join("Sprites", "Floor.png"))
-
-#         self.rect = self.image.get_rect()
-#         self.rect.x = posX
-#         self.rect.y = posY
-
 class FloorSprite(pygame.sprite.Sprite):
 
     def __init__(self, posX, posY, floorType):
 
         super().__init__()
-        self.image = pygame.Surface([32, 32])
 
         if floorType == "<":
 
-            self.image.fill((0, 0, 255))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_100.png")), (32, 32))
         elif floorType == ">":
 
-            self.image.fill((0, 0, 255))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_102.png")), (32, 32))
         elif floorType == "^":
 
-            self.image.fill((0, 0, 255))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_86.png")), (32, 32))
         elif floorType == "v":
 
-            self.image.fill((0, 0, 255))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_108.png")), (32, 32))
         else:
 
-            self.image.fill((125, 125, 125))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_108.png")), (32, 32))
 
         self.rect = self.image.get_rect()
         self.rect.x = posX
@@ -96,11 +56,10 @@ class WallSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY):
 
         super().__init__()
-        self.image = pygame.Surface([32, 32])
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_17.png")), (32, 32))
         self.rect = self.image.get_rect()
         self.rect.x = posX
         self.rect.y = posY
-        self.image.fill((255, 255, 255))
 
 class DoorSprite(pygame.sprite.Sprite):
 
@@ -109,12 +68,11 @@ class DoorSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY, direction):
 
         super().__init__()
-        self.image = pygame.Surface([32, 32])
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Tileset_39.png")), (32, 32))
         self.rect = self.image.get_rect()
         self.rect.x = posX
         self.rect.y = posY
         self.direction = direction
-        self.image.fill((255, 0, 0))
 
 class PlayerSprite(pygame.sprite.Sprite):
 
