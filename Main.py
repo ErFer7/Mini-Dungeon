@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.11
+# V 0.11.1
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -81,7 +81,7 @@ def BuildMenu():
     quitButton = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quitButtonBorder, quitButton))
 
-    versionTxt = font.render("V 0.2", False, (255, 255, 255))
+    versionTxt = font.render("V 0.11.1", False, (255, 255, 255))
     titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
     titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
     playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
@@ -137,7 +137,8 @@ while gameState != GameState.EXITING:
     if gameState == GameState.INGAME:
         
         BuildLoadingScreen()
-        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 50, 50)
+        # 25 é o máximo
+        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
         display.fill((10, 10, 10))
 
     while gameState == GameState.INGAME:
