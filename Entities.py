@@ -27,7 +27,7 @@ class Player(Entity):
 
         super().__init__(position)
 
-        self.speed = 2.5
+        self.speed = 2.0
         self.simulating = True
         self.sprites.add(Graphics.PlayerSprite(self.position[0], self.position[1]))
     

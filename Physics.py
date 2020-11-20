@@ -46,3 +46,5 @@ def UpdatePhysics(entities, room, roomIndex):
 
             entity.position[0] += entity.velocity[0]
             entity.position[1] += entity.velocity[1]
+        
+        entity.sprites.update(entity.position[0], entity.position[1], entity.direction[0])
