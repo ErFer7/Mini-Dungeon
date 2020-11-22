@@ -1,50 +1,83 @@
+import sys
 import pygame
 
-def UpdatePhysics(entities, room, roomIndex):
+def update_physics(rooms, room_index):
 
-    for entity in entities:
+    entities = rooms[room_index[0]][room_index[1]].entities
 
-        if entity.simulating:
+    for key in entities:
 
-            if entity.direction[0] == 0:
+        if entities[key].direction[0] == 0:
 
-                entity.velocity[0] /= 1 + entity.drag
+            if abs(entities[key].velocity[0]) >= 0.01:
+
+                entities[key].velocity[0] /= 1 + entities[key].drag
+            else:
+
+                entities[key].velocity[0] = 0.0
             
-            if entity.direction[1] == 0:
+        if entities[key].direction[1] == 0:
 
-                entity.velocity[1] /= 1 + entity.drag
+            if abs(entities[key].velocity[1]) >= 0.01:
+
+                entities[key].velocity[1] /= 1 + entities[key].drag
+            else:
+
+                entities[key].velocity[1] = 0.0
             
-            collider = pygame.sprite.spritecollideany(entity.sprites.sprites()[0], room.collisionSprites)
-            trigger = pygame.sprite.spritecollideany(entity.sprites.sprites()[0], room.triggerSprites)
+        collider = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].collision_sprites)
+        trigger = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].trigger_sprites)
 
-            if collider != None:
+        if collider != None:
 
-                if entity.sprites.sprites()[0].rect.left < collider.rect.left or entity.sprites.sprites()[0].rect.right > collider.rect.right:
+            if entities[key].sprites.sprites()[0].rect.left < collider.rect.left or entities[key].sprites.sprites()[0].rect.right > collider.rect.right:
 
-                    entity.position[0] -= entity.velocity[0] * (1 + entity.drag)
-                    entity.velocity[0] = 0
+                entities[key].position[0] -= entities[key].velocity[0] * (1.0 + entities[key].drag)
+                entities[key].velocity[0] = 0.0
                 
-                if entity.sprites.sprites()[0].rect.bottom < collider.rect.bottom or entity.sprites.sprites()[0].rect.top > collider.rect.top:
+            if entities[key].sprites.sprites()[0].rect.bottom < collider.rect.bottom or entities[key].sprites.sprites()[0].rect.top > collider.rect.top:
                     
-                    entity.position[1] -= entity.velocity[1] * (1 + entity.drag)
-                    entity.velocity[1] = 0
-            
-            if trigger != None:
+                entities[key].position[1] -= entities[key].velocity[1] * (1.0 + entities[key].drag)
+                entities[key].velocity[1] = 0.0
 
-                if trigger.direction == 0:
-
-                    roomIndex[0] -= 1
-                elif trigger.direction == 1:
-
-                    roomIndex[0] += 1
-                elif trigger.direction == 2:
-
-                    roomIndex[1] += 1
-                else:
-
-                    roomIndex[1] -= 1
-
-            entity.position[0] += entity.velocity[0]
-            entity.position[1] += entity.velocity[1]
+        entities[key].position[0] += entities[key].velocity[0]
+        entities[key].position[1] += entities[key].velocity[1]
         
-        entity.sprites.update(entity.position[0], entity.position[1], entity.direction[0])
+        entities[key].sprites.update(entities[key].position[0], entities[key].position[1], entities[key].direction[0])
+
+        if trigger != None:
+
+            if trigger.direction == 0:
+
+                temp = room_index[0]
+                room_index[0] -= 1
+                rooms[room_index[0]][room_index[1]].entities[key] = entities[key]
+                del rooms[temp][room_index[1]].entities[key]
+                rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[1][0]
+                rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[1][1] - 10
+            elif trigger.direction == 1:
+
+                temp = room_index[0]
+                room_index[0] += 1
+                rooms[room_index[0]][room_index[1]].entities[key] = entities[key]
+                del rooms[temp][room_index[1]].entities[key]
+                rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[0][0]
+                rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[0][1] + 10
+            elif trigger.direction == 2:
+
+                temp = room_index[1]
+                room_index[1] += 1
+                rooms[room_index[0]][room_index[1]].entities[key] = entities[key]
+                del rooms[room_index[0]][temp].entities[key]
+                rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[3][0] + 10
+                rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[3][1]
+            else:
+
+                temp = room_index[1]
+                room_index[1] -= 1
+                rooms[room_index[0]][room_index[1]].entities[key] = entities[key]
+                del rooms[room_index[0]][temp].entities[key]
+                rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][0] - 10
+                rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][1]
+            
+            break

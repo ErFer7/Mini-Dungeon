@@ -5,66 +5,65 @@ import pygame
 
 class StoneWallSprite(pygame.sprite.Sprite):
 
-    def __init__(self, posX, posY):
+    def __init__(self, pos_x, pos_y):
 
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall_0.png")), (256, 256))
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
 class ButtonSprite(pygame.sprite.Sprite):
 
-    def __init__(self, posX, posY, width, height, *color):
+    def __init__(self, pos_x, pos_y, width, height, *color):
 
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
         self.image.fill(color)
 
-# EM TESTES
 class FloorSprite(pygame.sprite.Sprite):
 
-    def __init__(self, posX, posY, floorType):
+    def __init__(self, pos_x, pos_y, floor_type):
 
         super().__init__()
 
-        if floorType == '<':
+        if floor_type == '<':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_border.png")), (32, 32)), 90)
-        elif floorType == '>':
+        elif floor_type == '>':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_border.png")), (32, 32)), -90)
-        elif floorType == '^':
+        elif floor_type == '^':
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_border.png")), (32, 32))
-        elif floorType == 'v':
+        elif floor_type == 'v':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_border.png")), (32, 32)), 180)
-        elif floorType == 'q':
+        elif floor_type == 'q':
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_corner.png")), (32, 32))
-        elif floorType == 'w':
+        elif floor_type == 'w':
 
             self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_corner.png")), (32, 32)), True, False)
-        elif floorType == 'e':
+        elif floor_type == 'e':
 
             self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_corner.png")), (32, 32)), False, True)
-        elif floorType == 'r':
+        elif floor_type == 'r':
 
             self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_corner.png")), (32, 32)), True, True)
-        elif floorType == 't':
+        elif floor_type == 't':
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_detailed.png")), (32, 32))
-        elif floorType == 'y':
+        elif floor_type == 'y':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_detailed.png")), (32, 32)), -90)
-        elif floorType == 'u':
+        elif floor_type == 'u':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_detailed.png")), (32, 32)), 180)
-        elif floorType == 'i':
+        elif floor_type == 'i':
 
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor_detailed.png")), (32, 32)), 90)
         else:
@@ -72,60 +71,86 @@ class FloorSprite(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor.png")), (32, 32))
 
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
 class WallSprite(pygame.sprite.Sprite):
 
-    def __init__(self, posX, posY):
+    def __init__(self, pos_x, pos_y):
 
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall_0.png")), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
 class DoorSprite(pygame.sprite.Sprite):
 
-    direction = 0
+    direction: int
 
-    def __init__(self, posX, posY, direction):
+    def __init__(self, pos_x, pos_y, direction):
 
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Door.png")), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
         self.direction = direction
 
 class PlayerSprite(pygame.sprite.Sprite):
 
-    _direction = 0
-    _cHOrientation = 0
+    _old_horizontal_orientation: int
 
-    def __init__(self, posX, posY):
+    def __init__(self, pos_x, pos_y):
+
+        super().__init__()
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_15.png")), (32, 32))
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self._old_horizontal_orientation = 1
+    
+    def update(self, pos_x, pos_y, horizontal_orientation):
+
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+
+        if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
+
+            if horizontal_orientation < 0 and self._old_horizontal_orientation >= 0:
+
+                self.image = pygame.transform.flip(self.image, True, False)
+            elif horizontal_orientation > 0 and self._old_horizontal_orientation <= 0:
+
+                self.image = pygame.transform.flip(self.image, True, False)
+            
+            self._old_horizontal_orientation = horizontal_orientation
+
+class MonsterSprite(pygame.sprite.Sprite):
+
+    _old_horizontal_orientation: int
+
+    def __init__(self, pos_x, pos_y):
 
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_0.png")), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.x = posX
-        self.rect.y = posY
-        self._direction = 1
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self._old_horizontal_orientation = 1
     
-    def update(self, posX, posY, hOrientation):
+    def update(self, pos_x, pos_y, horizontal_orientation):
 
-        self.rect.x = posX
-        self.rect.y = posY
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
-        if hOrientation != 0 and self._cHOrientation != hOrientation:
+        if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
 
-            self._cHOrientation = hOrientation
-
-            if hOrientation < 0 and self._direction == 1:
+            if horizontal_orientation < 0 and self._old_horizontal_orientation >= 0:
 
                 self.image = pygame.transform.flip(self.image, True, False)
-                self._direction = -1
-            elif self._direction == -1:
+            elif horizontal_orientation > 0 and self._old_horizontal_orientation <= 0:
 
                 self.image = pygame.transform.flip(self.image, True, False)
-                self._direction = 1
+            
+            self._old_horizontal_orientation = horizontal_orientation

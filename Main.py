@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.12.0
+# V 0.13.0
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -14,10 +14,10 @@ from random import seed
 from time import time_ns
 
 import pygame
-import Dungeons
-import Graphics
-import Entities
-import Physics
+import dungeons
+import graphics
+import entities
+import physics
 
 # Enumeradores
 class GameState(Enum):
@@ -31,7 +31,8 @@ class GameState(Enum):
 game_state = GameState.MENU
 mouse_position_X: int
 mouse_position_Y: int
-rooms = []
+rooms: list
+player: entities.Player
 
 # Funções
 def update_events(player = None):
@@ -50,19 +51,22 @@ def update_events(player = None):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
 
             game_state = GameState.EXITING
+            break
 
         if game_state == GameState.MENU:
 
             if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() - 125) / 2 and mouse_position_Y <= (display.get_height() + 125) / 2):
 
                 game_state = GameState.INGAME
+                break
             
             if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 125) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 125) / 2):
 
                 game_state = GameState.EXITING
+                break
         elif game_state == GameState.INGAME:
 
-            player.Control(event)
+            player.control(event)
 
 def build_menu():
 
@@ -72,40 +76,38 @@ def build_menu():
 
         for j in range(ceil(display.get_width() / 256)):
 
-            sprites.add(Graphics.StoneWallSprite(j * 256, i * 256))
+            sprites.add(graphics.StoneWallSprite(j * 256, i * 256))
 
-    play_button_border = Graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
-    play_button = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
+    play_button_border = graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
+    play_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((play_button_border, play_button))
 
-    # REFATORAR
+    quit_button_border = graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
+    quit_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
+    sprites.add((quit_button_border, quit_button))
 
-    quitButtonBorder = Graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
-    quitButton = Graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
-    sprites.add((quitButtonBorder, quitButton))
-
-    versionTxt = font.render("V 0.12.0", False, (255, 255, 255))
-    titleTxt = titleFont.render("MINI DUNGEON", False, (255, 223, 0))
-    titleShadowTxt = titleFontShadow.render("MINI DUNGEON", False, (10, 10, 10))
-    playTxt = titleFont.render("JOGAR", False, (255, 223, 0))
-    quitTxt = titleFont.render("SAIR", False, (255, 223, 0))
+    version_text = font.render("V 0.13.0", False, (255, 255, 255))
+    title_text = title_font.render("MINI DUNGEON", False, (255, 223, 0))
+    title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (10, 10, 10))
+    play_txt = title_font.render("JOGAR", False, (255, 223, 0))
+    quit_text = title_font.render("SAIR", False, (255, 223, 0))
 
     sprites.draw(display)
     
-    display.blit(versionTxt, (0, 0))
-    display.blit(titleShadowTxt, ((display.get_width() - titleShadowTxt.get_rect().width) / 2 - 10, (display.get_height() * 0.5 - titleShadowTxt.get_rect().height) / 2))
-    display.blit(titleTxt, ((display.get_width() - titleTxt.get_rect().width) / 2, (display.get_height() * 0.5 - titleTxt.get_rect().height) / 2))
-    display.blit(playTxt, ((display.get_width() - playTxt.get_rect().width) / 2, (display.get_height() - playTxt.get_rect().height) / 2))
-    display.blit(quitTxt, ((display.get_width() - quitTxt.get_rect().width) / 2, (display.get_height() * 1.5 - quitTxt.get_rect().height) / 2))
+    display.blit(version_text, (0, 0))
+    display.blit(title_shadow_text, ((display.get_width() - title_shadow_text.get_rect().width) / 2 - 10, (display.get_height() * 0.5 - title_shadow_text.get_rect().height) / 2))
+    display.blit(title_text, ((display.get_width() - title_text.get_rect().width) / 2, (display.get_height() * 0.5 - title_text.get_rect().height) / 2))
+    display.blit(play_txt, ((display.get_width() - play_txt.get_rect().width) / 2, (display.get_height() - play_txt.get_rect().height) / 2))
+    display.blit(quit_text, ((display.get_width() - quit_text.get_rect().width) / 2, (display.get_height() * 1.5 - quit_text.get_rect().height) / 2))
 
     pygame.display.update()
 
-def BuildLoadingScreen():
+def build_loading_screen():
 
     display.fill((10, 10, 10))
 
-    loadingTxt = titleFont.render("Carregando...", False, (255, 223, 0))
-    display.blit(loadingTxt, ((display.get_width() - loadingTxt.get_rect().width) / 2, (display.get_height() - loadingTxt.get_rect().height) / 2))
+    loading_text = title_font.render("Carregando...", False, (255, 223, 0))
+    display.blit(loading_text, ((display.get_width() - loading_text.get_rect().width) / 2, (display.get_height() - loading_text.get_rect().height) / 2))
 
     pygame.display.update()
 
@@ -114,10 +116,10 @@ seed(time_ns())
 
 pygame.init()
 
-fpsClock = pygame.time.Clock()
+fps_clock = pygame.time.Clock()
 
-titleFont = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
-titleFontShadow = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
+title_font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
+title_font_shadow = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
 font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 15)
 
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
@@ -135,32 +137,34 @@ while game_state != GameState.EXITING:
         update_events()
 
         pygame.display.update()
-        fpsClock.tick(60)
+        fps_clock.tick(60)
     
     if game_state == GameState.INGAME:
         
-        BuildLoadingScreen()
+        build_loading_screen()
         # 25 é o máximo
-        rooms, rIndex = Dungeons.GenerateDungeon([display.get_width(), display.get_height()], 2, 2)
+        player, rooms, room_index = dungeons.generate_dungeon([display.get_width(), display.get_height()], 2, 2)
         display.fill((10, 10, 10))
 
     while game_state == GameState.INGAME:
         
         display.fill((0, 0, 0))
-        display.blit(font.render("{0:.2f} FPS".format(fpsClock.get_fps()), False, (255, 255, 255)), (0, 0))
+        display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (0, 0))
 
-        update_events(rooms[rIndex[0]][rIndex[1]].entities[0])
-        Physics.UpdatePhysics(rooms[rIndex[0]][rIndex[1]].entities, rooms[rIndex[0]][rIndex[1]], rIndex)
+        update_events(player)
+        physics.update_physics(rooms, room_index)
 
-        rooms[rIndex[0]][rIndex[1]].sprites.draw(display)
-        rooms[rIndex[0]][rIndex[1]].collisionSprites.draw(display)
-        rooms[rIndex[0]][rIndex[1]].triggerSprites.draw(display)
+        rooms[room_index[0]][room_index[1]].sprites.draw(display)
+        rooms[room_index[0]][room_index[1]].collision_sprites.draw(display)
+        rooms[room_index[0]][room_index[1]].trigger_sprites.draw(display)
 
-        rooms[rIndex[0]][rIndex[1]].entities[0].sprites.draw(display)
+        for key in rooms[room_index[0]][room_index[1]].entities:
+
+            rooms[room_index[0]][room_index[1]].entities[key].sprites.draw(display)
 
         pygame.display.update()
 
-        fpsClock.tick(60)
+        fps_clock.tick(60)
 
 pygame.quit()
 sys.exit()

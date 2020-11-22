@@ -2,8 +2,8 @@
 
 import os
 import pygame
-import Graphics
-import Entities
+import graphics
+import entities
 
 from random import randint, choice
 from enum import Enum
@@ -17,75 +17,94 @@ class Direction(Enum):
 
 class Room():
     
-    doors = []
-    playerSpawnPosition = []
-    entities = []
-
-    collisionSprites: pygame.sprite.RenderPlain()
-    triggerSprites: pygame.sprite.RenderPlain()
+    doors: list
+    doors_leaving_position:list
+    player_spawn_position: list
+    entities: dict
+    collision_sprites: pygame.sprite.RenderPlain()
+    trigger_sprites: pygame.sprite.RenderPlain()
     sprites: pygame.sprite.RenderPlain()
 
-    def __init__(self, doors, file, screenSize):
+    def __init__(self, doors, file, screen_size):
 
         self.doors = doors[:]
-        self.collisionSprites = pygame.sprite.RenderPlain()
-        self.triggerSprites = pygame.sprite.RenderPlain()
+        self.doors_leaving_position = [[], [], [], []]
+        self.player_spawn_position = []
+        self.entities = {}
+        self.collision_sprites = pygame.sprite.RenderPlain()
+        self.trigger_sprites = pygame.sprite.RenderPlain()
         self.sprites = pygame.sprite.RenderPlain()
 
-        _position = [0, 0]
+        position = [0, 0]
 
-        _stage = 0
-        _doorsChars = "0123"
+        stage = 0
+        doors_chars = "0123"
+        room_size = []
 
-        with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as roomFile:
+        with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as room_file:
             
-            roomTxt = roomFile.readlines()
+            room_txt = room_file.readlines()
 
-        for line in roomTxt:
+        for line in room_txt:
 
             if not line.startswith('/'):
 
                 if line.startswith('!'):
 
-                    _stage += 1
+                    stage += 1
+                    
+                    if stage == 1:
+                        
+                        line_list = line.split()
+                        room_size = [int(line_list[2]), int(line_list[3])]
+
+                    position[0] = (screen_size[1] - room_size[1] * 32) / 2
+                    position[1] = (screen_size[0] - room_size[0] * 32) / 2
                 else:
                     
-                    if _stage == 1:
-
-                        w, h = map(int, line.split())
-
-                        _position[0] = (screenSize[1] - h * 32) / 2
-                        _position[1] = (screenSize[0] - w * 32) / 2
-                    elif _stage == 2:
+                    if stage == 2:
 
                         for char in line:
 
                             if char == '#':
 
-                                self.collisionSprites.add(Graphics.WallSprite(_position[1], _position[0]))
-                            elif char in _doorsChars:
+                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0]))
+                            elif char in doors_chars:
 
                                 if self.doors[int(char)]:
 
-                                    self.triggerSprites.add(Graphics.DoorSprite(_position[1], _position[0], int(char)))
+                                    self.doors_leaving_position
+                                    self.trigger_sprites.add(graphics.DoorSprite(position[1], position[0], int(char)))
                                 else:
 
-                                    self.collisionSprites.add(Graphics.WallSprite(_position[1], _position[0]))
+                                    self.collision_sprites.add(graphics.WallSprite(position[1], position[0]))
                             elif char != "\n":
                                 
-                                self.sprites.add(Graphics.FloorSprite(_position[1], _position[0], char))
+                                self.sprites.add(graphics.FloorSprite(position[1], position[0], char))
                             
-                            _position[1] += 32
+                            position[1] += 32
                         
-                        _position[0] += 32
-                        _position[1] = (screenSize[0] - w * 32) / 2
-                    else:
+                        position[0] += 32
+                        position[1] = (screen_size[0] - room_size[0] * 32) / 2
+                    elif stage == 3:
 
-                        if line.startswith("Player"):
+                        for char in line:
 
-                            self.playerSpawnPosition = [int(line.split()[1]) * 32, int(line.split()[2]) * 32]
+                            if char == 'P':
+
+                                self.player_spawn_position = [position[1], position[0]]
+                            elif char in doors_chars:
+
+                                if self.doors[int(char)]:
+                                    
+                                    self.doors_leaving_position[int(char)] = [position[1], position[0]]
+                            
+                            position[1] += 32
+                        
+                        position[0] += 32
+                        position[1] = (screen_size[0] - room_size[0] * 32) / 2
                 
-def GenerateDungeon(screenSize, width = 2, heigth = 2):
+def generate_dungeon(screen_size, width = 1, heigth = 1):
 
     # Cima, Baixo, Direita e Esquerda
     structure = []
@@ -97,53 +116,50 @@ def GenerateDungeon(screenSize, width = 2, heigth = 2):
 
             structure[i].append([False] * 4)
 
-    roomStructList = []
-    roomsStructStack = []
+    room_struct_list = []
+    rooms_struct_stack = []
 
     position = [randint(0, width - 1), randint(0, heigth - 1)]
 
-    backTracking = False
+    back_tracking = False
 
     while True:
 
         directions = []
 
-        if not backTracking:
+        if not back_tracking:
 
-            roomStructList.append(position[:])
-            roomsStructStack.append(position[:])
+            room_struct_list.append(position[:])
+            rooms_struct_stack.append(position[:])
 
-        if len(roomStructList) >= width * heigth:
-
-            roomStructList.clear()
-            roomsStructStack.clear()
+        if len(room_struct_list) >= width * heigth:
 
             break
 
-        if position[1] > 0 and ([position[0], position[1] - 1] not in roomStructList) and not (structure[position[1]][position[0]][0] or structure[position[1] - 1][position[0]][1]):
+        if position[1] > 0 and ([position[0], position[1] - 1] not in room_struct_list) and not (structure[position[1]][position[0]][0] or structure[position[1] - 1][position[0]][1]):
 
             directions.append(Direction.UP)
         
-        if position[1] < heigth - 1 and ([position[0], position[1] + 1] not in roomStructList) and not (structure[position[1]][position[0]][1] or structure[position[1] + 1][position[0]][0]):
+        if position[1] < heigth - 1 and ([position[0], position[1] + 1] not in room_struct_list) and not (structure[position[1]][position[0]][1] or structure[position[1] + 1][position[0]][0]):
 
             directions.append(Direction.DOWN)
         
-        if position[0] < width - 1 and ([position[0] + 1, position[1]] not in roomStructList) and not (structure[position[1]][position[0]][2] or structure[position[1]][position[0] + 1][3]):
+        if position[0] < width - 1 and ([position[0] + 1, position[1]] not in room_struct_list) and not (structure[position[1]][position[0]][2] or structure[position[1]][position[0] + 1][3]):
 
             directions.append(Direction.RIGHT)
         
-        if position[0] > 0 and ([position[0] - 1, position[1]] not in roomStructList) and not (structure[position[1]][position[0]][3] or structure[position[1]][position[0] - 1][2]):
+        if position[0] > 0 and ([position[0] - 1, position[1]] not in room_struct_list) and not (structure[position[1]][position[0]][3] or structure[position[1]][position[0] - 1][2]):
 
             directions.append(Direction.LEFT)
 
         if len(directions) == 0:
 
-            backTracking = True
-            roomsStructStack.remove(roomsStructStack[-1])
-            position = roomsStructStack[-1]
+            back_tracking = True
+            rooms_struct_stack.remove(rooms_struct_stack[-1])
+            position = rooms_struct_stack[-1]
         else:
 
-            backTracking = False
+            back_tracking = False
             direction = choice(directions)
 
             if direction == Direction.UP:
@@ -178,11 +194,13 @@ def GenerateDungeon(screenSize, width = 2, heigth = 2):
         rooms.append([])
         for j in range(width):
 
-            rooms[i].append(Room(structure[i][j], choice(os.listdir("Rooms")), screenSize))
+            rooms[i].append(Room(structure[i][j], choice(os.listdir("Rooms")), screen_size))
     
-    playerX = randint(0, width - 1)
-    playerY = randint(0, heigth - 1)
+    player_x = randint(0, width - 1)
+    player_y = randint(0, heigth - 1)
 
-    rooms[playerX][playerY].entities.append(Entities.Player(rooms[playerX][playerY].playerSpawnPosition))
+    player = entities.Player(rooms[player_x][player_y].player_spawn_position)
+
+    rooms[player_x][player_y].entities["Player"] = player
     
-    return rooms, [playerX, playerY]
+    return player, rooms, [player_x, player_y]
