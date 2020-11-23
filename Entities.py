@@ -10,6 +10,7 @@ class Entity():
     velocity: list
     drag: float
     speed: float
+    life: int
     sprites: pygame.sprite.RenderPlain()
 
     def __init__(self, position):
@@ -19,7 +20,10 @@ class Entity():
         self.velocity = [0.0, 0.0]
         self.drag = 0.25
         self.speed = 1.0
+        self.life = 100
         self.sprites = pygame.sprite.RenderPlain()
+    
+    #def attack(self, target, weapon):
 
 class Player(Entity):
 
@@ -70,9 +74,30 @@ class Monster(Entity):
 
         super().__init__(position)
 
-        self.speed = 2.0
         self.sprites.add(graphics.MonsterSprite(self.position[0], self.position[1]))
     
-    #def behaviour(self, player_position):
+    def behaviour(self, player_position):
 
-        
+        if self.position[0] < player_position[0]:
+
+            self.direction[0] = 1   
+            self.velocity[0] = self.speed
+        elif self.position[0] > player_position[0]:
+
+            self.direction[0] = -1
+            self.velocity[0] = -self.speed
+        else:
+
+            self.direction[0] = 0
+
+        if self.position[1] < player_position[1]:
+
+            self.direction[1] = 1   
+            self.velocity[1] = self.speed
+        elif self.position[1] > player_position[1]:
+
+            self.direction[1] = -1   
+            self.velocity[1] = -self.speed
+        else:
+
+            self.direction[1] = 0

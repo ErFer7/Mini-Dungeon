@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.13.0
+# V 0.14.0
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -33,6 +33,7 @@ mouse_position_X: int
 mouse_position_Y: int
 rooms: list
 player: entities.Player
+render_control: graphics.RenderControl
 
 # Funções
 def update_events(player = None):
@@ -86,7 +87,7 @@ def build_menu():
     quit_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quit_button_border, quit_button))
 
-    version_text = font.render("V 0.13.0", False, (255, 255, 255))
+    version_text = font.render("V 0.14.0", False, (255, 255, 255))
     title_text = title_font.render("MINI DUNGEON", False, (255, 223, 0))
     title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (10, 10, 10))
     play_txt = title_font.render("JOGAR", False, (255, 223, 0))
@@ -113,6 +114,8 @@ def build_loading_screen():
 
 # Inicialização
 seed(time_ns())
+
+render_control = graphics.RenderControl(True)
 
 pygame.init()
 
@@ -148,21 +151,12 @@ while game_state != GameState.EXITING:
 
     while game_state == GameState.INGAME:
         
-        display.fill((0, 0, 0))
-        display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (0, 0))
+        #display.fill((0, 0, 0))
+        #display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (0, 0))
 
         update_events(player)
-        physics.update_physics(rooms, room_index)
-
-        rooms[room_index[0]][room_index[1]].sprites.draw(display)
-        rooms[room_index[0]][room_index[1]].collision_sprites.draw(display)
-        rooms[room_index[0]][room_index[1]].trigger_sprites.draw(display)
-
-        for key in rooms[room_index[0]][room_index[1]].entities:
-
-            rooms[room_index[0]][room_index[1]].entities[key].sprites.draw(display)
-
-        pygame.display.update()
+        physics.update_physics(rooms, room_index, render_control)
+        render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
 
         fps_clock.tick(60)
 

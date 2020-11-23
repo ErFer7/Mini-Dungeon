@@ -39,6 +39,7 @@ class Room():
 
         stage = 0
         doors_chars = "0123"
+        monster_count = 0
         room_size = []
 
         with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as room_file:
@@ -98,6 +99,10 @@ class Room():
                                 if self.doors[int(char)]:
                                     
                                     self.doors_leaving_position[int(char)] = [position[1], position[0]]
+                            elif char == 'M':
+
+                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[1], position[0]])
+                                monster_count += 1
                             
                             position[1] += 32
                         

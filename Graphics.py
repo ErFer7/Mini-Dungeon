@@ -3,6 +3,50 @@
 import os
 import pygame
 
+class RenderControl():
+
+    update_all: bool
+
+    def __init__(self, update_all_init):
+
+        self.update_all = update_all_init
+
+    def update_graphics(self, room, display):
+
+        if self.update_all:
+
+            display.fill((10, 10, 10))
+
+            room.sprites.draw(display)
+            room.collision_sprites.draw(display)
+            room.trigger_sprites.draw(display)
+            
+            self.update_all = False
+        else:
+
+            for key in room.entities:
+
+                background_groups = [room.collision_sprites, room.trigger_sprites, room.sprites]
+                overlap_group = pygame.sprite.RenderPlain()
+
+                for group in background_groups:
+                    
+                    overlap = pygame.sprite.spritecollide(room.entities[key].sprites.sprites()[0].render_area, group, False)
+
+                    if overlap != None:
+
+                        for sprite in overlap:
+
+                            overlap_group.add(sprite)
+
+                overlap_group.draw(display)
+        
+            for key in room.entities:
+
+                room.entities[key].sprites.draw(display)
+
+        pygame.display.update()
+
 class StoneWallSprite(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y):
@@ -97,9 +141,25 @@ class DoorSprite(pygame.sprite.Sprite):
         self.rect.y = pos_y
         self.direction = direction
 
+class RenderAreaSprite(pygame.sprite.Sprite):
+
+    def __init__(self, pos_x, pos_y, width, height):
+
+        super().__init__()
+        self.image = pygame.Surface([width, height])
+        self.rect = self.image.get_rect()
+        self.rect.centerx = pos_x
+        self.rect.centery = pos_y
+    
+    def update(self, pos_x, pos_y):
+
+        self.rect.centerx = pos_x
+        self.rect.centery = pos_y
+
 class PlayerSprite(pygame.sprite.Sprite):
 
     _old_horizontal_orientation: int
+    render_area: pygame.sprite.Sprite
 
     def __init__(self, pos_x, pos_y):
 
@@ -109,11 +169,14 @@ class PlayerSprite(pygame.sprite.Sprite):
         self.rect.x = pos_x
         self.rect.y = pos_y
         self._old_horizontal_orientation = 1
+        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 48, 48)
     
     def update(self, pos_x, pos_y, horizontal_orientation):
 
         self.rect.x = pos_x
         self.rect.y = pos_y
+
+        self.render_area.update(self.rect.centerx, self.rect.centery)
 
         if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
 
@@ -129,6 +192,7 @@ class PlayerSprite(pygame.sprite.Sprite):
 class MonsterSprite(pygame.sprite.Sprite):
 
     _old_horizontal_orientation: int
+    render_area: pygame.sprite.Sprite
 
     def __init__(self, pos_x, pos_y):
 
@@ -138,11 +202,14 @@ class MonsterSprite(pygame.sprite.Sprite):
         self.rect.x = pos_x
         self.rect.y = pos_y
         self._old_horizontal_orientation = 1
+        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 48, 48)
     
     def update(self, pos_x, pos_y, horizontal_orientation):
 
         self.rect.x = pos_x
         self.rect.y = pos_y
+
+        self.render_area.update(self.rect.centerx, self.rect.centery)
 
         if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
 

@@ -1,11 +1,15 @@
 import sys
 import pygame
 
-def update_physics(rooms, room_index):
+def update_physics(rooms, room_index, render_control):
 
     entities = rooms[room_index[0]][room_index[1]].entities
 
     for key in entities:
+
+        if key != "Player":
+
+            entities[key].behaviour(entities["Player"].position)
 
         if entities[key].direction[0] == 0:
 
@@ -80,4 +84,5 @@ def update_physics(rooms, room_index):
                 rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][0] - 10
                 rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][1]
             
+            render_control.update_all = True
             break
