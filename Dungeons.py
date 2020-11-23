@@ -38,7 +38,6 @@ class Room():
         position = [0, 0]
 
         stage = 0
-        doors_chars = "0123"
         monster_count = 0
         room_size = []
 
@@ -69,8 +68,8 @@ class Room():
 
                             if char == '#':
 
-                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0]))
-                            elif char in doors_chars:
+                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0], char))
+                            elif char in "0123":
 
                                 if self.doors[int(char)]:
 
@@ -78,7 +77,32 @@ class Room():
                                     self.trigger_sprites.add(graphics.DoorSprite(position[1], position[0], int(char)))
                                 else:
 
-                                    self.collision_sprites.add(graphics.WallSprite(position[1], position[0]))
+                                    if char == '0':
+
+                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '#'))
+                                    elif char == '2':
+
+                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '%'))
+                                    elif char == '3':
+
+                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '$'))
+                                    else:
+
+                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '='))
+                            elif char in "@_&":
+
+                                self.sprites.add(graphics.WallSprite(position[1], position[0], char))
+                            elif char in "[].":
+
+                                if char != '.':
+
+                                    self.sprites.add(graphics.WallSprite(position[1], position[0] - 24, char))
+                                else:
+
+                                    self.sprites.add(graphics.WallSprite(position[1], position[0] - 24, '#'))
+                            elif char in "$%+-=":
+
+                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0], char))
                             elif char != "\n":
                                 
                                 self.sprites.add(graphics.FloorSprite(position[1], position[0], char))
@@ -94,7 +118,7 @@ class Room():
                             if char == 'P':
 
                                 self.player_spawn_position = [position[1], position[0]]
-                            elif char in doors_chars:
+                            elif char in "0123":
 
                                 if self.doors[int(char)]:
                                     

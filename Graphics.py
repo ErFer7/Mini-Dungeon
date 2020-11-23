@@ -48,12 +48,12 @@ class RenderControl():
 
         pygame.display.update()
 
-class StoneWallSprite(pygame.sprite.Sprite):
+class BackgroundSprite(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y):
 
         super().__init__()
-        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall_0.png")), (256, 256))
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall.png")), (256, 256))
         self.rect = self.image.get_rect()
         self.rect.x = pos_x
         self.rect.y = pos_y
@@ -121,10 +121,44 @@ class FloorSprite(pygame.sprite.Sprite):
 
 class WallSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, pos_x, pos_y, wall_type):
 
         super().__init__()
-        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall_0.png")), (32, 32))
+
+        if wall_type == '#':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall.png")), (32, 32))
+        elif wall_type == '_':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top.png")), (32, 32))
+        elif wall_type == '$':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Left.png")), (32, 32))
+        elif wall_type == '%':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Right.png")), (32, 32))
+        elif wall_type == '@':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Left.png")), (32, 32))
+        elif wall_type == '+':
+
+            self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Left.png")), (32, 32)), False, True)
+        elif wall_type == '-':
+
+            self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Right.png")), (32, 32)), False, True)
+        elif wall_type == '=':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Botton.png")), (32, 32))
+        elif wall_type == '[':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Botton - Left.png")), (32, 32))
+        elif wall_type == ']':
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Botton - Right.png")), (32, 32))
+        else:
+
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Right.png")), (32, 32))
+        
         self.rect = self.image.get_rect()
         self.rect.x = pos_x
         self.rect.y = pos_y

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# V 0.14.2
+# V 0.15
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -79,7 +79,7 @@ def build_menu():
 
         for j in range(ceil(display.get_width() / 256)):
 
-            sprites.add(graphics.StoneWallSprite(j * 256, i * 256))
+            sprites.add(graphics.BackgroundSprite(j * 256, i * 256))
 
     play_button_border = graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
     play_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
@@ -89,7 +89,7 @@ def build_menu():
     quit_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quit_button_border, quit_button))
 
-    version_text = font.render("V 0.14.2", False, (255, 255, 255))
+    version_text = font.render("V 0.15", False, (255, 255, 255))
     title_text = title_font.render("MINI DUNGEON", False, (255, 223, 0))
     title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (10, 10, 10))
     play_txt = title_font.render("JOGAR", False, (255, 223, 0))

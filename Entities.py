@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from enum import Enum
+
 import pygame
 import graphics
 
 from math import sqrt
+
+class EntityState(Enum):
+
+    IDLE = 1
+    ATTACK = 2
+    #DEATH = 3
 
 class Entity():
 
@@ -14,6 +22,7 @@ class Entity():
     speed: float
     life: int
     power: float
+    state: EntityState
     sprites: pygame.sprite.RenderPlain()
 
     def __init__(self, position):
@@ -25,12 +34,15 @@ class Entity():
         self.speed = 1.0
         self.life = 100
         self.power = 1.0
+        self.state = EntityState.IDLE
         self.sprites = pygame.sprite.RenderPlain()
     
     def attack(self, target = None):
 
+        self.state = EntityState.ATTACK
+
         if target != None:
-            
+
             target.change_life(-self.power)
 
     def change_life(self, value):
