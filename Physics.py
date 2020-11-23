@@ -10,6 +10,31 @@ def update_physics(rooms, room_index, render_control):
 
             entities[key].behaviour(entities["Player"].position)
 
+        colliders = pygame.sprite.spritecollide(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].collision_sprites, False)
+        trigger = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].trigger_sprites)
+
+        for collider in colliders:
+
+            if collider != None:
+                
+                if entities[key].sprites.sprites()[0].rect.centerx > collider.rect.centerx:
+
+                    entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
+                    entities[key].velocity[0] = 0.0
+                elif entities[key].sprites.sprites()[0].rect.centerx < collider.rect.centerx:
+
+                    entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
+                    entities[key].velocity[0] = 0.0
+
+                if entities[key].sprites.sprites()[0].rect.centery > collider.rect.centery:
+
+                    entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
+                    entities[key].velocity[1] = 0.0
+                elif entities[key].sprites.sprites()[0].rect.centery < collider.rect.centery:
+
+                    entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
+                    entities[key].velocity[1] = 0.0
+
         if entities[key].direction[0] == 0:
 
             if abs(entities[key].velocity[0]) >= 0.01:
@@ -28,27 +53,12 @@ def update_physics(rooms, room_index, render_control):
 
                 entities[key].velocity[1] = 0.0
             
-        collider = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].collision_sprites)
-        trigger = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].trigger_sprites)
-
-        if collider != None:
-
-            if entities[key].sprites.sprites()[0].rect.left < collider.rect.left or entities[key].sprites.sprites()[0].rect.right > collider.rect.right:
-
-                entities[key].position[0] -= entities[key].velocity[0] * (1.0 + entities[key].drag)
-                entities[key].velocity[0] = 0.0
-                
-            if entities[key].sprites.sprites()[0].rect.bottom < collider.rect.bottom or entities[key].sprites.sprites()[0].rect.top > collider.rect.top:
-                    
-                entities[key].position[1] -= entities[key].velocity[1] * (1.0 + entities[key].drag)
-                entities[key].velocity[1] = 0.0
-
         entities[key].position[0] += entities[key].velocity[0]
         entities[key].position[1] += entities[key].velocity[1]
         
         entities[key].sprites.update(entities[key].position[0], entities[key].position[1], entities[key].direction[0])
 
-        if trigger != None:
+        if trigger != None and key == "Player":
 
             if trigger.direction == 0:
 

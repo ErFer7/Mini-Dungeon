@@ -19,6 +19,7 @@ class RenderControl():
 
             room.sprites.draw(display)
             room.collision_sprites.draw(display)
+            room.collision_sprites.update()
             room.trigger_sprites.draw(display)
 
             self.update_all = False
