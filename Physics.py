@@ -1,4 +1,3 @@
-import sys
 import pygame
 
 def update_physics(rooms, room_index, render_control):

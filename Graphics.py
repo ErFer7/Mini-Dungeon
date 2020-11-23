@@ -20,16 +20,15 @@ class RenderControl():
             room.sprites.draw(display)
             room.collision_sprites.draw(display)
             room.trigger_sprites.draw(display)
-            
+
             self.update_all = False
         else:
 
             for key in room.entities:
 
-                background_groups = [room.collision_sprites, room.trigger_sprites, room.sprites]
                 overlap_group = pygame.sprite.RenderPlain()
 
-                for group in background_groups:
+                for group in [room.collision_sprites, room.trigger_sprites, room.sprites]:
                     
                     overlap = pygame.sprite.spritecollide(room.entities[key].sprites.sprites()[0].render_area, group, False)
 
@@ -40,7 +39,8 @@ class RenderControl():
                             overlap_group.add(sprite)
 
                 overlap_group.draw(display)
-        
+                overlap_group.empty()
+
             for key in room.entities:
 
                 room.entities[key].sprites.draw(display)
