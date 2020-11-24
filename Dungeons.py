@@ -225,11 +225,11 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
 
             rooms[i].append(Room(structure[i][j], choice(os.listdir("Rooms")), screen_size))
     
-    player_x = randint(0, width - 1)
-    player_y = randint(0, heigth - 1)
+    player_col = randint(0, width - 1)
+    player_ln = randint(0, heigth - 1)
 
-    player = entities.Player(rooms[player_x][player_y].player_spawn_position)
+    player = entities.Player(rooms[player_ln][player_col].player_spawn_position)
 
-    rooms[player_x][player_y].entities["Player"] = player
+    rooms[player_ln][player_col].entities["Player"] = player
     
-    return player, rooms, [player_x, player_y]
+    return player, rooms, [player_ln, player_col]

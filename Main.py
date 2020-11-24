@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# V 0.15
 # Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 # Github: https://github.com/ErFer7/Mini-Dungeon
 
@@ -26,8 +25,12 @@ class GameState(Enum):
 
     MENU = 1
     INGAME = 2
-    RESTARTING = 3
-    EXITING = 4
+    PAUSED = 3
+    RESTARTING = 4
+    EXITING = 5
+
+# Constantes
+VERSION = "0.15.1"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -89,7 +92,7 @@ def build_menu():
     quit_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
     sprites.add((quit_button_border, quit_button))
 
-    version_text = font.render("V 0.15", False, (255, 255, 255))
+    version_text = font.render("V {0}".format(VERSION), False, (255, 255, 255))
     title_text = title_font.render("MINI DUNGEON", False, (255, 223, 0))
     title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (10, 10, 10))
     play_txt = title_font.render("JOGAR", False, (255, 223, 0))
@@ -115,7 +118,8 @@ def build_loading_screen():
     pygame.display.update()
 
 # Inicialização
-seed(time_ns())
+#seed(time_ns())
+seed(2)
 
 process = psutil.Process()
 render_control = graphics.RenderControl(True)
