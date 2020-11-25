@@ -11,7 +11,7 @@ class EntityState(Enum):
 
     IDLE = 1
     ATTACK = 2
-    #DEATH = 3
+    DEAD = 3
 
 class Entity():
 
@@ -40,7 +40,7 @@ class Entity():
     def attack(self, target = None):
 
         self.state = EntityState.ATTACK
-
+        
         if target != None:
 
             target.change_life(-self.power)
@@ -51,11 +51,7 @@ class Entity():
 
         if self.life <= 0:
 
-            self.die()
-    
-    def die(self):
-
-        del self
+            self.state = EntityState.DEAD
 
 class Player(Entity):
 

@@ -30,7 +30,7 @@ class GameState(Enum):
     EXITING = 5
 
 # Constantes
-VERSION = "0.15.1"
+VERSION = "0.16"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -61,12 +61,12 @@ def update_events(player = None):
 
         if game_state == GameState.MENU:
 
-            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() - 125) / 2 and mouse_position_Y <= (display.get_height() + 125) / 2):
+            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2):
 
                 game_state = GameState.INGAME
                 break
             
-            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 125) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 125) / 2):
+            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
 
                 game_state = GameState.EXITING
                 break
@@ -84,19 +84,19 @@ def build_menu():
 
             sprites.add(graphics.BackgroundSprite(j * 256, i * 256))
 
-    play_button_border = graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() - 125) / 2, 400, 125, (255, 223, 0))
-    play_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() - 105) / 2, 380, 105, (10, 10, 10))
+    play_button_border = graphics.ButtonSprite((display.get_width() - 300) / 2, (display.get_height() - 100) / 2, 300, 100, (255, 223, 0))
+    play_button = graphics.ButtonSprite((display.get_width() - 280) / 2, (display.get_height() - 80) / 2, 280, 80, (20, 20, 20))
     sprites.add((play_button_border, play_button))
 
-    quit_button_border = graphics.ButtonSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 125) / 2, 400, 125, (255, 223, 0))
-    quit_button = graphics.ButtonSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 105) / 2, 380, 105, (10, 10, 10))
+    quit_button_border = graphics.ButtonSprite((display.get_width() - 300) / 2, (display.get_height() * 1.5 - 100) / 2, 300, 100, (255, 223, 0))
+    quit_button = graphics.ButtonSprite((display.get_width() - 280) / 2, (display.get_height() * 1.5 - 80) / 2, 280, 80, (20, 20, 20))
     sprites.add((quit_button_border, quit_button))
 
     version_text = font.render("V {0}".format(VERSION), False, (255, 255, 255))
     title_text = title_font.render("MINI DUNGEON", False, (255, 223, 0))
-    title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (10, 10, 10))
-    play_txt = title_font.render("JOGAR", False, (255, 223, 0))
-    quit_text = title_font.render("SAIR", False, (255, 223, 0))
+    title_shadow_text = title_font_shadow.render("MINI DUNGEON", False, (20, 20, 20))
+    play_txt = subtitle_font.render("JOGAR", False, (255, 223, 0))
+    quit_text = subtitle_font.render("SAIR", False, (255, 223, 0))
 
     sprites.draw(display)
     
@@ -110,7 +110,7 @@ def build_menu():
 
 def build_loading_screen():
 
-    display.fill((10, 10, 10))
+    display.fill((20, 20, 20))
 
     loading_text = title_font.render("Carregando...", False, (255, 223, 0))
     display.blit(loading_text, ((display.get_width() - loading_text.get_rect().width) / 2, (display.get_height() - loading_text.get_rect().height) / 2))
@@ -118,18 +118,19 @@ def build_loading_screen():
     pygame.display.update()
 
 # Inicialização
-#seed(time_ns())
-seed(2)
+seed(time_ns())
 
 process = psutil.Process()
 render_control = graphics.RenderControl(True)
 
-pygame.init()
+pygame.display.init()
+pygame.font.init()
 
 fps_clock = pygame.time.Clock()
 
 title_font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
 title_font_shadow = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 80)
+subtitle_font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 40)
 font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 15)
 
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
@@ -154,7 +155,7 @@ while game_state != GameState.EXITING:
         
         build_loading_screen()
         # 25 é o máximo
-        player, rooms, room_index = dungeons.generate_dungeon([display.get_width(), display.get_height()], 2, 2)
+        player, rooms, room_index = dungeons.generate_dungeon([display.get_width(), display.get_height()], 5, 5)
         display.fill((10, 10, 10))
 
     while game_state == GameState.INGAME:

@@ -17,23 +17,11 @@ def update_physics(rooms, room_index, render_control):
 
             if collider != None:
                 
-                if entities[key].sprites.sprites()[0].rect.centerx > collider.rect.centerx:
+                entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
+                entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
 
-                    entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
-                    entities[key].velocity[0] = 0.0
-                elif entities[key].sprites.sprites()[0].rect.centerx < collider.rect.centerx:
-
-                    entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
-                    entities[key].velocity[0] = 0.0
-
-                if entities[key].sprites.sprites()[0].rect.centery > collider.rect.centery:
-
-                    entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
-                    entities[key].velocity[1] = 0.0
-                elif entities[key].sprites.sprites()[0].rect.centery < collider.rect.centery:
-
-                    entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
-                    entities[key].velocity[1] = 0.0
+                entities[key].velocity[0] = 0.0
+                entities[key].velocity[1] = 0.0
 
         if entities[key].direction[0] == 0:
 
@@ -55,8 +43,6 @@ def update_physics(rooms, room_index, render_control):
             
         entities[key].position[0] += entities[key].velocity[0]
         entities[key].position[1] += entities[key].velocity[1]
-        
-        entities[key].sprites.update(entities[key].position[0], entities[key].position[1], entities[key].direction[0])
 
         if trigger != None and key == "Player":
 
@@ -93,5 +79,8 @@ def update_physics(rooms, room_index, render_control):
                 rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][0] - 10
                 rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][1]
             
+            rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0], rooms[room_index[0]][room_index[1]].entities[key].position[1], rooms[room_index[0]][room_index[1]].entities[key].direction[0])
             render_control.update_all = True
             break
+
+        rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0], rooms[room_index[0]][room_index[1]].entities[key].position[1], rooms[room_index[0]][room_index[1]].entities[key].direction[0])

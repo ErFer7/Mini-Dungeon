@@ -15,7 +15,7 @@ class RenderControl():
 
         if self.update_all:
 
-            display.fill((10, 10, 10))
+            display.fill((20, 20, 20))
 
             room.sprites.draw(display)
             room.collision_sprites.draw(display)

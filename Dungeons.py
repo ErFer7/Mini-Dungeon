@@ -103,10 +103,10 @@ class Room():
                             elif char in "$%+-=":
 
                                 self.collision_sprites.add(graphics.WallSprite(position[1], position[0], char))
-                            elif char != "\n":
+                            elif char in "qwer^v<>tyui'":
                                 
                                 self.sprites.add(graphics.FloorSprite(position[1], position[0], char))
-                            
+
                             position[1] += 32
                         
                         position[0] += 32
