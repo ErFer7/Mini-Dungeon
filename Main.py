@@ -7,7 +7,6 @@
 import os
 import sys
 import psutil
-#import objgraph
 
 from enum import Enum
 from math import ceil
@@ -30,7 +29,7 @@ class GameState(Enum):
     EXITING = 5
 
 # Constantes
-VERSION = "0.16"
+VERSION = "0.17"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -171,12 +170,7 @@ while game_state != GameState.EXITING:
         update_events(player)
         physics.update_physics(rooms, room_index, render_control)
         render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
-        #print("----------------------------")
-        #objgraph.show_most_common_types(limit = 50)
         fps_clock.tick(60)
-
-    #obj = objgraph.by_type("FloorSprite")
-    #objgraph.show_backrefs(obj, max_depth=10)
 
 pygame.quit()
 sys.exit()

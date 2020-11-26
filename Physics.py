@@ -1,3 +1,6 @@
+from math import sin, sqrt
+from time import time_ns
+
 import pygame
 
 def update_physics(rooms, room_index, render_control):
@@ -19,7 +22,6 @@ def update_physics(rooms, room_index, render_control):
                 
                 entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
                 entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
-
                 entities[key].velocity[0] = 0.0
                 entities[key].velocity[1] = 0.0
 

@@ -74,7 +74,7 @@ class Room():
                                 if self.doors[int(char)]:
 
                                     self.doors_leaving_position
-                                    self.trigger_sprites.add(graphics.DoorSprite(position[1], position[0], int(char)))
+                                    self.trigger_sprites.add(graphics.DoorSprite(position[1], position[0], int(char), char))
                                 else:
 
                                     if char == '0':
@@ -106,6 +106,10 @@ class Room():
                             elif char in "qwer^v<>tyui'":
                                 
                                 self.sprites.add(graphics.FloorSprite(position[1], position[0], char))
+
+                                if randint(0, 100) == 100:
+
+                                    self.sprites.add(graphics.DecorationSprite(position[1], position[0]))
 
                             position[1] += 32
                         

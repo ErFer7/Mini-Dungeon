@@ -60,7 +60,7 @@ class Player(Entity):
         super().__init__(position)
 
         self.speed = 2.0
-        self.sprites.add(graphics.PlayerSprite(self.position[0], self.position[1]))
+        self.sprites.add(graphics.PlayerBaseSprite(self.position[0], self.position[1]))
     
     def control(self, event):
 
@@ -109,7 +109,7 @@ class Monster(Entity):
         super().__init__(position)
 
         self.sight_distance = 256.0
-        self.sprites.add(graphics.MonsterSprite(self.position[0], self.position[1]))
+        self.sprites.add(graphics.MonsterBaseSprite(self.position[0], self.position[1]))
     
     def behaviour(self, player_position):
 
