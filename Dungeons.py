@@ -121,15 +121,15 @@ class Room():
 
                             if char == 'P':
 
-                                self.player_spawn_position = [position[1], position[0]]
+                                self.player_spawn_position = [position[1] + 16, position[0] + 16]
                             elif char in "0123":
 
                                 if self.doors[int(char)]:
                                     
-                                    self.doors_leaving_position[int(char)] = [position[1], position[0]]
+                                    self.doors_leaving_position[int(char)] = [position[1] + 16, position[0] + 16]
                             elif char == 'M':
 
-                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[1], position[0]])
+                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[1] + 16, position[0] + 16])
                                 monster_count += 1
                             
                             position[1] += 32

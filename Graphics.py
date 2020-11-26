@@ -329,6 +329,6 @@ class MonsterSprite(EntitySprite):
     def __init__(self, pos_x, pos_y):
 
         super().__init__(pos_x, pos_y)
-        self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", "Monster_{0}.png".format(randint(0, 32)))), (32, 32)), True, False)
+        self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", "Monster_{0}.png".format(randint(0, 24)))), (32, 32)), True, False)
         self.walking_freq = 0.5
         self.walking_amp = 2.0

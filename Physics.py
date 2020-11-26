@@ -11,11 +11,11 @@ def update_physics(rooms, room_index, render_control):
 
         if key != "Player":
 
-            entities[key].behaviour(entities["Player"].position)
+            entities[key].behaviour(entities["Player"].position, rooms[room_index[0]][room_index[1]].collision_sprites.sprites())
 
         colliders = pygame.sprite.spritecollide(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].collision_sprites, False)
         trigger = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].trigger_sprites)
-
+        
         for collider in colliders:
 
             if collider != None:
@@ -81,8 +81,8 @@ def update_physics(rooms, room_index, render_control):
                 rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][0] - 10
                 rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][1]
             
-            rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0], rooms[room_index[0]][room_index[1]].entities[key].position[1], rooms[room_index[0]][room_index[1]].entities[key].direction[0])
+            rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0] - 16, rooms[room_index[0]][room_index[1]].entities[key].position[1] - 16, rooms[room_index[0]][room_index[1]].entities[key].direction[0])
             render_control.update_all = True
             break
 
-        rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0], rooms[room_index[0]][room_index[1]].entities[key].position[1], rooms[room_index[0]][room_index[1]].entities[key].direction[0])
+        rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position[0] - 16, rooms[room_index[0]][room_index[1]].entities[key].position[1] - 16, rooms[room_index[0]][room_index[1]].entities[key].direction[0])

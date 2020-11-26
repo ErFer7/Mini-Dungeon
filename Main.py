@@ -29,7 +29,7 @@ class GameState(Enum):
     EXITING = 5
 
 # Constantes
-VERSION = "0.17"
+VERSION = "0.18"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -134,6 +134,7 @@ font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 15)
 
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
 UI_display = pygame.Surface([400, 120])
+HUD = pygame.Surface([1366, 768])
 
 # Loop principal
 while game_state != GameState.EXITING:
@@ -170,6 +171,7 @@ while game_state != GameState.EXITING:
         update_events(player)
         physics.update_physics(rooms, room_index, render_control)
         render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
+
         fps_clock.tick(60)
 
 pygame.quit()
