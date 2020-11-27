@@ -367,7 +367,12 @@ class SwordSprite(pygame.sprite.Sprite):
     
     def update(self, pos_x, pos_y, horizontal_orientation):
 
-        self.rect.x = pos_x + 14
+        if self._old_horizontal_orientation == 1:
+
+            self.rect.x = pos_x + 14
+        else:
+
+            self.rect.x = pos_x - 14
         self.rect.y = pos_y + 16
 
         if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
@@ -378,5 +383,4 @@ class SwordSprite(pygame.sprite.Sprite):
             elif horizontal_orientation > 0 and self._old_horizontal_orientation <= 0:
 
                 self.image = pygame.transform.flip(self.image, True, False)
-            
             self._old_horizontal_orientation = horizontal_orientation

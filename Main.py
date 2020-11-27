@@ -29,7 +29,7 @@ class GameState(Enum):
     EXITING = 5
 
 # Constantes
-VERSION = "0.19"
+VERSION = "0.19.1"
 
 # Variáveis globais
 game_state = GameState.MENU
