@@ -33,6 +33,10 @@ def update_physics(rooms, room_index, render_control):
 
                         if entities[sub_key].is_dead():
 
+                            if sub_key != "Player":
+
+                                entities["Player"].kill_count += 1
+                                
                             dead_entities_keys.append(sub_key)
                             render_control.update_all = True
 
@@ -112,4 +116,5 @@ def update_physics(rooms, room_index, render_control):
 
     for key in dead_entities_keys:
 
+        rooms[room_index[0]][room_index[1]].entities[key].delete()
         del rooms[room_index[0]][room_index[1]].entities[key]

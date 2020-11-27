@@ -25,11 +25,13 @@ class GameState(Enum):
     MENU = 1
     INGAME = 2
     PAUSED = 3
-    RESTARTING = 4
-    EXITING = 5
+    WON = 4
+    LOST = 5
+    RESTARTING = 6
+    EXITING = 7
 
 # Constantes
-VERSION = "0.19.1"
+VERSION = "0.20"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -40,7 +42,7 @@ player: entities.Player
 render_control: graphics.RenderControl
 
 # Funções
-def update_events(player = None):
+def update_events():
 
     global game_state
     global mouse_position_X
@@ -59,26 +61,57 @@ def update_events(player = None):
         
         if event != None:
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
-
-                game_state = GameState.EXITING
-                break
-
             if game_state == GameState.MENU:
 
-                if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2) or event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if event.type == pygame.KEYDOWN:
+                
+                    if event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
+
+                        game_state = GameState.EXITING
+                        break
+                    elif event.key == pygame.K_RETURN:
+
+                        game_state = GameState.INGAME
+                        break
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    if (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2):
+
+                        game_state = GameState.INGAME
+                        break
+                
+                    if (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
+
+                        game_state = GameState.EXITING
+                        break
+        
+        if game_state == GameState.INGAME:
+
+            if event != None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                
+                game_state = GameState.PAUSED
+                break
+
+            player.update(event)
+        elif game_state == GameState.PAUSED:
+
+            if event != None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                
+                game_state = GameState.INGAME
+                break
+            
+            if event != None and event.type == pygame.MOUSEBUTTONDOWN:
+
+                if (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2):
 
                     game_state = GameState.INGAME
                     break
                 
-                if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
+                if (mouse_position_X >= (display.get_width() - 400) / 2 and mouse_position_X <= (display.get_width() + 400) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
 
-                    game_state = GameState.EXITING
+                    game_state = GameState.MENU
                     break
-        
-        if game_state == GameState.INGAME:
-
-            player.update(event)
 
 def build_menu():
 
@@ -90,12 +123,12 @@ def build_menu():
 
             sprites.add(graphics.BackgroundSprite(j * 256, i * 256))
 
-    play_button_border = graphics.ButtonSprite((display.get_width() - 300) / 2, (display.get_height() - 100) / 2, 300, 100, (255, 223, 0))
-    play_button = graphics.ButtonSprite((display.get_width() - 280) / 2, (display.get_height() - 80) / 2, 280, 80, (20, 20, 20))
+    play_button_border = graphics.RectangleSprite((display.get_width() - 300) / 2, (display.get_height() - 100) / 2, 300, 100, (255, 223, 0))
+    play_button = graphics.RectangleSprite((display.get_width() - 280) / 2, (display.get_height() - 80) / 2, 280, 80, (20, 20, 20))
     sprites.add((play_button_border, play_button))
 
-    quit_button_border = graphics.ButtonSprite((display.get_width() - 300) / 2, (display.get_height() * 1.5 - 100) / 2, 300, 100, (255, 223, 0))
-    quit_button = graphics.ButtonSprite((display.get_width() - 280) / 2, (display.get_height() * 1.5 - 80) / 2, 280, 80, (20, 20, 20))
+    quit_button_border = graphics.RectangleSprite((display.get_width() - 300) / 2, (display.get_height() * 1.5 - 100) / 2, 300, 100, (255, 223, 0))
+    quit_button = graphics.RectangleSprite((display.get_width() - 280) / 2, (display.get_height() * 1.5 - 80) / 2, 280, 80, (20, 20, 20))
     sprites.add((quit_button_border, quit_button))
 
     version_text = font.render("V {0}".format(VERSION), False, (255, 255, 255))
@@ -114,6 +147,8 @@ def build_menu():
 
     pygame.display.update()
 
+    sprites.empty()
+
 def build_loading_screen():
 
     display.fill((20, 20, 20))
@@ -123,11 +158,39 @@ def build_loading_screen():
 
     pygame.display.update()
 
+def update_pause_screen():
+
+    pause_group.draw(display)
+    display.blit(continue_txt, ((display.get_width() - continue_txt.get_rect().width) / 2, (display.get_height() - continue_txt.get_rect().height) / 2))
+    display.blit(menu_text, ((display.get_width() - menu_text.get_rect().width) / 2, (display.get_height() * 1.5 - menu_text.get_rect().height) / 2))
+    pygame.display.update()
+
+def update_UI():
+
+    UI_display.fill((20, 20, 20))
+    UI_display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (display.get_width() - 120, 0))
+    UI_display.blit(font.render("Sala: ({0}, {1})".format(room_index[0], room_index[1]), False, (255, 255, 255)), (display.get_width() - 170, 20))
+    UI_display.blit(font.render("Memória: {0} kB".format(process.memory_info()[0] / 1000), False, (255, 255, 255)), (display.get_width() - 250, 40))
+    UI_group.sprites()[1].update(10, 20, int(500.0 * player.life / 100.0), 35)
+    UI_group.draw(UI_display)
+    UI_display.blit(font.render("{0}".format(player.life), False, (255, 255, 255)), (20, 28))
+    display.blit(UI_display, (0, 0))
+
+def ResetGame(rooms, room_index):
+
+    for i in range(len(rooms)):
+
+        for j in range(len(rooms[i])):
+
+            rooms[i][j].delete()
+
+    del rooms
+
 # Inicialização
 seed(time_ns())
 
 process = psutil.Process()
-render_control = graphics.RenderControl(True)
+render_control = graphics.RenderControl()
 
 pygame.display.init()
 pygame.font.init()
@@ -140,8 +203,21 @@ subtitle_font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"),
 font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 15)
 
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
-UI_display = pygame.Surface([400, 120])
-HUD = pygame.Surface([1366, 768])
+UI_display = pygame.Surface([display.get_width(), 120])
+
+UI_group = pygame.sprite.RenderPlain()
+pause_group = pygame.sprite.RenderPlain()
+
+UI_group.add(graphics.RectangleSprite(5, 15, 510, 45, (100, 0, 0)))
+UI_group.add(graphics.RectangleSprite(10, 20, 500, 35, (200, 0, 0)))
+
+pause_group.add(graphics.RectangleSprite((display.get_width() - 400) / 2, (display.get_height() - 100) / 2, 400, 100, (255, 223, 0)))
+pause_group.add(graphics.RectangleSprite((display.get_width() - 380) / 2, (display.get_height() - 80) / 2, 380, 80, (20, 20, 20)))
+pause_group.add(graphics.RectangleSprite((display.get_width() - 400) / 2, (display.get_height() * 1.5 - 100) / 2, 400, 100, (255, 223, 0)))
+pause_group.add(graphics.RectangleSprite((display.get_width() - 380) / 2, (display.get_height() * 1.5 - 80) / 2, 380, 80, (20, 20, 20)))
+
+continue_txt = subtitle_font.render("CONTINUAR", False, (255, 223, 0))
+menu_text = subtitle_font.render("MENU", False, (255, 223, 0))
 
 # Loop principal
 while game_state != GameState.EXITING:
@@ -162,23 +238,28 @@ while game_state != GameState.EXITING:
         
         build_loading_screen()
         # 25 é o máximo
-        player, rooms, room_index = dungeons.generate_dungeon([display.get_width(), display.get_height()], 5, 5)
+
+        player, rooms, room_index, initial_monster_ammount = dungeons.generate_dungeon([display.get_width(), display.get_height()], 5, 5)
+
+        render_control.update_all = True
         display.fill((10, 10, 10))
 
-    while game_state == GameState.INGAME:
+    while game_state == GameState.INGAME or game_state == GameState.PAUSED:
         
-        UI_display.fill((10, 10, 10))
-        display.blit(UI_display, (0, 0))
-        display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (0, 0))
-        display.blit(font.render("Room: ({0}, {1})".format(room_index[0], room_index[1]), False, (255, 255, 255)), (0, 20))
-        display.blit(font.render("Memory: {0} kB".format(process.memory_info()[0] / 1000), False, (255, 255, 255)), (0, 40))
-        display.blit(font.render("Life: {0}".format(rooms[room_index[0]][room_index[1]].entities["Player"].life), False, (255, 255, 255)), (0, 60))
+        update_UI()
+        update_events()
 
-        update_events(player)
-        physics.update_physics(rooms, room_index, render_control)
-        render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
+        if game_state != GameState.PAUSED:
+
+            physics.update_physics(rooms, room_index, render_control)
+            render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
+        else:
+
+            update_pause_screen()
 
         fps_clock.tick(60)
+    
+    ResetGame(rooms, room_index)
 
 pygame.quit()
 sys.exit()

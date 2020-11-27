@@ -11,9 +11,9 @@ class RenderControl():
 
     update_all: bool
 
-    def __init__(self, update_all_init):
+    def __init__(self):
 
-        self.update_all = update_all_init
+        self.update_all = False
 
     def update_graphics(self, room, display):
 
@@ -69,16 +69,22 @@ class BackgroundSprite(pygame.sprite.Sprite):
         self.rect.x = pos_x
         self.rect.y = pos_y
 
-class ButtonSprite(pygame.sprite.Sprite):
+class RectangleSprite(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y, width, height, *color):
 
         super().__init__()
-        self.image = pygame.Surface([width, height])
+        self.image = pygame.Surface((width, height))
         self.rect = self.image.get_rect()
         self.rect.x = pos_x
         self.rect.y = pos_y
         self.image.fill(color)
+    
+    def update(self, pos_x, pos_y, width, height):
+
+        self.image = pygame.transform.scale(self.image, (width, height))
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
 class FloorSprite(pygame.sprite.Sprite):
 
@@ -321,7 +327,7 @@ class PlayerBaseSprite(EntityBaseSprite):
         super().__init__(pos_x, pos_y)
 
         self.entity_sprites.add(PlayerSprite(pos_x, pos_y))
-        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 54, 54)
+        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 56, 56)
         self.item_sprite = SwordSprite(pos_x, pos_y)
 
 class MonsterBaseSprite(EntityBaseSprite):
