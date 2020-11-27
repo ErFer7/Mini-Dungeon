@@ -29,7 +29,7 @@ class GameState(Enum):
     EXITING = 5
 
 # Constantes
-VERSION = "0.18"
+VERSION = "0.19"
 
 # Variáveis globais
 game_state = GameState.MENU
@@ -50,28 +50,35 @@ def update_events(player = None):
 
     mouse_position_X = pygame.mouse.get_pos()[0]
     mouse_position_Y = pygame.mouse.get_pos()[1]
+    
+    if len(events) < 1:
+
+        events.append(None)
 
     for event in events:
+        
+        if event != None:
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
-
-            game_state = GameState.EXITING
-            break
-
-        if game_state == GameState.MENU:
-
-            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2):
-
-                game_state = GameState.INGAME
-                break
-            
-            if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
 
                 game_state = GameState.EXITING
                 break
-        elif game_state == GameState.INGAME:
 
-            player.control(event)
+            if game_state == GameState.MENU:
+
+                if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() - 100) / 2 and mouse_position_Y <= (display.get_height() + 100) / 2) or event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+
+                    game_state = GameState.INGAME
+                    break
+                
+                if event.type == pygame.MOUSEBUTTONDOWN and (mouse_position_X >= (display.get_width() - 300) / 2 and mouse_position_X <= (display.get_width() + 300) / 2) and (mouse_position_Y >= (display.get_height() * 1.5 - 100) / 2 and mouse_position_Y <= (display.get_height() * 1.5 + 100) / 2):
+
+                    game_state = GameState.EXITING
+                    break
+        
+        if game_state == GameState.INGAME:
+
+            player.update(event)
 
 def build_menu():
 
@@ -160,13 +167,12 @@ while game_state != GameState.EXITING:
 
     while game_state == GameState.INGAME:
         
-        UI_display.fill((255, 10, 10))
+        UI_display.fill((10, 10, 10))
         display.blit(UI_display, (0, 0))
         display.blit(font.render("{0:.2f} FPS".format(fps_clock.get_fps()), False, (255, 255, 255)), (0, 0))
-        display.blit(font.render("Player Pos: ({0:.2f}, {1:.2f})".format(player.position[0], player.position[1]), False, (255, 255, 255)), (0, 20))
-        display.blit(font.render("Player Vel: ({0:.2f}, {1:.2f})".format(player.velocity[0], player.velocity[1]), False, (255, 255, 255)), (0, 40))
-        display.blit(font.render("Room: ({0}, {1})".format(room_index[0], room_index[1]), False, (255, 255, 255)), (0, 60))
-        display.blit(font.render("Memory: {0} kB".format(process.memory_info()[0] / 1000), False, (255, 255, 255)), (0, 80))
+        display.blit(font.render("Room: ({0}, {1})".format(room_index[0], room_index[1]), False, (255, 255, 255)), (0, 20))
+        display.blit(font.render("Memory: {0} kB".format(process.memory_info()[0] / 1000), False, (255, 255, 255)), (0, 40))
+        display.blit(font.render("Life: {0}".format(rooms[room_index[0]][room_index[1]].entities["Player"].life), False, (255, 255, 255)), (0, 60))
 
         update_events(player)
         physics.update_physics(rooms, room_index, render_control)

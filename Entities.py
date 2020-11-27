@@ -9,9 +9,10 @@ from math import sqrt
 
 class EntityState(Enum):
 
-    IDLE = 1
-    ATTACK = 2
-    DEAD = 3
+    IDLING = 1
+    ATTACKING = 2
+    STUNNED = 3
+    DEAD = 4
 
 class Entity():
 
@@ -21,8 +22,12 @@ class Entity():
     drag: float
     speed: float
     life: int
-    power: float
-    state: EntityState
+    _power: float
+    _attack_time: float
+    _attack_time_counter: int
+    _stun_time: float
+    _stun_time_counter: int
+    _state: EntityState
     sprites: pygame.sprite.RenderPlain()
 
     def __init__(self, position):
@@ -34,24 +39,46 @@ class Entity():
         self.speed = 1.0
         self.life = 100
         self.power = 1.0
-        self.state = EntityState.IDLE
+        self._attack_time = 0.1
+        self._attack_time_counter = 0
+        self._stun_time = 0.5
+        self._stun_time_counter = 0
+        self._state = EntityState.IDLING
         self.sprites = pygame.sprite.RenderPlain()
     
-    def attack(self, target = None):
+    def attack(self):
 
-        self.state = EntityState.ATTACK
-        
-        if target != None:
-
-            target.change_life(-self.power)
+        self._state = EntityState.ATTACKING
 
     def change_life(self, value):
 
         self.life += value
 
+        if value < 0:
+
+            self._state = EntityState.STUNNED
+
         if self.life <= 0:
 
-            self.state = EntityState.DEAD
+            self._state = EntityState.DEAD
+    
+    def is_attacking(self):
+
+        if self._state == EntityState.ATTACKING:
+
+            return True
+        else:
+
+            return False
+    
+    def is_dead(self):
+
+        if self._state == EntityState.DEAD:
+
+            return True
+        else:
+
+            return False
 
 class Player(Entity):
 
@@ -60,62 +87,84 @@ class Player(Entity):
         super().__init__(position)
 
         self.speed = 2.0
+        self._stun_time = 0.1
         self.sprites.add(graphics.PlayerBaseSprite(self.position[0] - 16, self.position[1] - 16))
     
-    def control(self, event):
+    def update(self, event):
 
-        if event != None:
+        if event != None and self._state != EntityState.STUNNED:
 
             if event.type == pygame.KEYDOWN:
                     
-                if event.key == pygame.K_a:
+                if event.key == pygame.K_LEFT:
 
                     self.direction[0] = -1
                     self.velocity[0] = -self.speed
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_RIGHT:
 
                     self.direction[0] = 1
                     self.velocity[0] = self.speed
                     
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_DOWN:
 
                     self.direction[1] = 1
                     self.velocity[1] = self.speed
-                elif event.key == pygame.K_w:
+                elif event.key == pygame.K_UP:
 
                     self.direction[1] = -1
                     self.velocity[1] = -self.speed
                 
             if event.type == pygame.KEYUP:
 
-                if event.key == pygame.K_a or event.key == pygame.K_d:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
 
                     self.direction[0] = 0
                     
-                if event.key == pygame.K_s or event.key == pygame.K_w:
+                if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
 
                     self.direction[1] = 0
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
 
                 self.attack()
+        elif self._state == EntityState.STUNNED:
+
+            self.direction[0] = 0
+            self.direction[1] = 0
+        
+        if self._state == EntityState.ATTACKING:
+
+            self._attack_time_counter += 1
+
+            if self._attack_time_counter > 60 * self._attack_time:
+
+                self._attack_time_counter = 0
+                self._state = EntityState.IDLING
+        elif self._state == EntityState.STUNNED:
+
+            self._stun_time_counter += 1
+
+            if self._stun_time_counter > 60 * self._stun_time:
+
+                self._stun_time_counter = 0
+                self._state = EntityState.IDLING
 
 class Monster(Entity):
     
-    sight_distance: float
+    _sight_distance: float
 
     def __init__(self, position):
 
         super().__init__(position)
 
-        self.sight_distance = 300.0
+        self._sight_distance = 300.0
         self.sprites.add(graphics.MonsterBaseSprite(self.position[0] - 16, self.position[1] - 16))
     
-    def behaviour(self, player_position, obstacles):
+    def update(self, player_position, obstacles):
         
         distance_from_player = sqrt((player_position[0] - self.position[0]) ** 2 + (player_position[1] - self.position[1]) ** 2)
 
-        if distance_from_player <= self.sight_distance and distance_from_player >= 40:
+        if distance_from_player <= self._sight_distance and self._state != EntityState.DEAD and self._state != EntityState.STUNNED:
 
             has_line_of_sight = True
 
@@ -261,7 +310,28 @@ class Monster(Entity):
                 else:
 
                     self.direction[1] = 0
-            else:
 
-                self.direction[0] = 0
-                self.direction[1] = 0
+                if distance_from_player <= 16:
+
+                    self.attack()
+        else:
+
+            self.direction[0] = 0
+            self.direction[1] = 0
+        
+        if self._state == EntityState.ATTACKING:
+
+            self._attack_time_counter += 1
+
+            if self._attack_time_counter > int(60 * self._attack_time):
+
+                self._attack_time_counter = 0
+                self._state = EntityState.IDLING
+        elif self._state == EntityState.STUNNED:
+
+            self._stun_time_counter += 1
+
+            if self._stun_time_counter > 60 * self._stun_time:
+
+                self._stun_time_counter = 0
+                self._state = EntityState.IDLING

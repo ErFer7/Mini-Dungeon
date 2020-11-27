@@ -225,7 +225,9 @@ class DecorationSprite(pygame.sprite.Sprite):
 class EntityBaseSprite(pygame.sprite.Sprite):
 
     entity_sprites: pygame.sprite.RenderPlain()
+    item_sprite: pygame.sprite.Sprite
     render_area: pygame.sprite.Sprite
+    _old_attacking_state: bool
 
     def __init__(self, pos_x, pos_y):
 
@@ -236,13 +238,26 @@ class EntityBaseSprite(pygame.sprite.Sprite):
         self.rect.y = pos_y
         self.entity_sprites = pygame.sprite.RenderPlain()
         self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 48, 48)
+        self._old_attacking_state = False
     
-    def update(self, pos_x, pos_y, horizontal_orientation):
+    def update(self, pos_x, pos_y, horizontal_orientation, attacking):
 
         self.rect.x = pos_x
         self.rect.y = pos_y
 
+        if attacking != self._old_attacking_state:
+
+            if attacking:
+
+                self.entity_sprites.add(self.item_sprite)
+            else:
+
+                self.entity_sprites.remove(self.item_sprite)
+
+        self._old_attacking_state = attacking
+
         self.entity_sprites.update(pos_x, pos_y, horizontal_orientation)
+        self.item_sprite.update(pos_x, pos_y, horizontal_orientation)
         self.render_area.update(self.rect.centerx, self.rect.centery)
 
 class EntitySprite(pygame.sprite.Sprite):
@@ -306,6 +321,8 @@ class PlayerBaseSprite(EntityBaseSprite):
         super().__init__(pos_x, pos_y)
 
         self.entity_sprites.add(PlayerSprite(pos_x, pos_y))
+        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 54, 54)
+        self.item_sprite = SwordSprite(pos_x, pos_y)
 
 class MonsterBaseSprite(EntityBaseSprite):
 
@@ -314,6 +331,7 @@ class MonsterBaseSprite(EntityBaseSprite):
         super().__init__(pos_x, pos_y)
 
         self.entity_sprites.add(MonsterSprite(pos_x, pos_y))
+        self.item_sprite = SwordSprite(pos_x, pos_y)
 
 class PlayerSprite(EntitySprite):
 
@@ -332,3 +350,33 @@ class MonsterSprite(EntitySprite):
         self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", "Monster_{0}.png".format(randint(0, 24)))), (32, 32)), True, False)
         self.walking_freq = 0.5
         self.walking_amp = 2.0
+
+class SwordSprite(pygame.sprite.Sprite):
+
+    _old_horizontal_orientation: int
+
+    def __init__(self, pos_x, pos_y):
+
+        super().__init__()
+
+        self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Itens", "Sword.png")), (14, 28)), -90)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x + 14
+        self.rect.y = pos_y + 16
+        self._old_horizontal_orientation = 1
+    
+    def update(self, pos_x, pos_y, horizontal_orientation):
+
+        self.rect.x = pos_x + 14
+        self.rect.y = pos_y + 16
+
+        if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
+
+            if horizontal_orientation < 0 and self._old_horizontal_orientation >= 0:
+
+                self.image = pygame.transform.flip(self.image, True, False)
+            elif horizontal_orientation > 0 and self._old_horizontal_orientation <= 0:
+
+                self.image = pygame.transform.flip(self.image, True, False)
+            
+            self._old_horizontal_orientation = horizontal_orientation
