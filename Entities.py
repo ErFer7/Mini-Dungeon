@@ -29,11 +29,11 @@ class Entity():
     _stun_time: float
     _stun_time_counter: int
     _state: EntityState
-    sprites: pygame.sprite.RenderPlain()
+    sprites: pygame.sprite.RenderPlain
 
     def __init__(self, position):
 
-        self.position = position
+        self.position = position[:]
         self.direction = [0, 0]
         self.velocity = [0.0, 0.0]
         self.drag = 0.25
@@ -98,7 +98,7 @@ class Player(Entity):
         self.speed = 2.0
         self._stun_time = 0.1
         self.power = 2.5
-        self.sprites.add(graphics.PlayerBaseSprite(self.position[0] - 16, self.position[1] - 16))
+        self.sprites.add(graphics.PlayerBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, event):
 
@@ -168,7 +168,7 @@ class Monster(Entity):
         super().__init__(position)
 
         self._sight_distance = 300.0
-        self.sprites.add(graphics.MonsterBaseSprite(self.position[0] - 16, self.position[1] - 16))
+        self.sprites.add(graphics.MonsterBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, player_position, obstacles):
         

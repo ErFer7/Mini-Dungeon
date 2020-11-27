@@ -54,7 +54,7 @@ class RenderControl():
 
 class BackgroundSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
         super().__init__()
 
@@ -66,29 +66,29 @@ class BackgroundSprite(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall_{0}.png".format(random_number))), (256, 256))
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
 class RectangleSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y, width, height, *color):
+    def __init__(self, position, size, *color):
 
         super().__init__()
-        self.image = pygame.Surface((width, height))
+        self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
         self.image.fill(color)
     
-    def update(self, pos_x, pos_y, width, height):
+    def update(self, position, size):
 
-        self.image = pygame.transform.scale(self.image, (width, height))
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.image = pygame.transform.scale(self.image, size)
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
 class FloorSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y, floor_type):
+    def __init__(self, position, floor_type):
 
         super().__init__()
 
@@ -133,12 +133,12 @@ class FloorSprite(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Floor", "Floor.png")), (32, 32))
 
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
 class WallSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y, wall_type):
+    def __init__(self, position, wall_type):
 
         super().__init__()
 
@@ -183,14 +183,14 @@ class WallSprite(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Right.png")), (32, 32))
         
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
 class DoorSprite(pygame.sprite.Sprite):
 
     direction: int
 
-    def __init__(self, pos_x, pos_y, direction, door_type):
+    def __init__(self, position, direction, door_type):
 
         super().__init__()
 
@@ -207,13 +207,13 @@ class DoorSprite(pygame.sprite.Sprite):
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Doors", "Door - Lateral.png")), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
         self.direction = direction
 
 class DecorationSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
         super().__init__()
 
@@ -225,31 +225,31 @@ class DecorationSprite(pygame.sprite.Sprite):
 
         self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Decoration", "Skull.png")), (32, 32)), flip, False)
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
 class EntityBaseSprite(pygame.sprite.Sprite):
 
-    entity_sprites: pygame.sprite.RenderPlain()
+    entity_sprites: pygame.sprite.RenderPlain
     item_sprite: pygame.sprite.Sprite
     render_area: pygame.sprite.Sprite
     _old_attacking_state: bool
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
         super().__init__()
         self.image = pygame.Surface([32, 32])
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
         self.entity_sprites = pygame.sprite.RenderPlain()
-        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 48, 48)
+        self.render_area = RenderAreaSprite((self.rect.centerx, self.rect.centery), (48, 48))
         self._old_attacking_state = False
     
-    def update(self, pos_x, pos_y, horizontal_orientation, attacking):
+    def update(self, position, horizontal_orientation, attacking):
 
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
 
         if attacking != self._old_attacking_state:
 
@@ -262,9 +262,9 @@ class EntityBaseSprite(pygame.sprite.Sprite):
 
         self._old_attacking_state = attacking
 
-        self.entity_sprites.update(pos_x, pos_y, horizontal_orientation)
-        self.item_sprite.update(pos_x, pos_y, horizontal_orientation)
-        self.render_area.update(self.rect.centerx, self.rect.centery)
+        self.entity_sprites.update(position, horizontal_orientation)
+        self.item_sprite.update(position, horizontal_orientation)
+        self.render_area.update((self.rect.centerx, self.rect.centery))
 
 class EntitySprite(pygame.sprite.Sprite):
 
@@ -272,27 +272,27 @@ class EntitySprite(pygame.sprite.Sprite):
     walking_freq: float
     walking_amp: float
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_0.png")), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
+        self.rect.x = position[0]
+        self.rect.y = position[1]
         self._old_horizontal_orientation = 1
         self.walking_freq = 1.0
         self.walking_amp = 1.0
     
-    def update(self, pos_x, pos_y, horizontal_orientation):
+    def update(self, position, horizontal_orientation):
 
-        if abs(self.rect.x - pos_x) < 1.0:
+        if abs(self.rect.x - position[0]) < 1.0:
 
-            self.rect.y = pos_y + self.walking_amp * sin(pos_y * self.walking_freq)
+            self.rect.y = position[1] + self.walking_amp * sin(position[1] * self.walking_freq)
         else:
 
-            self.rect.y = pos_y + self.walking_amp * sin(pos_x * self.walking_freq)
+            self.rect.y = position[1] + self.walking_amp * sin(position[0] * self.walking_freq)
 
-        self.rect.x = pos_x
+        self.rect.x = position[0]
 
         if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
 
@@ -307,52 +307,52 @@ class EntitySprite(pygame.sprite.Sprite):
 
 class RenderAreaSprite(pygame.sprite.Sprite):
 
-    def __init__(self, pos_x, pos_y, width, height):
+    def __init__(self, position, size):
 
         super().__init__()
-        self.image = pygame.Surface([width, height])
+        self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
-        self.rect.centerx = pos_x
-        self.rect.centery = pos_y
+        self.rect.centerx = position[0]
+        self.rect.centery = position[1]
     
-    def update(self, pos_x, pos_y):
+    def update(self, position):
 
-        self.rect.centerx = pos_x
-        self.rect.centery = pos_y
+        self.rect.centerx = position[0]
+        self.rect.centery = position[1]
 
 class PlayerBaseSprite(EntityBaseSprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
-        super().__init__(pos_x, pos_y)
+        super().__init__(position)
 
-        self.entity_sprites.add(PlayerSprite(pos_x, pos_y))
-        self.render_area = RenderAreaSprite(self.rect.centerx, self.rect.centery, 56, 56)
-        self.item_sprite = SwordSprite(pos_x, pos_y)
+        self.entity_sprites.add(PlayerSprite(position))
+        self.render_area = RenderAreaSprite((self.rect.centerx, self.rect.centery), (56, 56))
+        self.item_sprite = SwordSprite(position)
 
 class MonsterBaseSprite(EntityBaseSprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
-        super().__init__(pos_x, pos_y)
+        super().__init__(position)
 
-        self.entity_sprites.add(MonsterSprite(pos_x, pos_y))
-        self.item_sprite = SwordSprite(pos_x, pos_y)
+        self.entity_sprites.add(MonsterSprite(position))
+        self.item_sprite = SwordSprite(position)
 
 class PlayerSprite(EntitySprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
-        super().__init__(pos_x, pos_y)
+        super().__init__(position)
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_{0}.png".format(randint(0, 13)))), (32, 32))
         self.walking_freq = 0.3
         self.walking_amp = 2.0
 
 class MonsterSprite(EntitySprite):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
-        super().__init__(pos_x, pos_y)
+        super().__init__(position)
         self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", "Monster_{0}.png".format(randint(0, 24)))), (32, 32)), True, False)
         self.walking_freq = 0.5
         self.walking_amp = 2.0
@@ -361,25 +361,25 @@ class SwordSprite(pygame.sprite.Sprite):
 
     _old_horizontal_orientation: int
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, position):
 
         super().__init__()
 
         self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Itens", "Sword.png")), (14, 28)), -90)
         self.rect = self.image.get_rect()
-        self.rect.x = pos_x + 14
-        self.rect.y = pos_y + 16
+        self.rect.x = position[0] + 14
+        self.rect.y = position[1] + 16
         self._old_horizontal_orientation = 1
     
-    def update(self, pos_x, pos_y, horizontal_orientation):
+    def update(self, position, horizontal_orientation):
 
         if self._old_horizontal_orientation == 1:
 
-            self.rect.x = pos_x + 14
+            self.rect.x = position[0] + 14
         else:
 
-            self.rect.x = pos_x - 14
-        self.rect.y = pos_y + 16
+            self.rect.x = position[0] - 14
+        self.rect.y = position[1] + 16
 
         if horizontal_orientation != 0 and self._old_horizontal_orientation != horizontal_orientation:
 

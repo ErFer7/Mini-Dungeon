@@ -22,9 +22,9 @@ class Room():
     player_spawn_position: list
     entities: dict
     initial_monster_ammount: int
-    collision_sprites: pygame.sprite.RenderPlain()
-    trigger_sprites: pygame.sprite.RenderPlain()
-    sprites: pygame.sprite.RenderPlain()
+    collision_sprites: pygame.sprite.RenderPlain
+    trigger_sprites: pygame.sprite.RenderPlain
+    sprites: pygame.sprite.RenderPlain
 
     def __init__(self, doors, file, screen_size):
 
@@ -60,8 +60,8 @@ class Room():
                         line_list = line.split()
                         room_size = [int(line_list[2]), int(line_list[3])]
 
-                    position[0] = (screen_size[1] - room_size[1] * 32) / 2
-                    position[1] = (screen_size[0] - room_size[0] * 32) / 2
+                    position[0] = (screen_size[0] - room_size[0] * 32) / 2
+                    position[1] = (screen_size[1] - room_size[1] * 32) / 2
                 else:
                     
                     if stage == 2:
@@ -70,75 +70,74 @@ class Room():
 
                             if char == '#':
 
-                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0], char))
+                                self.collision_sprites.add(graphics.WallSprite(position, char))
                             elif char in "0123":
 
                                 if self.doors[int(char)]:
 
-                                    self.doors_leaving_position
-                                    self.trigger_sprites.add(graphics.DoorSprite(position[1], position[0], int(char), char))
+                                    self.trigger_sprites.add(graphics.DoorSprite(position, int(char), char))
                                 else:
 
                                     if char == '0':
 
-                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '#'))
+                                        self.collision_sprites.add(graphics.WallSprite(position, '#'))
                                     elif char == '2':
 
-                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '%'))
+                                        self.collision_sprites.add(graphics.WallSprite(position, '%'))
                                     elif char == '3':
 
-                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '$'))
+                                        self.collision_sprites.add(graphics.WallSprite(position, '$'))
                                     else:
 
-                                        self.collision_sprites.add(graphics.WallSprite(position[1], position[0], '='))
+                                        self.collision_sprites.add(graphics.WallSprite(position, '='))
                             elif char in "@_&":
 
-                                self.sprites.add(graphics.WallSprite(position[1], position[0], char))
+                                self.sprites.add(graphics.WallSprite(position, char))
                             elif char in "[].":
 
                                 if char != '.':
 
-                                    self.sprites.add(graphics.WallSprite(position[1], position[0] - 24, char))
+                                    self.sprites.add(graphics.WallSprite((position[0], position[1] - 24), char))
                                 else:
 
-                                    self.sprites.add(graphics.WallSprite(position[1], position[0] - 24, '#'))
+                                    self.sprites.add(graphics.WallSprite((position[0], position[1] - 24), '#'))
                             elif char in "$%+-=":
 
-                                self.collision_sprites.add(graphics.WallSprite(position[1], position[0], char))
+                                self.collision_sprites.add(graphics.WallSprite(position, char))
                             elif char in "qwer^v<>tyui'":
                                 
-                                self.sprites.add(graphics.FloorSprite(position[1], position[0], char))
+                                self.sprites.add(graphics.FloorSprite(position, char))
 
                                 if randint(0, 100) == 100:
 
-                                    self.sprites.add(graphics.DecorationSprite(position[1], position[0]))
+                                    self.sprites.add(graphics.DecorationSprite(position))
 
-                            position[1] += 32
+                            position[0] += 32
                         
-                        position[0] += 32
-                        position[1] = (screen_size[0] - room_size[0] * 32) / 2
+                        position[0] = (screen_size[0] - room_size[0] * 32) / 2
+                        position[1] += 32
                     elif stage == 3:
 
                         for char in line:
 
                             if char == 'P':
 
-                                self.player_spawn_position = [position[1] + 16, position[0] + 16]
+                                self.player_spawn_position = [position[0] + 16, position[1] + 16]
                             elif char in "0123":
 
                                 if self.doors[int(char)]:
                                     
-                                    self.doors_leaving_position[int(char)] = [position[1] + 16, position[0] + 16]
+                                    self.doors_leaving_position[int(char)] = [position[0] + 16, position[1] + 16]
                             elif char == 'M':
 
-                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[1] + 16, position[0] + 16])
+                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[0] + 16, position[1] + 16])
                                 self.initial_monster_ammount += 1
                                 monster_count += 1
                             
-                            position[1] += 32
+                            position[0] += 32
                         
-                        position[0] += 32
-                        position[1] = (screen_size[0] - room_size[0] * 32) / 2
+                        position[0] = (screen_size[0] - room_size[0] * 32) / 2
+                        position[1] += 32
     
     def delete(self):
 
