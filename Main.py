@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
 '''
-Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
-Github: https://github.com/ErFer7/Mini-Dungeon
+Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC
+(Feito individualmente).
+
+Todo o código é escrito em inglês por questões de padronização. A idéia é seguir as convenções do
+Python a medida do possível.
+
+O código está disponível no Github no link https://github.com/ErFer7/Mini-Dungeon. Lá é possível
+checar as alterações de cada versão.
 '''
 
-# Módulos
 import sys
 import os
 
@@ -20,7 +25,6 @@ import graphics
 import physics
 import UI
 
-# Enumeradores
 class GameState(Enum):
 
     '''
@@ -35,11 +39,9 @@ class GameState(Enum):
     RESTARTING = 6
     EXITING = 7
 
-# Constantes
-VERSION = "0.27.1"
+VERSION = "0.27.2"  # Esta variável é usada apenas para a identificação da versão
 
-# Inicialização
-seed(time_ns())
+seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
 game_state = core.GameState(core.State.MENU, 1, 10)
 render_control = graphics.RenderControl()

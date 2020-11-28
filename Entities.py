@@ -121,35 +121,35 @@ class Player(Entity):
 
             if event.type == pygame.KEYDOWN:
                     
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_a:
 
                     self.direction[0] = -1
                     self.velocity[0] = -self.speed
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_d:
 
                     self.direction[0] = 1
                     self.velocity[0] = self.speed
                     
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_s:
 
                     self.direction[1] = 1
                     self.velocity[1] = self.speed
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_w:
 
                     self.direction[1] = -1
                     self.velocity[1] = -self.speed
                 
             if event.type == pygame.KEYUP:
 
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_a or event.key == pygame.K_d:
 
                     self.direction[0] = 0
                     
-                if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
+                if event.key == pygame.K_s or event.key == pygame.K_w:
 
                     self.direction[1] = 0
             
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_x and not self.is_attacking():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_k and not self.is_attacking():
 
                 self.attack()
         elif self._state == EntityState.STUNNED:
