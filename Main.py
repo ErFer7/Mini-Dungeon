@@ -13,7 +13,6 @@ from enum import Enum
 from random import seed
 from time import time_ns
 
-import psutil
 import pygame
 import core
 import dungeons
@@ -37,26 +36,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.27"
-
-# ETAPA FINAL
-
-# Comentar tudo
-
-# EXTRAS
-
-# Implementar itens diferentes
-# Implementar monstros diferentes
-# Baús
-# Drops
-# Slots
-# Inventário
-# Mais músicas <<< frescura
+VERSION = "0.27.1"
 
 # Inicialização
 seed(time_ns())
-
-process = psutil.Process()
 
 game_state = core.GameState(core.State.MENU, 1, 10)
 render_control = graphics.RenderControl()
