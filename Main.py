@@ -37,7 +37,7 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.23"
+VERSION = "0.23.1"
 
 # ETAPA FINAL
 

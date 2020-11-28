@@ -347,6 +347,14 @@ class MonsterBaseSprite(EntityBaseSprite):
         self.entity_sprites.add(MonsterSprite(position))
         self.item_sprite = SwordSprite(position)
 
+    def update(self, position, horizontal_orientation, attacking):
+
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+
+        self.entity_sprites.update(position, horizontal_orientation)
+        self.render_area.update((self.rect.centerx, self.rect.centery))
+
 class PlayerSprite(EntitySprite):
 
     def __init__(self, position):

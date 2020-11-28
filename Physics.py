@@ -23,7 +23,16 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
 
                 if sub_key != key and not (key.startswith("Monster") and sub_key.startswith("Monster")):
 
-                    if pygame.sprite.collide_rect(entities[key].sprites.sprites()[0].item_sprite, entities[sub_key].sprites.sprites()[0]):
+                    successful_attack = False
+
+                    if key.startswith("Monster"):
+
+                        successful_attack = pygame.sprite.collide_rect(entities[key].sprites.sprites()[0], entities[sub_key].sprites.sprites()[0])
+                    else:
+
+                        successful_attack = pygame.sprite.collide_rect(entities[key].sprites.sprites()[0].item_sprite, entities[sub_key].sprites.sprites()[0])
+
+                    if successful_attack:
 
                         entities[sub_key].change_life(-entities[key].power)
 
