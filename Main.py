@@ -37,11 +37,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.22"
+VERSION = "0.23"
 
 # ETAPA FINAL
 
-# Implementar geração de monstros dinâmica
 # Poções de vida
 # Efeitos sonoros
 # Música

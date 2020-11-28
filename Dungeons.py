@@ -21,18 +21,18 @@ class Room():
     doors_leaving_position:list
     player_spawn_position: list
     entities: dict
-    initial_monster_ammount: int
+    monster_ammount: int
     collision_sprites: pygame.sprite.RenderPlain
     trigger_sprites: pygame.sprite.RenderPlain
     sprites: pygame.sprite.RenderPlain
 
-    def __init__(self, doors, file, screen_size):
+    def __init__(self, doors, file, screen_size, difficulty, initial_monster_ammount):
 
         self.doors = doors[:]
         self.doors_leaving_position = [[], [], [], []]
         self.player_spawn_position = []
         self.entities = {}
-        self.initial_monster_ammount = 0
+        self.monster_ammount = 0
         self.collision_sprites = pygame.sprite.RenderPlain()
         self.trigger_sprites = pygame.sprite.RenderPlain()
         self.sprites = pygame.sprite.RenderPlain()
@@ -40,7 +40,6 @@ class Room():
         position = [0, 0]
 
         stage = 0
-        monster_count = 0
         room_size = []
 
         with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as room_file:
@@ -130,9 +129,10 @@ class Room():
                                     self.doors_leaving_position[int(char)] = [position[0] + 16, position[1] + 16]
                             elif char == 'M':
 
-                                self.entities["Monster_{0}".format(monster_count)] = entities.Monster([position[0] + 16, position[1] + 16])
-                                self.initial_monster_ammount += 1
-                                monster_count += 1
+                                if randint(0, 10) <= difficulty or initial_monster_ammount == 0:
+
+                                    self.entities["Monster_{0}".format(self.monster_ammount)] = entities.Monster([position[0] + 16, position[1] + 16])
+                                    self.monster_ammount += 1
                             
                             position[0] += 32
                         
@@ -235,18 +235,18 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
     rooms = []
     initial_monster_ammount = 0
 
+    player_col = randint(0, width - 1)
+    player_ln = randint(0, heigth - 1)
+
     for i in range(heigth):
 
         rooms.append([])
         for j in range(width):
 
-            room = Room(structure[i][j], choice(os.listdir("Rooms")), screen_size)
-            initial_monster_ammount += room.initial_monster_ammount
+            room = Room(structure[i][j], choice(os.listdir("Rooms")), screen_size, abs(i - player_ln) + abs(j - player_col), initial_monster_ammount)
+            initial_monster_ammount += room.monster_ammount
 
             rooms[i].append(room)
-    
-    player_col = randint(0, width - 1)
-    player_ln = randint(0, heigth - 1)
 
     player = entities.Player(rooms[player_ln][player_col].player_spawn_position)
 
