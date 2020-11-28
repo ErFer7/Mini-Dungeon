@@ -14,7 +14,6 @@ checar as alterações de cada versão.
 import sys
 import os
 
-from enum import Enum
 from random import seed
 from time import time_ns
 
@@ -25,21 +24,7 @@ import graphics
 import physics
 import UI
 
-class GameState(Enum):
-
-    '''
-    Definição dos estados do jogo
-    '''
-
-    MENU = 1
-    INGAME = 2
-    PAUSED = 3
-    WON = 4
-    LOST = 5
-    RESTARTING = 6
-    EXITING = 7
-
-VERSION = "0.27.3" # Esta variável é usada apenas para a identificação da versão
+VERSION = "0.27.4" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 

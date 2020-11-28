@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+'''
+Neste módulo estão definidos os estados do jogo
+'''
+
 from enum import Enum
 
 class State(Enum):
@@ -18,6 +22,10 @@ class State(Enum):
     EXITING = 8
 
 class GameState():
+
+    '''
+    Armazena informações importantes do jogo como nível, nível máximo e estado
+    '''
 
     level: int
     max_level: int
