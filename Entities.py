@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+'''
+Neste módulo estão definidas as entidades
+'''
+
 import os
 
 from enum import Enum
@@ -11,6 +15,10 @@ import graphics
 
 class EntityState(Enum):
 
+    '''
+    Estados da entidade
+    '''
+
     IDLING = 1
     ATTACKING = 2
     STUNNED = 3
@@ -18,24 +26,29 @@ class EntityState(Enum):
 
 class Entity():
 
-    position: list
-    direction: list
-    velocity: list
-    drag: float
-    speed: float
-    life: int
-    _power: float
-    _attack_time: float
-    _attack_time_counter: int
-    _stun_time: float
-    _stun_time_counter: int
-    _state: EntityState
-    sprites: pygame.sprite.RenderPlain
-    attack_sound: pygame.mixer.Sound
-    collision_sound: pygame.mixer.Sound
+    '''
+    As entidades são o jogador, monstros e poções de vida
+    '''
+
+    position: list # Posição da entidade
+    direction: list # Direção
+    velocity: list # Valocidade
+    drag: float # Arrasto
+    speed: float # Aceleração
+    life: int # Vida
+    _power: float # Poder de dano
+    _attack_time: float # Tempo de ataque
+    _attack_time_counter: int # Contador do tempo de ataque
+    _stun_time: float # Tempo de atordoamento
+    _stun_time_counter: int # Contador do tempo de atordoamento
+    _state: EntityState # Estado
+    sprites: pygame.sprite.RenderPlain # Sprites
+    attack_sound: pygame.mixer.Sound # Som de ataque
+    collision_sound: pygame.mixer.Sound # Som de colisão
 
     def __init__(self, position):
 
+        # Inicializa todas as variáveis
         self.position = position[:]
         self.direction = [0, 0]
         self.velocity = [0.0, 0.0]
@@ -53,25 +66,37 @@ class Entity():
     
     def attack(self):
 
+        '''
+        Define o estado como "atacando"
+        '''
+
         self._state = EntityState.ATTACKING
 
     def change_life(self, value):
 
+        '''
+        Muda o valor de vida
+        '''
+
         self.life += value
 
-        if value < 0:
+        if value < 0: # Caso esteja levando dano
 
             self._state = EntityState.STUNNED
 
-        if self.life <= 0.0:
+        if self.life <= 0.0: # Caso de morte
 
             self.life = 0.0
             self._state = EntityState.DEAD
-        elif self.life > 100.0:
+        elif self.life > 100.0: # Caso de recuperação de vida acima do limite
 
             self.life = 100.0
     
     def is_attacking(self):
+
+        '''
+        Método para determinar se a entidade está atacando
+        '''
 
         if self._state == EntityState.ATTACKING:
 
@@ -82,6 +107,10 @@ class Entity():
     
     def is_dead(self):
 
+        '''
+        Método para determinar se a entidade está morta
+        '''
+
         if self._state == EntityState.DEAD:
 
             return True
@@ -91,6 +120,10 @@ class Entity():
 
     def delete(self):
 
+        '''
+        Libera os sprites
+        '''
+
         if len(self.sprites.sprites()) > 0:
 
             self.sprites.sprites()[0].entity_sprites.empty()
@@ -98,14 +131,19 @@ class Entity():
 
 class Player(Entity):
 
-    kill_count: int
-    game_over_sound: pygame.mixer.Sound
-    kill_sound: pygame.mixer.Sound
+    '''
+    Define o jogador
+    '''
+
+    kill_count: int # Contagem de eliminações
+    game_over_sound: pygame.mixer.Sound # Som de fim de jogo
+    kill_sound: pygame.mixer.Sound # Som eliminação
 
     def __init__(self, position):
 
         super().__init__(position)
 
+        # Inicializa as variáveis
         self.speed = 2.0
         self._stun_time = 0.1
         self.power = 3.5
@@ -117,47 +155,52 @@ class Player(Entity):
     
     def update(self, event):
 
+        '''
+        Atualiza os controles e definições do jogador
+        '''
+
+        # Caso o jogador não esteja atordoado e o evento não seja "Nulo"
         if event is not None and self._state != EntityState.STUNNED:
 
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN: # Caso uma tecla esteja sendo pressionada
                     
-                if event.key == pygame.K_a:
+                if event.key == pygame.K_a: # Tecla "A". Movimento para a esquerda
 
                     self.direction[0] = -1
                     self.velocity[0] = -self.speed
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_d: # Tecla "D". Movimento para a direita
 
                     self.direction[0] = 1
                     self.velocity[0] = self.speed
                     
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_s: # Tecla "S". Movimento para baixo
 
                     self.direction[1] = 1
                     self.velocity[1] = self.speed
-                elif event.key == pygame.K_w:
+                elif event.key == pygame.K_w: # Tecla "W". Movimento para cima
 
                     self.direction[1] = -1
                     self.velocity[1] = -self.speed
                 
-            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_k and not self.is_attacking(): # tecla "K". Ataque
 
-                if event.key == pygame.K_a or event.key == pygame.K_d:
+                    self.attack()
+                
+            if event.type == pygame.KEYUP: # Caso uma tecla seja solta
+
+                if event.key == pygame.K_a or event.key == pygame.K_d: # Teclas horizontais
 
                     self.direction[0] = 0
                     
-                if event.key == pygame.K_s or event.key == pygame.K_w:
+                if event.key == pygame.K_s or event.key == pygame.K_w: # Teclas verticais
 
                     self.direction[1] = 0
-            
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_k and not self.is_attacking():
-
-                self.attack()
-        elif self._state == EntityState.STUNNED:
+        elif self._state == EntityState.STUNNED: # Redefine as direções caso o jogador esteja artodoado
 
             self.direction[0] = 0
             self.direction[1] = 0
         
-        if self._state == EntityState.ATTACKING:
+        if self._state == EntityState.ATTACKING: # Faz a contagem do ataque e o redefine caso necessário
 
             self._attack_time_counter += 1
 
@@ -165,7 +208,7 @@ class Player(Entity):
 
                 self._attack_time_counter = 0
                 self._state = EntityState.IDLING
-        elif self._state == EntityState.STUNNED:
+        elif self._state == EntityState.STUNNED: # Faz a contagem do atordoamento e o redefine caso necessário
 
             self._stun_time_counter += 1
 
@@ -175,13 +218,18 @@ class Player(Entity):
                 self._state = EntityState.IDLING
 
 class Monster(Entity):
-    
-    _sight_distance: float
+
+    '''
+    Define o monstro
+    '''
+
+    _sight_distance: float # Define a distância de visão
 
     def __init__(self, position):
 
         super().__init__(position)
 
+        # Inicializa as variáveis
         self.power = 4.5
         self.speed = 1.0
         self._stun_time = 0.1
@@ -191,134 +239,161 @@ class Monster(Entity):
     
     def update(self, player_position, obstacles):
         
-        distance_from_player = sqrt((player_position[0] - self.position[0]) ** 2 + (player_position[1] - self.position[1]) ** 2)
+        '''
+        Define o comportamento do monstro
+        '''
 
-        if distance_from_player <= self._sight_distance and self._state != EntityState.DEAD and self._state != EntityState.STUNNED:
+        # Distância do jogador
+        distance_from_player = sqrt((player_position[0] - self.position[0]) ** 2 +
+                                    (player_position[1] - self.position[1]) ** 2)
 
-            has_line_of_sight = True
+        # Caso o monstro esteja perto o suficiente do jogador e não esteja nem morto ou atordoado
+        if distance_from_player <= self._sight_distance and \
+           self._state != EntityState.DEAD and              \
+           self._state != EntityState.STUNNED:
 
-            ang_coeff = 0.0
+            has_line_of_sight = True # Definição da linha de visão
 
+            ang_coeff = 0.0 # Coeficiente angular da linha de visão
+
+            # Características da linha
             is_vertical = False
             is_horizontal = False
 
-            if (player_position[0] - self.position[0]) == 0.0:
+            if (player_position[0] - self.position[0]) == 0.0: # Caso a variação de X seja 0
 
                 is_vertical = True
-            elif (self.position[1] - player_position[1]) == 0.0:
+            elif (self.position[1] - player_position[1]) == 0.0: # Caso a variação de Y seja 0
 
                 is_horizontal = True
             else:
 
+                # Calcula o coeficiente angular
                 ang_coeff = (self.position[1] - player_position[1]) / (player_position[0] - self.position[0])
 
-            for obstacle in obstacles:
+            for obstacle in obstacles: # Loop para cada obstáculo
                 
+                # Definições do obstáculo
                 obstacle_is_in_range_X = True
                 obstacle_is_in_range_Y = True
 
-                if player_position[0] >= self.position[0]:
+                if player_position[0] >= self.position[0]: # Caso o jogador esteja na direita do monstro
 
+                    # Se o obstáculo não está antes do monstro ou adiante do jogador
                     if obstacle.rect.right <= self.position[0] or obstacle.rect.left >= player_position[0]:
 
                         obstacle_is_in_range_X = False
-                else:
+                else: # Caso o jogador esteja na esquerda do monstro
 
+                    # Se o obstáculo não está antes do monstro ou adiante do jogador
                     if obstacle.rect.left >= self.position[0] or obstacle.rect.right <= player_position[0]:
 
                         obstacle_is_in_range_X = False
 
-                if -player_position[1] >= -self.position[1]:
+                if -player_position[1] >= -self.position[1]: # Caso o jogador esteja acima do monstro
 
+                    # Se o obstáculo não está antes do monstro ou adiante do jogador
                     if -obstacle.rect.top <= -self.position[1] or -obstacle.rect.bottom >= -player_position[1]:
 
                         obstacle_is_in_range_Y = False
-                else:
+                else: # Caso o jogador esteja abaixo do monstro
 
+                    # Se o obstáculo não está antes do monstro ou adiante do jogador
                     if -obstacle.rect.bottom >= -self.position[1] or -obstacle.rect.top <= -player_position[1]:
 
                         obstacle_is_in_range_Y = False
 
+                # Caso o obstáculo esteja no intervalo em que pode estar no caminho
                 if obstacle_is_in_range_X and obstacle_is_in_range_Y:
-
+                    
+                    # Redefine os vértices
                     top_left = (obstacle.rect.topleft[0] - self.position[0], self.position[1] - obstacle.rect.topleft[1])
                     top_right = (obstacle.rect.topright[0] - self.position[0], self.position[1] - obstacle.rect.topright[1])
                     botton_right = (obstacle.rect.bottomright[0] - self.position[0], self.position[1] - obstacle.rect.bottomright[1])
                     botton_left = (obstacle.rect.bottomleft[0] - self.position[0], self.position[1] - obstacle.rect.bottomleft[1])
 
-                    if is_horizontal:
+                    if is_horizontal: # Caso a linha seja horizontal
                         
-                        if top_left[1] == 0:
+                        if top_left[1] == 0: # Intercepta o topo
 
                             has_line_of_sight = False
                             break
 
-                        if botton_left[1] == 0:
+                        if botton_left[1] == 0: # Intercepta o lado infeiror
 
                             has_line_of_sight = False
                             break
 
-                        if botton_left[1] <= 0 and top_left[1] >= 0:
+                        if botton_left[1] <= 0 and top_left[1] >= 0: # Intercepta a esquerda
 
                             has_line_of_sight = False
                             break
 
-                        if botton_right[1] <= 0 and top_right[1] >= 0:
+                        if botton_right[1] <= 0 and top_right[1] >= 0: # Intercepta a direita
 
                             has_line_of_sight = False
                             break
-                    elif is_vertical:
+                    elif is_vertical: # Caso a linha seja vertical
                     
-                        if top_left[0] <= 0 and top_right[0] >= 0:
+                        if top_left[0] <= 0 and top_right[0] >= 0: # Intercepta o topo
                             
                             has_line_of_sight = False
                             break
 
-                        if botton_left[0] <= 0 and botton_right[0] >= 0:
+                        if botton_left[0] <= 0 and botton_right[0] >= 0: # Intercepta o lado infeiror
                             
                             has_line_of_sight = False
                             break
 
-                        if botton_left[0] == 0:
+                        if botton_left[0] == 0: # Intercepta a esquerda
 
                             has_line_of_sight = False
                             break
 
-                        if botton_right[0] == 0:
+                        if botton_right[0] == 0: # Intercepta a direita
 
                             has_line_of_sight = False
                             break
-                    else:
+                    else: # Caso a linha seja uma linha comum
 
-                        if top_left[1] / ang_coeff >= top_left[0] and top_right[1] / ang_coeff <= top_right[0]:
+                        # Intercepta o topo
+                        if top_left[1] / ang_coeff >= top_left[0] and \
+                           top_right[1] / ang_coeff <= top_right[0]:
                             
                             has_line_of_sight = False
                             break
+                        
+                        # Intercepta o lado infeiror
+                        if botton_left[1] / ang_coeff >= botton_left[0] and \
+                           botton_right[1] / ang_coeff <= botton_right[0]:
 
-                        if botton_left[1] / ang_coeff >= botton_left[0] and botton_right[1] / ang_coeff <= botton_right[0]:
+                            has_line_of_sight = False
+                            break
+                        
+                        # Intercepta a esquerda
+                        if botton_left[0] * ang_coeff >= botton_left[1] and \
+                           top_left[0] * ang_coeff <= top_left[1]:
+
+                            has_line_of_sight = False
+                            break
+                        
+                        # Intercepta a direita
+                        if botton_right[0] * ang_coeff >= botton_right[1] and \
+                           top_right[0] * ang_coeff <= top_right[1]:
 
                             has_line_of_sight = False
                             break
 
-                        if botton_left[0] * ang_coeff >= botton_left[1] and top_left[0] * ang_coeff <= top_left[1]:
+            if has_line_of_sight: # Caso o monstro tenha visão do jogador
 
-                            has_line_of_sight = False
-                            break
-
-                        if botton_right[0] * ang_coeff >= botton_right[1] and top_right[0] * ang_coeff <= top_right[1]:
-
-                            has_line_of_sight = False
-                            break
-
-            if has_line_of_sight:
-
+                # Checa se o jogador precisa se mover horizontalmente
                 if abs(player_position[0] - self.position[0]) > 3.0:
 
-                    if self.position[0] < player_position[0]:
+                    if self.position[0] < player_position[0]: # Se o jogador está na direita do monstro
 
                         self.direction[0] = 1   
                         self.velocity[0] = self.speed
-                    elif self.position[0] > player_position[0]:
+                    elif self.position[0] > player_position[0]: # Se o jogador está na esquerda do monstro
 
                         self.direction[0] = -1
                         self.velocity[0] = -self.speed
@@ -326,13 +401,14 @@ class Monster(Entity):
 
                     self.direction[0] = 0
 
+                # Checa se o jogador precisa se mover verticalmente
                 if abs(player_position[1] - self.position[1]) > 3.0:
 
-                    if self.position[1] < player_position[1]:
+                    if self.position[1] < player_position[1]: # Se o jogador está acima do monstro
 
                         self.direction[1] = 1
                         self.velocity[1] = self.speed
-                    elif self.position[1] > player_position[1]:
+                    elif self.position[1] > player_position[1]: # Se o jogador está abaixo do monstro
 
                         self.direction[1] = -1
                         self.velocity[1] = -self.speed
@@ -340,15 +416,15 @@ class Monster(Entity):
 
                     self.direction[1] = 0
 
-                if distance_from_player <= 16 and not self.is_attacking():
+                if distance_from_player <= 16 and not self.is_attacking(): # Verifica se pode atacar
 
-                    self.attack()
-        else:
+                    self.attack() # Ataca o jogador
+        else: # Redefine as direções para 0
 
             self.direction[0] = 0
             self.direction[1] = 0
         
-        if self._state == EntityState.ATTACKING:
+        if self._state == EntityState.ATTACKING: # Faz a contagem do ataque e o redefine caso necessário
 
             self._attack_time_counter += 1
 
@@ -356,7 +432,7 @@ class Monster(Entity):
 
                 self._attack_time_counter = 0
                 self._state = EntityState.IDLING
-        elif self._state == EntityState.STUNNED:
+        elif self._state == EntityState.STUNNED: # Faz a contagem do atordoamento e o redefine caso necessário
 
             self._stun_time_counter += 1
 
@@ -367,18 +443,27 @@ class Monster(Entity):
     
     def drop(self, entities, key):
 
-        if randint(0, 3) == 0:
+        '''
+        Calcula o drop
+        '''
+
+        if randint(0, 3) == 0: # Há 1/4 de chance de gerar uma poção de vida
 
             drop_key = key + "_drop"
             entities[drop_key] = HealthPotion(self.position)
 
 class HealthPotion(Entity):
 
-    heal_sound: pygame.mixer.Sound
+    '''
+    Define uma poção de vida
+    '''
+
+    heal_sound: pygame.mixer.Sound # Define o som da poção
 
     def __init__(self, position):
 
         super().__init__(position)
 
+        # Inicializa as variáveis
         self.heal_sound = pygame.mixer.Sound(os.path.join("Audio", "Heal.wav"))
         self.sprites.add(graphics.HealthPotionBaseSprite((self.position[0] - 16, self.position[1] - 16)))
