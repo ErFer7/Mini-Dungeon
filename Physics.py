@@ -6,7 +6,7 @@ from time import time_ns
 import pygame
 import core
 
-def update_physics(rooms, room_index, render_control, game_state):
+def update_physics(rooms, room_index, render_control, game_state, monster_ammount):
 
     entities = rooms[room_index[0]][room_index[1]].entities
     dead_entities_keys = []
@@ -39,6 +39,16 @@ def update_physics(rooms, room_index, render_control, game_state):
                             if sub_key != "Player":
 
                                 entities["Player"].kill_count += 1
+
+                                if entities["Player"].kill_count == monster_ammount:
+
+                                    game_state.state = core.State.WON
+                                    game_state.level += 1
+
+                                    if game_state.level == 25:
+
+                                        game_state.state = core.State.FINISHED
+
                                 dead_entities_keys.append(sub_key)
                                 render_control.update_all = True
                             else:

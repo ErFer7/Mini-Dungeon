@@ -13,13 +13,16 @@ class State(Enum):
     PAUSED = 3
     WON = 4
     LOST = 5
-    RESTARTING = 6
-    EXITING = 7
+    FINISHED = 6
+    RESTARTING = 7
+    EXITING = 8
 
 class GameState():
 
+    level: int
     state: State
 
-    def __init__(self, state):
+    def __init__(self, state, level):
 
         self.state = state
+        self.level = level
