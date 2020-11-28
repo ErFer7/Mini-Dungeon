@@ -4,8 +4,9 @@ from math import sin, sqrt
 from time import time_ns
 
 import pygame
+import core
 
-def update_physics(rooms, room_index, render_control):
+def update_physics(rooms, room_index, render_control, game_state):
 
     entities = rooms[room_index[0]][room_index[1]].entities
     dead_entities_keys = []
@@ -38,9 +39,11 @@ def update_physics(rooms, room_index, render_control):
                             if sub_key != "Player":
 
                                 entities["Player"].kill_count += 1
-                                
-                            dead_entities_keys.append(sub_key)
-                            render_control.update_all = True
+                                dead_entities_keys.append(sub_key)
+                                render_control.update_all = True
+                            else:
+
+                                game_state.state = core.State.LOST
 
         colliders = pygame.sprite.spritecollide(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].collision_sprites, False)
         trigger = pygame.sprite.spritecollideany(entities[key].sprites.sprites()[0], rooms[room_index[0]][room_index[1]].trigger_sprites)

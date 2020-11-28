@@ -60,8 +60,9 @@ class Entity():
 
             self._state = EntityState.STUNNED
 
-        if self.life <= 0:
+        if self.life <= 0.0:
 
+            self.life = 0.0
             self._state = EntityState.DEAD
     
     def is_attacking(self):

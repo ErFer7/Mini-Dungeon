@@ -82,6 +82,14 @@ class RectangleSprite(pygame.sprite.Sprite):
     
     def update(self, position, size):
 
+        if size[0] == 0:
+
+            size[0] = 1
+        
+        if size[1] == 0:
+
+            size[1] = 1
+
         self.image = pygame.transform.scale(self.image, size)
         self.rect.x = position[0]
         self.rect.y = position[1]

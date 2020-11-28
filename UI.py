@@ -179,7 +179,7 @@ class Bar():
     
     def update(self, value):
 
-        self.sprites.sprites()[1].update((10, 20), (int((self.size[0] / 100.0) * value), 35))
+        self.sprites.sprites()[1].update((10, 20), [int((self.size[0] / 100.0) * value), 35])
     
     def delete(self):
 
@@ -247,6 +247,20 @@ class PauseScreen(UIBase):
         self.buttons["Menu"] = Button(Alignment.CENTER, (0, -200), (400, 100), screen_size)
 
         self.texts.append(Text("CONTINUAR", Alignment.CENTER, (0, 0), 40, (255, 223, 0), screen_size))
+        self.texts.append(Text("MENU", Alignment.CENTER, (0, -200), 40, (255, 223, 0), screen_size))
+
+class GameOverScreen(UIBase):
+
+    def __init__(self, screen_size):
+
+        super().__init__((0, 0), screen_size, screen_size)
+
+        self.texts.append(Text("FIM DE JOGO", Alignment.CENTER, (0, 200), 80, (255, 0, 0), screen_size))
+
+        self.buttons["Restart"] = Button(Alignment.CENTER, (0, 0), (600, 100), screen_size)
+        self.buttons["Menu"] = Button(Alignment.CENTER, (0, -200), (600, 100), screen_size)
+
+        self.texts.append(Text("TENTAR NOVAMENTE", Alignment.CENTER, (0, 0), 40, (255, 223, 0), screen_size))
         self.texts.append(Text("MENU", Alignment.CENTER, (0, -200), 40, (255, 223, 0), screen_size))
 
 class HUD(UIBase):

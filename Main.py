@@ -15,6 +15,7 @@ from time import time_ns
 
 import psutil
 import pygame
+import core
 import dungeons
 import graphics
 import physics
@@ -36,11 +37,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.20.1"
+VERSION = "0.21"
 
 # ETAPA FINAL
 
-# Implementar fim de jogo
 # Implementar progressão de fases e vitória
 # Implementar geração de monstros dinâmica
 # Poções de vida
@@ -57,14 +57,33 @@ VERSION = "0.20.1"
 # Slots
 # Inventário
 
-# Funções
+# Inicialização
+seed(time_ns())
+
+process = psutil.Process()
+
+game_state = core.GameState(core.State.MENU)
+
+render_control = graphics.RenderControl()
+
+pygame.display.init()
+pygame.font.init()
+
+fps_clock = pygame.time.Clock()
+
+display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
+
+menu = UI.Menu((display.get_width(), display.get_height()), VERSION)
+loading_screen = UI.LoadingScreen((display.get_width(), display.get_height()))
+pause_screen = UI.PauseScreen((display.get_width(), display.get_height()))
+HUD = UI.HUD((display.get_width(), display.get_height()))
+game_over_screen = UI.GameOverScreen((display.get_width(), display.get_height()))
+
 def update_events():
 
     '''
     Atualiza os eventos do input
     '''
-
-    global game_state
 
     events = pygame.event.get()
     mouse_position = pygame.mouse.get_pos()
@@ -75,62 +94,83 @@ def update_events():
 
     for event in events:
 
-        if event is not None:
+        if game_state.state == core.State.MENU:
 
-            if game_state == GameState.MENU:
-
+            if event is not None:
+            
                 if event.type == pygame.KEYDOWN:
 
                     if event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
 
-                        game_state = GameState.EXITING
+                        game_state.state = core.State.EXITING
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        game_state = GameState.INGAME
+                        game_state.state = core.State.INGAME
                         break
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if menu.check_buttons(mouse_position) == "Play":
 
-                        game_state = GameState.INGAME
+                        game_state.state = core.State.INGAME
                         break
 
                     if menu.check_buttons(mouse_position) == "Quit":
 
-                        game_state = GameState.EXITING
+                        game_state.state = core.State.EXITING
                         break
-
-        if game_state == GameState.INGAME:
+        elif game_state.state == core.State.INGAME:
 
             if event is not None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
-                game_state = GameState.PAUSED
+                game_state.state = core.State.PAUSED
                 break
 
             player.update(event)
-        elif game_state == GameState.PAUSED:
+        elif game_state.state == core.State.PAUSED:
 
-            if event is not None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if event is not None:
+                
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
-                game_state = GameState.INGAME
-                render_control.update_all = True
-                break
-
-            if event is not None and event.type == pygame.MOUSEBUTTONDOWN:
-
-                if pause_screen.check_buttons(mouse_position) == "Continue":
-
-                    game_state = GameState.INGAME
+                    game_state.state = core.State.INGAME
                     render_control.update_all = True
                     break
 
-                if pause_screen.check_buttons(mouse_position) == "Menu":
+                if event.type == pygame.MOUSEBUTTONDOWN:
 
-                    game_state = GameState.MENU
-                    render_control.update_all = True
+                    if pause_screen.check_buttons(mouse_position) == "Continue":
+
+                        game_state.state = core.State.INGAME
+                        render_control.update_all = True
+                        break
+
+                    if pause_screen.check_buttons(mouse_position) == "Menu":
+
+                        game_state.state = core.State.MENU
+                        render_control.update_all = True
+                        break
+        elif game_state.state == core.State.LOST:
+
+            if event is not None:
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+
+                    game_state.state = core.State.MENU
                     break
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    if game_over_screen.check_buttons(mouse_position) == "Restart":
+
+                        game_state.state = core.State.INGAME
+                        break
+
+                    if game_over_screen.check_buttons(mouse_position) == "Menu":
+
+                        game_state.state = core.State.MENU
+                        break
 
 def reset_game(rooms = None):
 
@@ -148,34 +188,13 @@ def reset_game(rooms = None):
 
         del rooms
 
-# Inicialização
-seed(time_ns())
-
-process = psutil.Process()
-game_state = GameState.MENU
-render_control = graphics.RenderControl()
-
-pygame.display.init()
-pygame.font.init()
-
-fps_clock = pygame.time.Clock()
-
-font = pygame.font.Font(os.path.join("Fonts", "joystix monospace.ttf"), 15)
-
-display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
-
-menu = UI.Menu((display.get_width(), display.get_height()), VERSION)
-loading_screen = UI.LoadingScreen((display.get_width(), display.get_height()))
-pause_screen = UI.PauseScreen((display.get_width(), display.get_height()))
-HUD = UI.HUD((display.get_width(), display.get_height()))
-
 # Loop principal
-while game_state != GameState.EXITING:
+while game_state.state != core.State.EXITING:
 
     menu.update(display)
 
     # Loop do menu
-    while game_state == GameState.MENU:
+    while game_state.state == core.State.MENU:
 
         # MENU
         update_events()
@@ -183,20 +202,19 @@ while game_state != GameState.EXITING:
         pygame.display.update()
         fps_clock.tick(60)
 
-    if game_state == GameState.INGAME:
+    if game_state.state == core.State.INGAME:
 
         loading_screen.update(display)
         player, rooms, room_index, initial_monster_ammount = dungeons.generate_dungeon([display.get_width(), display.get_height()], 5, 5)
         render_control.update_all = True
 
-    while game_state == GameState.INGAME or game_state == GameState.PAUSED:
+    while game_state.state == core.State.INGAME or game_state.state == core.State.PAUSED:
 
-        #update_UI()
         update_events()
 
-        if game_state != GameState.PAUSED:
+        if game_state.state != core.State.PAUSED:
 
-            physics.update_physics(rooms, room_index, render_control)
+            physics.update_physics(rooms, room_index, render_control, game_state)
 
             HUD.update(display, player.life,                                        \
                         "{0:.2f} FPS".format(fps_clock.get_fps()),                  \
@@ -210,7 +228,17 @@ while game_state != GameState.EXITING:
 
         fps_clock.tick(60)
 
-    reset_game(rooms)
+    while game_state.state == core.State.LOST:
+
+        update_events()
+        game_over_screen.update(display)
+        fps_clock.tick(60)
+
+    try:
+
+        reset_game(rooms)
+    except NameError:
+        continue
 
 pygame.quit()
 sys.exit()
