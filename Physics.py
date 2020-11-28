@@ -3,7 +3,7 @@
 import pygame
 import core
 
-def update_physics(rooms, room_index, render_control, game_state, monster_ammount):
+def update_physics(rooms, room_index, render_control, game_state, monster_ammount, sound_channel):
 
     entities = rooms[room_index[0]][room_index[1]].entities
     dead_entities_keys = []
@@ -34,7 +34,9 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                         if successful_attack:
 
                             entities[sub_key].change_life(-entities[key].power)
-                            entities[key].attack_sound.play()
+
+                            sound_channel.stop()
+                            sound_channel.play(entities[key].attack_sound)
 
                             if entities[sub_key].position[0] >= entities[key].position[0]:
 
@@ -49,12 +51,15 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
 
                                     entities["Player"].kill_count += 1
 
+                                    sound_channel.stop()
+                                    sound_channel.play(entities["Player"].kill_sound)
+
                                     if entities["Player"].kill_count == monster_ammount:
 
                                         game_state.state = core.State.WON
                                         game_state.level += 1
 
-                                        if game_state.level == 25:
+                                        if game_state.level == game_state.max_level:
 
                                             game_state.state = core.State.FINISHED
 
@@ -62,12 +67,17 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                     render_control.update_all = True
                                 else:
 
+                                    sound_channel.stop()
+                                    sound_channel.play(entities["Player"].game_over_sound)
+
                                     game_state.state = core.State.LOST
                     else:
 
                         if sub_key == "Player" and pygame.sprite.collide_rect(entities[key].sprites.sprites()[0], entities[sub_key].sprites.sprites()[0]):
 
-                            entities[key].heal_sound.play()
+                            sound_channel.stop()
+                            sound_channel.play(entities[key].heal_sound)
+
                             entities[sub_key].change_life(20)
                             dead_entities_keys.append(key)
 
@@ -83,7 +93,8 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                 entities[key].velocity[0] = 0.0
                 entities[key].velocity[1] = 0.0
                 
-                entities[key].collision_sound.play()
+                sound_channel.stop()
+                sound_channel.play(entities[key].collision_sound)
 
         if key.startswith("Monster"):
 

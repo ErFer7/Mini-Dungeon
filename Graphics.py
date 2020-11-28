@@ -194,6 +194,17 @@ class WallSprite(pygame.sprite.Sprite):
         self.rect.x = position[0]
         self.rect.y = position[1]
 
+class BoxSprite(pygame.sprite.Sprite):
+
+    def __init__(self, position):
+
+        super().__init__()
+
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Obstacles", "Box.png")), (32, 32))
+        self.rect = self.image.get_rect()
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+
 class DoorSprite(pygame.sprite.Sprite):
 
     direction: int
@@ -368,7 +379,7 @@ class PlayerSprite(EntitySprite):
     def __init__(self, position):
 
         super().__init__(position)
-        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_{0}.png".format(randint(0, 13)))), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_0.png")), (32, 32))
         self.walking_freq = 0.25
         self.walking_amp = 2.0
 

@@ -67,9 +67,14 @@ class Room():
 
                         for char in line:
 
-                            if char == '#':
+                            if char in '#;':
 
-                                self.collision_sprites.add(graphics.WallSprite(position, char))
+                                if char == '#':
+
+                                    self.collision_sprites.add(graphics.WallSprite(position, char))
+                                else:
+
+                                    self.collision_sprites.add(graphics.BoxSprite(position))
                             elif char in "0123":
 
                                 if self.doors[int(char)]:
@@ -107,7 +112,7 @@ class Room():
                                 
                                 self.sprites.add(graphics.FloorSprite(position, char))
 
-                                if randint(0, 100) == 100:
+                                if randint(0, 110) == 110:
 
                                     self.sprites.add(graphics.DecorationSprite(position))
 

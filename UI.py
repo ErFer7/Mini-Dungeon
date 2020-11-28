@@ -309,9 +309,9 @@ class HUD(UIBase):
         self.texts.append(Text("", Alignment.TOP_LEFT, (15, 87), 15, (255, 255, 255), screen_size))
         self.texts.append(Text("", Alignment.TOP_RIGHT, (120, 0), 15, (255, 255, 255), screen_size))
         self.texts.append(Text("", Alignment.TOP_RIGHT, (160, 20), 15, (255, 255, 255), screen_size))
-        self.texts.append(Text("", Alignment.TOP_RIGHT, (260, 40), 15, (255, 255, 255), screen_size))
+        self.texts.append(Text("", Alignment.TOP_RIGHT, (160, 40), 15, (255, 255, 255), screen_size))
     
-    def update(self, display, life, kill_count, FPS, room, memory, monster_ammount):
+    def update(self, display, life, kill_count, FPS, room, monster_ammount, level, max_level):
 
         self.surface.fill((20, 20, 20))
         
@@ -325,7 +325,7 @@ class HUD(UIBase):
         self.texts[1].update("{0}/{1} Monstros eliminados".format(kill_count, monster_ammount))
         self.texts[2].update("{0:.2f} FPS".format(FPS))
         self.texts[3].update(room)
-        self.texts[4].update("Memória: {0} kB".format(memory))
+        self.texts[4].update("Nível: {0}/{1}".format(level, max_level))
 
         for text in self.texts:
 

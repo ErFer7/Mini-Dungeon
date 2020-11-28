@@ -37,11 +37,11 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.26"
+VERSION = "0.27"
 
 # ETAPA FINAL
 
-# Mais mapas
+# Comentar tudo
 
 # EXTRAS
 
@@ -58,17 +58,20 @@ seed(time_ns())
 
 process = psutil.Process()
 
-game_state = core.GameState(core.State.MENU, 1)
+game_state = core.GameState(core.State.MENU, 1, 10)
 render_control = graphics.RenderControl()
-#audio_control = audio.SoundControl()
 
 pygame.display.init()
 pygame.font.init()
 pygame.mixer.init()
 
 fps_clock = pygame.time.Clock()
-music = pygame.mixer.Sound(os.path.join("Audio", "Music.wav"))
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
+
+music_channel = pygame.mixer.Channel(0)
+sound_effects_channel = pygame.mixer.Channel(1)
+
+music = pygame.mixer.Sound(os.path.join("Audio", "Music.wav"))
 
 menu = UI.Menu((display.get_width(), display.get_height()), VERSION)
 loading_screen = UI.LoadingScreen((display.get_width(), display.get_height()))
@@ -105,7 +108,8 @@ def update_events():
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        menu.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(menu.selection_sound)
                         game_state.state = core.State.INGAME
                         game_state.level = 1
                         break
@@ -114,7 +118,8 @@ def update_events():
 
                     if menu.check_buttons(mouse_position) == "Play":
 
-                        menu.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(menu.selection_sound)
                         game_state.state = core.State.INGAME
                         game_state.level = 1
                         break
@@ -127,7 +132,8 @@ def update_events():
 
             if event is not None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
-                pause_screen.selection_sound.play()
+                sound_effects_channel.stop()
+                sound_effects_channel.play(pause_screen.selection_sound)
                 game_state.state = core.State.PAUSED
                 break
 
@@ -140,12 +146,14 @@ def update_events():
                     
                     if event.key == pygame.K_ESCAPE:
                         
-                        pause_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(pause_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        pause_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(pause_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         render_control.update_all = True
                         break
@@ -154,14 +162,16 @@ def update_events():
 
                     if pause_screen.check_buttons(mouse_position) == "Continue":
 
-                        pause_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(pause_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         render_control.update_all = True
                         break
 
                     if pause_screen.check_buttons(mouse_position) == "Menu":
 
-                        pause_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(pause_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
         elif game_state.state == core.State.LOST:
@@ -172,12 +182,14 @@ def update_events():
                     
                     if event.key == pygame.K_ESCAPE:
 
-                        game_over_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(game_over_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        game_over_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(game_over_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         break
 
@@ -185,13 +197,15 @@ def update_events():
 
                     if game_over_screen.check_buttons(mouse_position) == "Restart":
 
-                        game_over_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(game_over_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         break
 
                     if game_over_screen.check_buttons(mouse_position) == "Menu":
 
-                        game_over_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(game_over_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
         elif game_state.state == core.State.WON:
@@ -202,12 +216,14 @@ def update_events():
                     
                     if event.key == pygame.K_ESCAPE:
 
-                        victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(victory_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(victory_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         break
 
@@ -215,13 +231,15 @@ def update_events():
 
                     if victory_screen.check_buttons(mouse_position) == "Next":
 
-                        victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(victory_screen.selection_sound)
                         game_state.state = core.State.INGAME
                         break
 
                     if victory_screen.check_buttons(mouse_position) == "Menu":
 
-                        victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(victory_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
         elif game_state.state == core.State.FINISHED:
@@ -236,7 +254,8 @@ def update_events():
                         break
                     elif event.key == pygame.K_RETURN:
 
-                        final_victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(final_victory_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
 
@@ -244,7 +263,8 @@ def update_events():
 
                     if final_victory_screen.check_buttons(mouse_position) == "Menu":
 
-                        final_victory_screen.selection_sound.play()
+                        sound_effects_channel.stop()
+                        sound_effects_channel.play(final_victory_screen.selection_sound)
                         game_state.state = core.State.MENU
                         break
 
@@ -270,7 +290,8 @@ def reset_game(rooms = None):
         del rooms
 
 music.set_volume(0.5)
-music.play(-1)
+music_channel.play(music, -1)
+
 # Loop principal
 while game_state.state != core.State.EXITING:
 
@@ -297,11 +318,11 @@ while game_state.state != core.State.EXITING:
 
         if game_state.state != core.State.PAUSED:
 
-            physics.update_physics(rooms, room_index, render_control, game_state, initial_monster_ammount)
+            physics.update_physics(rooms, room_index, render_control, game_state, initial_monster_ammount, sound_effects_channel)
 
             HUD.update(display, player.life, player.kill_count, fps_clock.get_fps(),    \
                         "Sala: ({0}, {1})".format(room_index[0], room_index[1]),        \
-                        process.memory_info()[0] / 1000, initial_monster_ammount)
+                        initial_monster_ammount, game_state.level, game_state.max_level)
 
             render_control.update_graphics(rooms[room_index[0]][room_index[1]], display)
         else:

@@ -20,9 +20,11 @@ class State(Enum):
 class GameState():
 
     level: int
+    max_level: int
     state: State
 
-    def __init__(self, state, level):
+    def __init__(self, state, level, max_level):
 
         self.state = state
         self.level = level
+        self.max_level = max_level

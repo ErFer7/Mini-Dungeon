@@ -99,6 +99,8 @@ class Entity():
 class Player(Entity):
 
     kill_count: int
+    game_over_sound: pygame.mixer.Sound
+    kill_sound: pygame.mixer.Sound
 
     def __init__(self, position):
 
@@ -109,11 +111,13 @@ class Player(Entity):
         self.power = 3.5
         self.kill_count = 0
         self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Sword attack.wav"))
+        self.game_over_sound = pygame.mixer.Sound(os.path.join("Audio", "Game over.wav"))
+        self.kill_sound = pygame.mixer.Sound(os.path.join("Audio", "Kill.wav"))
         self.sprites.add(graphics.PlayerBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, event):
 
-        if event != None and self._state != EntityState.STUNNED:
+        if event is not None and self._state != EntityState.STUNNED:
 
             if event.type == pygame.KEYDOWN:
                     
@@ -145,7 +149,7 @@ class Player(Entity):
 
                     self.direction[1] = 0
             
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_x and not self.is_attacking():
 
                 self.attack()
         elif self._state == EntityState.STUNNED:
@@ -178,9 +182,10 @@ class Monster(Entity):
 
         super().__init__(position)
 
-        self.power = 3.0
+        self.power = 4.5
         self.speed = 1.0
-        self._sight_distance = 300.0
+        self._stun_time = 0.1
+        self._sight_distance = 400.0
         self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Monster attack.wav"))
         self.sprites.add(graphics.MonsterBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
@@ -335,7 +340,7 @@ class Monster(Entity):
 
                     self.direction[1] = 0
 
-                if distance_from_player <= 16:
+                if distance_from_player <= 16 and not self.is_attacking():
 
                     self.attack()
         else:
@@ -362,7 +367,7 @@ class Monster(Entity):
     
     def drop(self, entities, key):
 
-        if randint(0, 3) == 0 or True:
+        if randint(0, 3) == 0:
 
             drop_key = key + "_drop"
             entities[drop_key] = HealthPotion(self.position)
