@@ -256,8 +256,8 @@ class EntityBaseSprite(pygame.sprite.Sprite):
     
     def update(self, position, horizontal_orientation, attacking):
 
-        self.rect.x = position[0]
-        self.rect.y = position[1]
+        self.rect.x = position[0] - 16
+        self.rect.y = position[1] - 16
 
         if attacking != self._old_attacking_state:
 
@@ -270,8 +270,8 @@ class EntityBaseSprite(pygame.sprite.Sprite):
 
         self._old_attacking_state = attacking
 
-        self.entity_sprites.update(position, horizontal_orientation)
-        self.item_sprite.update(position, horizontal_orientation)
+        self.entity_sprites.update((position[0] - 16, position[1] - 16), horizontal_orientation)
+        self.item_sprite.update((position[0] - 16, position[1] - 16), horizontal_orientation)
         self.render_area.update((self.rect.centerx, self.rect.centery))
 
 class EntitySprite(pygame.sprite.Sprite):
@@ -349,10 +349,10 @@ class MonsterBaseSprite(EntityBaseSprite):
 
     def update(self, position, horizontal_orientation, attacking):
 
-        self.rect.x = position[0]
-        self.rect.y = position[1]
+        self.rect.x = position[0] - 16
+        self.rect.y = position[1] - 16
 
-        self.entity_sprites.update(position, horizontal_orientation)
+        self.entity_sprites.update((position[0] - 16, position[1] - 16), horizontal_orientation)
         self.render_area.update((self.rect.centerx, self.rect.centery))
 
 class HealthPotionBaseSprite(EntityBaseSprite):
@@ -369,7 +369,7 @@ class PlayerSprite(EntitySprite):
 
         super().__init__(position)
         self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Chars", "Char_{0}.png".format(randint(0, 13)))), (32, 32))
-        self.walking_freq = 0.3
+        self.walking_freq = 0.25
         self.walking_amp = 2.0
 
 class MonsterSprite(EntitySprite):

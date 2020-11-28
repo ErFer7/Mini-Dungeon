@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from enum import Enum
 from math import sqrt
 from random import randint
@@ -29,6 +31,8 @@ class Entity():
     _stun_time_counter: int
     _state: EntityState
     sprites: pygame.sprite.RenderPlain
+    attack_sound: pygame.mixer.Sound
+    collision_sound: pygame.mixer.Sound
 
     def __init__(self, position):
 
@@ -45,6 +49,7 @@ class Entity():
         self._stun_time_counter = 0
         self._state = EntityState.IDLING
         self.sprites = pygame.sprite.RenderPlain()
+        self.collision_sound = pygame.mixer.Sound(os.path.join("Audio", "Collision.wav"))
     
     def attack(self):
 
@@ -101,8 +106,9 @@ class Player(Entity):
 
         self.speed = 2.0
         self._stun_time = 0.1
-        self.power = 2.5
+        self.power = 3.5
         self.kill_count = 0
+        self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Sword attack.wav"))
         self.sprites.add(graphics.PlayerBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, event):
@@ -172,7 +178,10 @@ class Monster(Entity):
 
         super().__init__(position)
 
+        self.power = 3.0
+        self.speed = 1.0
         self._sight_distance = 300.0
+        self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Monster attack.wav"))
         self.sprites.add(graphics.MonsterBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, player_position, obstacles):
@@ -353,15 +362,18 @@ class Monster(Entity):
     
     def drop(self, entities, key):
 
-        if randint(0, 3) == 0:
+        if randint(0, 3) == 0 or True:
 
             drop_key = key + "_drop"
             entities[drop_key] = HealthPotion(self.position)
 
 class HealthPotion(Entity):
 
+    heal_sound: pygame.mixer.Sound
+
     def __init__(self, position):
 
         super().__init__(position)
 
+        self.heal_sound = pygame.mixer.Sound(os.path.join("Audio", "Heal.wav"))
         self.sprites.add(graphics.HealthPotionBaseSprite((self.position[0] - 16, self.position[1] - 16)))

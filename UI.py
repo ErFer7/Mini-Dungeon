@@ -25,6 +25,7 @@ class UIBase():
     texts: list
     buttons: dict
     surface: pygame.Surface((0, 0))
+    selection_sound: pygame.mixer.Sound
 
     def __init__(self, position, size, screen_size):
 
@@ -33,6 +34,7 @@ class UIBase():
         self.texts = []
         self.buttons = {}
         self.surface = pygame.Surface(size)
+        self.selection_sound = pygame.mixer.Sound(os.path.join("Audio", "Selection.wav"))
     
     def update(self, display):
 

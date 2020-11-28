@@ -34,6 +34,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                         if successful_attack:
 
                             entities[sub_key].change_life(-entities[key].power)
+                            entities[key].attack_sound.play()
 
                             if entities[sub_key].position[0] >= entities[key].position[0]:
 
@@ -66,6 +67,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
 
                         if sub_key == "Player" and pygame.sprite.collide_rect(entities[key].sprites.sprites()[0], entities[sub_key].sprites.sprites()[0]):
 
+                            entities[key].heal_sound.play()
                             entities[sub_key].change_life(20)
                             dead_entities_keys.append(key)
 
@@ -80,11 +82,13 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                 entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
                 entities[key].velocity[0] = 0.0
                 entities[key].velocity[1] = 0.0
+                
+                entities[key].collision_sound.play()
 
         if key.startswith("Monster"):
 
             if trigger is not None:
-                    
+                
                 entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
                 entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
                 entities[key].velocity[0] = 0.0
@@ -146,13 +150,13 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                 rooms[room_index[0]][room_index[1]].entities[key].position[0] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][0] - 10
                 rooms[room_index[0]][room_index[1]].entities[key].position[1] = rooms[room_index[0]][room_index[1]].doors_leaving_position[2][1]
             
-            rooms[room_index[0]][room_index[1]].entities[key].sprites.update((rooms[room_index[0]][room_index[1]].entities[key].position[0] - 16, rooms[room_index[0]][room_index[1]].entities[key].position[1] - 16), rooms[room_index[0]][room_index[1]].entities[key].direction[0], rooms[room_index[0]][room_index[1]].entities[key].is_attacking())
+            rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position, rooms[room_index[0]][room_index[1]].entities[key].direction[0], rooms[room_index[0]][room_index[1]].entities[key].is_attacking())
             render_control.update_all = True
             break
         
         if not key.endswith("drop"):
 
-            rooms[room_index[0]][room_index[1]].entities[key].sprites.update((rooms[room_index[0]][room_index[1]].entities[key].position[0] - 16, rooms[room_index[0]][room_index[1]].entities[key].position[1] - 16), rooms[room_index[0]][room_index[1]].entities[key].direction[0], rooms[room_index[0]][room_index[1]].entities[key].is_attacking())
+            rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position, rooms[room_index[0]][room_index[1]].entities[key].direction[0], rooms[room_index[0]][room_index[1]].entities[key].is_attacking())
 
     for key in dead_entities_keys:
 

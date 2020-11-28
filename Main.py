@@ -19,6 +19,7 @@ import dungeons
 import graphics
 import physics
 import UI
+import audio
 
 # Enumeradores
 class GameState(Enum):
@@ -36,11 +37,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.24.1"
+VERSION = "0.25"
 
 # ETAPA FINAL
 
-# Efeitos sonoros
 # Música
 # Mais mapas
 
@@ -60,9 +60,11 @@ process = psutil.Process()
 
 game_state = core.GameState(core.State.MENU, 1)
 render_control = graphics.RenderControl()
+#audio_control = audio.SoundControl()
 
 pygame.display.init()
 pygame.font.init()
+pygame.mixer.init()
 
 fps_clock = pygame.time.Clock()
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
@@ -102,6 +104,7 @@ def update_events():
                         break
                     elif event.key == pygame.K_RETURN:
 
+                        menu.selection_sound.play()
                         game_state.state = core.State.INGAME
                         game_state.level = 1
                         break
@@ -110,6 +113,7 @@ def update_events():
 
                     if menu.check_buttons(mouse_position) == "Play":
 
+                        menu.selection_sound.play()
                         game_state.state = core.State.INGAME
                         game_state.level = 1
                         break
@@ -122,6 +126,7 @@ def update_events():
 
             if event is not None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
+                pause_screen.selection_sound.play()
                 game_state.state = core.State.PAUSED
                 break
 
@@ -130,78 +135,115 @@ def update_events():
 
             if event is not None:
                 
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:
+                    
+                    if event.key == pygame.K_ESCAPE:
+                        
+                        pause_screen.selection_sound.play()
+                        game_state.state = core.State.MENU
+                        break
+                    elif event.key == pygame.K_RETURN:
 
-                    game_state.state = core.State.INGAME
-                    render_control.update_all = True
-                    break
+                        pause_screen.selection_sound.play()
+                        game_state.state = core.State.INGAME
+                        render_control.update_all = True
+                        break
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if pause_screen.check_buttons(mouse_position) == "Continue":
 
+                        pause_screen.selection_sound.play()
                         game_state.state = core.State.INGAME
                         render_control.update_all = True
                         break
 
                     if pause_screen.check_buttons(mouse_position) == "Menu":
 
+                        pause_screen.selection_sound.play()
                         game_state.state = core.State.MENU
-                        render_control.update_all = True
                         break
         elif game_state.state == core.State.LOST:
 
             if event is not None:
 
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:
+                    
+                    if event.key == pygame.K_ESCAPE:
 
-                    game_state.state = core.State.MENU
-                    break
+                        game_over_screen.selection_sound.play()
+                        game_state.state = core.State.MENU
+                        break
+                    elif event.key == pygame.K_RETURN:
+
+                        game_over_screen.selection_sound.play()
+                        game_state.state = core.State.INGAME
+                        break
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if game_over_screen.check_buttons(mouse_position) == "Restart":
 
+                        game_over_screen.selection_sound.play()
                         game_state.state = core.State.INGAME
                         break
 
                     if game_over_screen.check_buttons(mouse_position) == "Menu":
 
+                        game_over_screen.selection_sound.play()
                         game_state.state = core.State.MENU
                         break
         elif game_state.state == core.State.WON:
 
             if event is not None:
 
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:
+                    
+                    if event.key == pygame.K_ESCAPE:
 
-                    game_state.state = core.State.MENU
-                    break
+                        victory_screen.selection_sound.play()
+                        game_state.state = core.State.MENU
+                        break
+                    elif event.key == pygame.K_RETURN:
+
+                        victory_screen.selection_sound.play()
+                        game_state.state = core.State.INGAME
+                        break
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if victory_screen.check_buttons(mouse_position) == "Next":
 
+                        victory_screen.selection_sound.play()
                         game_state.state = core.State.INGAME
                         break
 
                     if victory_screen.check_buttons(mouse_position) == "Menu":
 
+                        victory_screen.selection_sound.play()
                         game_state.state = core.State.MENU
                         break
         elif game_state.state == core.State.FINISHED:
 
             if event is not None:
 
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:
+                    
+                    if event.key == pygame.K_ESCAPE:
 
-                    game_state.state = core.State.MENU
-                    break
+                        game_state.state = core.State.EXITING
+                        break
+                    elif event.key == pygame.K_RETURN:
+
+                        final_victory_screen.selection_sound.play()
+                        game_state.state = core.State.MENU
+                        break
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if final_victory_screen.check_buttons(mouse_position) == "Menu":
 
+                        final_victory_screen.selection_sound.play()
                         game_state.state = core.State.MENU
                         break
 
