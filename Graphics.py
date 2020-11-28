@@ -355,6 +355,14 @@ class MonsterBaseSprite(EntityBaseSprite):
         self.entity_sprites.update(position, horizontal_orientation)
         self.render_area.update((self.rect.centerx, self.rect.centery))
 
+class HealthPotionBaseSprite(EntityBaseSprite):
+
+    def __init__(self, position):
+
+        super().__init__(position)
+
+        self.entity_sprites.add(HealthPotionSprite(position))
+
 class PlayerSprite(EntitySprite):
 
     def __init__(self, position):
@@ -406,3 +414,14 @@ class SwordSprite(pygame.sprite.Sprite):
 
                 self.image = pygame.transform.flip(self.image, True, False)
             self._old_horizontal_orientation = horizontal_orientation
+
+class HealthPotionSprite(pygame.sprite.Sprite):
+
+    def __init__(self, position):
+
+        super().__init__()
+
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Itens", "Health_Potion.png")), (32, 32))
+        self.rect = self.image.get_rect()
+        self.rect.x = position[0]
+        self.rect.y = position[1]

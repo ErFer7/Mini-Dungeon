@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
+from math import sqrt
+from random import randint
 
 import pygame
 import graphics
-
-from math import sqrt
 
 class EntityState(Enum):
 
@@ -22,7 +22,6 @@ class Entity():
     drag: float
     speed: float
     life: int
-    kill_count: int
     _power: float
     _attack_time: float
     _attack_time_counter: int
@@ -40,7 +39,6 @@ class Entity():
         self.speed = 1.0
         self.life = 100.0
         self.power = 1.0
-        self.kill_count = 0
         self._attack_time = 0.1
         self._attack_time_counter = 0
         self._stun_time = 0.5
@@ -64,6 +62,9 @@ class Entity():
 
             self.life = 0.0
             self._state = EntityState.DEAD
+        elif self.life > 100.0:
+
+            self.life = 100.0
     
     def is_attacking(self):
 
@@ -82,7 +83,7 @@ class Entity():
         else:
 
             return False
-    
+
     def delete(self):
 
         if len(self.sprites.sprites()) > 0:
@@ -92,6 +93,8 @@ class Entity():
 
 class Player(Entity):
 
+    kill_count: int
+
     def __init__(self, position):
 
         super().__init__(position)
@@ -99,6 +102,7 @@ class Player(Entity):
         self.speed = 2.0
         self._stun_time = 0.1
         self.power = 2.5
+        self.kill_count = 0
         self.sprites.add(graphics.PlayerBaseSprite((self.position[0] - 16, self.position[1] - 16)))
     
     def update(self, event):
@@ -346,3 +350,18 @@ class Monster(Entity):
 
                 self._stun_time_counter = 0
                 self._state = EntityState.IDLING
+    
+    def drop(self, entities, key):
+
+        if randint(0, 3) == 0:
+
+            drop_key = key + "_drop"
+            entities[drop_key] = HealthPotion(self.position)
+
+class HealthPotion(Entity):
+
+    def __init__(self, position):
+
+        super().__init__(position)
+
+        self.sprites.add(graphics.HealthPotionBaseSprite((self.position[0] - 16, self.position[1] - 16)))

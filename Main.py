@@ -6,7 +6,6 @@ Github: https://github.com/ErFer7/Mini-Dungeon
 '''
 
 # Módulos
-import os
 import sys
 
 from enum import Enum
@@ -37,11 +36,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.23.1"
+VERSION = "0.24.1"
 
 # ETAPA FINAL
 
-# Poções de vida
 # Efeitos sonoros
 # Música
 # Mais mapas
