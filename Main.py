@@ -7,6 +7,7 @@ Github: https://github.com/ErFer7/Mini-Dungeon
 
 # Módulos
 import sys
+import os
 
 from enum import Enum
 from random import seed
@@ -19,7 +20,6 @@ import dungeons
 import graphics
 import physics
 import UI
-import audio
 
 # Enumeradores
 class GameState(Enum):
@@ -37,11 +37,10 @@ class GameState(Enum):
     EXITING = 7
 
 # Constantes
-VERSION = "0.25"
+VERSION = "0.26"
 
 # ETAPA FINAL
 
-# Música
 # Mais mapas
 
 # EXTRAS
@@ -52,6 +51,7 @@ VERSION = "0.25"
 # Drops
 # Slots
 # Inventário
+# Mais músicas <<< frescura
 
 # Inicialização
 seed(time_ns())
@@ -67,6 +67,7 @@ pygame.font.init()
 pygame.mixer.init()
 
 fps_clock = pygame.time.Clock()
+music = pygame.mixer.Sound(os.path.join("Audio", "Music.wav"))
 display = pygame.display.set_mode(flags = pygame.FULLSCREEN)
 
 menu = UI.Menu((display.get_width(), display.get_height()), VERSION)
@@ -268,6 +269,8 @@ def reset_game(rooms = None):
 
         del rooms
 
+music.set_volume(0.5)
+music.play(-1)
 # Loop principal
 while game_state.state != core.State.EXITING:
 
