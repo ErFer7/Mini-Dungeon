@@ -146,7 +146,7 @@ class Player(Entity):
         # Inicializa as variáveis
         self.speed = 2.0
         self._stun_time = 0.1
-        self.power = 3.5
+        self.power = 7.0
         self.kill_count = 0
         self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Sword attack.wav"))
         self.game_over_sound = pygame.mixer.Sound(os.path.join("Audio", "Game over.wav"))
@@ -230,7 +230,7 @@ class Monster(Entity):
         super().__init__(position)
 
         # Inicializa as variáveis
-        self.power = 4.5
+        self.power = 7.5
         self.speed = 1.0
         self._stun_time = 0.1
         self._sight_distance = 400.0

@@ -29,8 +29,10 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
 
             for sub_key in entities: # Para cada entidade
 
-                # Evita danos a si mesmo e dano entre monstros durante o ataque
-                if sub_key != key and not (key.startswith("Monster") and sub_key.startswith("Monster")):
+                # Evita danos a si mesmo e dano entre monstros durante o ataque, além de evitar erros com poções
+                if sub_key != key and not                                                \
+                   (key.startswith("Monster") and sub_key.startswith("Monster")) and not \
+                   (sub_key.endswith("drop") and key.endswith("drop")):
 
                     if not key.endswith("drop"): # Caso não seja poção
 
@@ -41,7 +43,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                             # Verifica se o monstro acertou o jogador
                             successful_attack = pygame.sprite.collide_rect(entities[key].sprites.sprites()[0],
                                                                            entities["Player"].sprites.sprites()[0])
-                        else:
+                        elif not sub_key.endswith("drop"): # Se a entidade não é uma poção
 
                             # Verifica se o jogador acertou o monstro
                             successful_attack = pygame.sprite.collide_rect(entities["Player"].sprites.sprites()[0].item_sprite,
@@ -65,8 +67,9 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                 entities[sub_key].velocity[0] -= 3.0
 
                             if entities[sub_key].is_dead(): # Caso a entidade tenha ficado com 0 de vida
-
-                                if sub_key != "Player": # Caso a entidade seja um monstro
+                                
+                                # Caso a entidade seja um monstro
+                                if sub_key != "Player":
 
                                     entities["Player"].kill_count += 1
 
@@ -105,8 +108,9 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                             sound_channel.stop()
                             sound_channel.play(entities[key].heal_sound)
                             
-                            entities[sub_key].change_life(20) # Modifica a vida do jogador
+                            entities[key].change_life(20) # Modifica a vida do jogador
                             dead_entities_keys.append(key) # Adiciona a poção na lista de eliminações
+                            render_control.update_all = True # Atualiza a tela toda
 
         # Lista de sprites de colisão que colidem com a entidade
         colliders = pygame.sprite.spritecollide(entities[key].sprites.sprites()[0],
