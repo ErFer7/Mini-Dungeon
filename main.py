@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC
-(Feito individualmente).
+Escrito por Eric Fernandes Evaristo para a discplina de Programação OOP I da UFSC.
 
 Todo o código é escrito em inglês por questões de padronização. A idéia é seguir as convenções do
 Python a medida do possível.
