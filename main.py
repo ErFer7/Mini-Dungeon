@@ -24,7 +24,7 @@ import graphics
 import physics
 import UI
 
-VERSION = "1.0.1" # Esta variável é usada apenas para a identificação da versão
+VERSION = "1.0.2" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
@@ -44,7 +44,7 @@ sound_effects_channel = pygame.mixer.Channel(1)
 music = pygame.mixer.Sound(os.path.join("Audio", "Music.wav")) # Inicializa a música
 
 # Define o estado incial, o nível, e o nível máximo
-game_state = core.GameState(core.State.MENU, 1, 10)
+game_state = core.GameState(core.State.MENU, 1, 7)
 
 render_control = graphics.RenderControl() # Inicializa o controle de renderização
 
