@@ -24,7 +24,7 @@ import graphics
 import physics
 import UI
 
-VERSION = "0.27.7" # Esta variável é usada apenas para a identificação da versão
+VERSION = "0.27.8" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
