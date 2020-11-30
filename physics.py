@@ -83,7 +83,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                         game_state.state = core.State.WON
                                         game_state.level += 1
 
-                                        if game_state.level == game_state.max_level:
+                                        if game_state.level > game_state.max_level:
 
                                             game_state.state = core.State.FINISHED
 
@@ -108,7 +108,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                             sound_channel.stop()
                             sound_channel.play(entities[key].heal_sound)
                             
-                            entities[key].change_life(20) # Modifica a vida do jogador
+                            entities["Player"].change_life(20) # Modifica a vida do jogador
                             dead_entities_keys.append(key) # Adiciona a poção na lista de eliminações
                             render_control.update_all = True # Atualiza a tela toda
 

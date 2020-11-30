@@ -419,6 +419,10 @@ class Monster(Entity):
                 if distance_from_player <= 16 and not self.is_attacking(): # Verifica se pode atacar
 
                     self.attack() # Ataca o jogador
+            else:
+
+                self.direction[0] = 0
+                self.direction[1] = 0
         else: # Redefine as direções para 0
 
             self.direction[0] = 0
