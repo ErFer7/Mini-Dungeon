@@ -270,7 +270,7 @@ class Menu(UIBase):
         self.buttons["Play"] = Button(Alignment.CENTER, (0, 0), (400, 100), screen_size)
         self.buttons["Quit"] = Button(Alignment.CENTER, (0, -200), (400, 100), screen_size)
 
-        self.texts.append(Text("V {0}".format(version), Alignment.TOP_LEFT, (0, 0), 15, (255, 255, 255), screen_size))
+        self.texts.append(Text(f"V {version}", Alignment.TOP_LEFT, (0, 0), 15, (255, 255, 255), screen_size))
         self.texts.append(Text("MINI DUNGEON", Alignment.CENTER, (0, 200), 80, (20, 20, 20), screen_size))
         self.texts.append(Text("MINI DUNGEON", Alignment.CENTER, (-10, 200), 80, (255, 223, 0), screen_size))
         self.texts.append(Text("JOGAR", Alignment.CENTER, (0, 0), 40, (255, 223, 0), screen_size))
@@ -434,11 +434,11 @@ class HUD(UIBase):
         self.progress_bar.update((kill_count / monster_ammount) * 100.0)
         self.progress_bar.sprites.draw(self.surface)
 
-        self.texts[0].update("Vida: {0}".format(int(life)))
-        self.texts[1].update("{0}/{1} Monstros eliminados".format(kill_count, monster_ammount))
-        self.texts[2].update("{0:.2f} FPS".format(FPS))
+        self.texts[0].update(f"Vida: {int(life)}")
+        self.texts[1].update(f"{kill_count}/{monster_ammount} Monstros eliminados")
+        self.texts[2].update(f"{FPS:.2f} FPS")
         self.texts[3].update(room)
-        self.texts[4].update("Nível: {0}/{1}".format(level, max_level))
+        self.texts[4].update(f"Nível: {level}/{max_level}")
 
         for text in self.texts:
 

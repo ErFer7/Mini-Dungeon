@@ -159,7 +159,7 @@ class Room():
                                 # Gera o monstro com base na dificuldade
                                 if randint(0, 10) <= difficulty or initial_monster_ammount == 0:
 
-                                    self.entities["Monster_{0}".format(self.monster_ammount)] = entities.Monster([position[0] + 16, position[1] + 16])
+                                    self.entities[f"Monster_{self.monster_ammount}"] = entities.Monster([position[0] + 16, position[1] + 16])
                                     self.monster_ammount += 1
                             
                             position[0] += 32 # Incrementa a posição latera

@@ -23,7 +23,7 @@ import graphics
 import physics
 import UI
 
-VERSION = "1.0.5" # Esta variável é usada apenas para a identificação da versão
+VERSION = "1.0.6" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
@@ -328,7 +328,7 @@ while game_state.state != core.State.EXITING:
                        player.life,
                        player.kill_count,
                        fps_clock.get_fps(),
-                       "Sala: ({0}, {1})".format(room_index[0], room_index[1]),
+                       f"Sala: ({room_index[0]}, {room_index[1]})",
                        initial_monster_ammount,
                        game_state.level,
                        game_state.max_level)

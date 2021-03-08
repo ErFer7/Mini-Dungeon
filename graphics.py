@@ -84,7 +84,7 @@ class BackgroundSprite(pygame.sprite.Sprite):
 
             random_number = randint(1, 6)
 
-        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall_{0}.png".format(random_number))), (256, 256))
+        self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", f"Wall_{random_number}.png")), (256, 256))
         self.rect = self.image.get_rect()
         self.rect.x = position[0]
         self.rect.y = position[1]
@@ -200,7 +200,7 @@ class WallSprite(pygame.sprite.Sprite):
 
                 random_number = randint(1, 11)
 
-            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall_{0}.png".format(random_number))), (32, 32))
+            self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", f"Wall_{random_number}.png")), (32, 32))
         elif wall_type == '_':
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top.png")), (32, 32))
@@ -506,7 +506,7 @@ class MonsterSprite(EntitySprite):
     def __init__(self, position):
 
         super().__init__(position)
-        self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", "Monster_{0}.png".format(randint(0, 24)))), (32, 32)), True, False)
+        self.image = pygame.transform.flip(pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Monsters", f"Monster_{randint(0, 24)}.png")), (32, 32)), True, False)
         self.walking_freq = 0.5
         self.walking_amp = 2.0
 
