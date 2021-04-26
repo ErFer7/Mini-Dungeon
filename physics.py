@@ -5,7 +5,7 @@ Este módulo processa a física do jogo
 '''
 
 import pygame
-import core
+import states
 
 def update_physics(rooms, room_index, render_control, game_state, monster_ammount, sound_channel):
     
@@ -80,12 +80,12 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                     # Condição de vitória da fase
                                     if entities["Player"].kill_count == monster_ammount:
 
-                                        game_state.state = core.State.WON
+                                        game_state.state = states.State.WON
                                         game_state.level += 1
 
                                         if game_state.level > game_state.max_level:
 
-                                            game_state.state = core.State.FINISHED
+                                            game_state.state = states.State.FINISHED
 
                                     # Coloca a entidade na lista de eliminações e define que a tela deve ser
                                     # atualizada
@@ -97,7 +97,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                     sound_channel.stop()
                                     sound_channel.play(entities["Player"].game_over_sound)
 
-                                    game_state.state = core.State.LOST
+                                    game_state.state = states.State.LOST
                     else: # Caso seja uma poção
 
                         # Caso a poção esteja colidindo com o jogador

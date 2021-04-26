@@ -17,13 +17,13 @@ from random import seed
 from time import time_ns
 
 import pygame
-import core
+import states
 import dungeons
 import graphics
 import physics
 import UI
 
-VERSION = "1.0.6" # Esta variável é usada apenas para a identificação da versão
+VERSION = "1.0.7" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
@@ -43,7 +43,7 @@ sound_effects_channel = pygame.mixer.Channel(1)
 music = pygame.mixer.Sound(os.path.join("Audio", "Music.wav")) # Inicializa a música
 
 # Define o estado incial, o nível, e o nível máximo
-game_state = core.GameState(core.State.MENU, 1, 6)
+game_state = states.GameState(states.State.MENU, 1, 6)
 
 render_control = graphics.RenderControl() # Inicializa o controle de renderização
 
@@ -72,7 +72,7 @@ def update_events():
 
     for event in events:
 
-        if game_state.state == core.State.MENU: # No menu
+        if game_state.state == states.State.MENU: # No menu
 
             if event is not None:
                 
@@ -80,14 +80,14 @@ def update_events():
 
                     if event.key == pygame.K_ESCAPE or event.type == pygame.QUIT: # Sai do jogo
 
-                        game_state.state = core.State.EXITING
+                        game_state.state = states.State.EXITING
                         break
                     elif event.key == pygame.K_RETURN: # Entra no jogo
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(menu.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         game_state.level = 1
                         break
 
@@ -98,26 +98,26 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(menu.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         game_state.level = 1
                         break
 
                     if menu.check_buttons(mouse_position) == "Quit": # Sai do jogo
 
-                        game_state.state = core.State.EXITING
+                        game_state.state = states.State.EXITING
                         break
-        elif game_state.state == core.State.INGAME: # No jogo
+        elif game_state.state == states.State.INGAME: # No jogo
 
             if event is not None and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE: # Pausa
 
                 sound_effects_channel.stop()
                 sound_effects_channel.play(pause_screen.selection_sound)
 
-                game_state.state = core.State.PAUSED
+                game_state.state = states.State.PAUSED
                 break
 
             player.update(event) # Atualiza os movimentos do jogador
-        elif game_state.state == core.State.PAUSED: # Na pausa
+        elif game_state.state == states.State.PAUSED: # Na pausa
 
             if event is not None:
 
@@ -128,14 +128,14 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(pause_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
                     elif event.key == pygame.K_RETURN: # Volta para o jogo
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(pause_screen.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         render_control.update_all = True
                         break
 
@@ -145,7 +145,7 @@ def update_events():
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(pause_screen.selection_sound)
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         render_control.update_all = True
                         break
 
@@ -153,9 +153,9 @@ def update_events():
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(pause_screen.selection_sound)
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
-        elif game_state.state == core.State.LOST: # Na derrota
+        elif game_state.state == states.State.LOST: # Na derrota
 
             if event is not None:
 
@@ -166,14 +166,14 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(game_over_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
                     elif event.key == pygame.K_RETURN: # Recomeça o jogo
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(game_over_screen.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         break
 
                 if event.type == pygame.MOUSEBUTTONDOWN: # Caso um clique seja dado
@@ -182,16 +182,16 @@ def update_events():
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(game_over_screen.selection_sound)
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         break
 
                     if game_over_screen.check_buttons(mouse_position) == "Menu": # Vai para o menu
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(game_over_screen.selection_sound)
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
-        elif game_state.state == core.State.WON: # Na vitória
+        elif game_state.state == states.State.WON: # Na vitória
 
             if event is not None:
 
@@ -202,14 +202,14 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(victory_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
                     elif event.key == pygame.K_RETURN: # Vai para o próximo nível
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(victory_screen.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         break
 
                 if event.type == pygame.MOUSEBUTTONDOWN: # Caso um clique seja dado
@@ -219,7 +219,7 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(victory_screen.selection_sound)
 
-                        game_state.state = core.State.INGAME
+                        game_state.state = states.State.INGAME
                         break
 
                     if victory_screen.check_buttons(mouse_position) == "Menu": # Vai para o menu
@@ -227,9 +227,9 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(victory_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
-        elif game_state.state == core.State.FINISHED: # No fim do jogo (Vitória)
+        elif game_state.state == states.State.FINISHED: # No fim do jogo (Vitória)
 
             if event is not None:
 
@@ -237,14 +237,14 @@ def update_events():
 
                     if event.key == pygame.K_ESCAPE: # Sai do jogo
 
-                        game_state.state = core.State.EXITING
+                        game_state.state = states.State.EXITING
                         break
                     elif event.key == pygame.K_RETURN: # Vai para o menu
 
                         sound_effects_channel.stop()
                         sound_effects_channel.play(final_victory_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
 
                 if event.type == pygame.MOUSEBUTTONDOWN: # Caso um clique seja dado
@@ -254,12 +254,12 @@ def update_events():
                         sound_effects_channel.stop()
                         sound_effects_channel.play(final_victory_screen.selection_sound)
 
-                        game_state.state = core.State.MENU
+                        game_state.state = states.State.MENU
                         break
 
                     if final_victory_screen.check_buttons(mouse_position) == "Quit": # Sai do jogo
 
-                        game_state.state = core.State.EXITING
+                        game_state.state = states.State.EXITING
                         break
 
 def reset_game(rooms = None):
@@ -283,18 +283,18 @@ music.set_volume(0.5)
 music_channel.play(music, -1)
 
 # Loop principal. Funciona enquanto o jogo não está no estado de saída
-while game_state.state != core.State.EXITING:
+while game_state.state != states.State.EXITING:
 
     menu.update(display) # Exibe o menu
 
-    while game_state.state == core.State.MENU: # Loop do menu
+    while game_state.state == states.State.MENU: # Loop do menu
 
         update_events() # Atualiza os eventos
 
         pygame.display.update() # Atualiza o display
         fps_clock.tick(60) # Clock de 60 FPS
 
-    if game_state.state == core.State.INGAME: # Carregamento do jogo
+    if game_state.state == states.State.INGAME: # Carregamento do jogo
 
         loading_screen.update(display) # Exibe a tela de carregamento
 
@@ -309,11 +309,11 @@ while game_state.state != core.State.EXITING:
         # Define que toda a tela deve ser atualizada
         render_control.update_all = True
 
-    while game_state.state == core.State.INGAME or game_state.state == core.State.PAUSED: # Loop do jogo
+    while game_state.state == states.State.INGAME or game_state.state == states.State.PAUSED: # Loop do jogo
 
         update_events() # Atualiza os eventos
 
-        if game_state.state != core.State.PAUSED: # Caso o jogo não esteja pausado
+        if game_state.state != states.State.PAUSED: # Caso o jogo não esteja pausado
 
             # Atualiza a física
             physics.update_physics(rooms,
@@ -341,19 +341,19 @@ while game_state.state != core.State.EXITING:
 
         fps_clock.tick(60) # Clock de 60 FPS
 
-    while game_state.state == core.State.LOST: # Loop de derrota
+    while game_state.state == states.State.LOST: # Loop de derrota
 
         update_events() # Atualiza os eventos
         game_over_screen.update(display) # Exibe e atualiza a tela de derrota
         fps_clock.tick(60) # Clock de 60 FPS
 
-    while game_state.state == core.State.WON: # Loop de vitória
+    while game_state.state == states.State.WON: # Loop de vitória
 
         update_events() # Atualiza os eventos
         victory_screen.update(display) # Exibe e atualiza a tela de vitória
         fps_clock.tick(60) # Clock de 60 FPS
 
-    while game_state.state == core.State.FINISHED: # Loop de fim de jogo (vitória)
+    while game_state.state == states.State.FINISHED: # Loop de fim de jogo (vitória)
 
         update_events() # Atualiza os eventos
         final_victory_screen.update(display) # Exibe e atualiza a tela de fim de jogo
