@@ -63,7 +63,7 @@ class Entity():
         self._state = EntityState.IDLING
         self.sprites = pygame.sprite.RenderPlain()
         self.collision_sound = pygame.mixer.Sound(os.path.join("Audio", "Collision.wav"))
-    
+
     def attack(self):
 
         '''
@@ -91,7 +91,7 @@ class Entity():
         elif self.life > 100.0: # Caso de recuperação de vida acima do limite
 
             self.life = 100.0
-    
+
     def is_attacking(self):
 
         '''
@@ -104,7 +104,7 @@ class Entity():
         else:
 
             return False
-    
+
     def is_dead(self):
 
         '''
@@ -152,7 +152,7 @@ class Player(Entity):
         self.game_over_sound = pygame.mixer.Sound(os.path.join("Audio", "Game over.wav"))
         self.kill_sound = pygame.mixer.Sound(os.path.join("Audio", "Kill.wav"))
         self.sprites.add(graphics.PlayerBaseSprite((self.position[0] - 16, self.position[1] - 16)))
-    
+
     def update(self, event):
 
         '''
@@ -163,7 +163,7 @@ class Player(Entity):
         if event is not None and self._state != EntityState.STUNNED:
 
             if event.type == pygame.KEYDOWN: # Caso uma tecla esteja sendo pressionada
-                    
+
                 if event.key == pygame.K_a: # Tecla "A". Movimento para a esquerda
 
                     self.direction[0] = -1
@@ -172,7 +172,7 @@ class Player(Entity):
 
                     self.direction[0] = 1
                     self.velocity[0] = self.speed
-                    
+
                 if event.key == pygame.K_s: # Tecla "S". Movimento para baixo
 
                     self.direction[1] = 1
@@ -181,17 +181,17 @@ class Player(Entity):
 
                     self.direction[1] = -1
                     self.velocity[1] = -self.speed
-                
+
                 if event.key == pygame.K_k and not self.is_attacking(): # tecla "K". Ataque
 
                     self.attack()
-                
+
             if event.type == pygame.KEYUP: # Caso uma tecla seja solta
 
                 if event.key == pygame.K_a or event.key == pygame.K_d: # Teclas horizontais
 
                     self.direction[0] = 0
-                    
+
                 if event.key == pygame.K_s or event.key == pygame.K_w: # Teclas verticais
 
                     self.direction[1] = 0
@@ -199,7 +199,7 @@ class Player(Entity):
 
             self.direction[0] = 0
             self.direction[1] = 0
-        
+
         if self._state == EntityState.ATTACKING: # Faz a contagem do ataque e o redefine caso necessário
 
             self._attack_time_counter += 1
@@ -236,9 +236,9 @@ class Monster(Entity):
         self._sight_distance = 400.0
         self.attack_sound = pygame.mixer.Sound(os.path.join("Audio", "Monster attack.wav"))
         self.sprites.add(graphics.MonsterBaseSprite((self.position[0] - 16, self.position[1] - 16)))
-    
+
     def update(self, player_position, obstacles):
-        
+
         '''
         Define o comportamento do monstro
         '''
@@ -272,7 +272,7 @@ class Monster(Entity):
                 ang_coeff = (self.position[1] - player_position[1]) / (player_position[0] - self.position[0])
 
             for obstacle in obstacles: # Loop para cada obstáculo
-                
+
                 # Definições do obstáculo
                 obstacle_is_in_range_X = True
                 obstacle_is_in_range_Y = True
@@ -305,7 +305,7 @@ class Monster(Entity):
 
                 # Caso o obstáculo esteja no intervalo em que pode estar no caminho
                 if obstacle_is_in_range_X and obstacle_is_in_range_Y:
-                    
+
                     # Redefine os vértices
                     top_left = (obstacle.rect.topleft[0] - self.position[0], self.position[1] - obstacle.rect.topleft[1])
                     top_right = (obstacle.rect.topright[0] - self.position[0], self.position[1] - obstacle.rect.topright[1])
@@ -313,7 +313,7 @@ class Monster(Entity):
                     botton_left = (obstacle.rect.bottomleft[0] - self.position[0], self.position[1] - obstacle.rect.bottomleft[1])
 
                     if is_horizontal: # Caso a linha seja horizontal
-                        
+
                         if top_left[1] == 0: # Intercepta o topo
 
                             has_line_of_sight = False
@@ -334,14 +334,14 @@ class Monster(Entity):
                             has_line_of_sight = False
                             break
                     elif is_vertical: # Caso a linha seja vertical
-                    
+
                         if top_left[0] <= 0 and top_right[0] >= 0: # Intercepta o topo
-                            
+
                             has_line_of_sight = False
                             break
 
                         if botton_left[0] <= 0 and botton_right[0] >= 0: # Intercepta o lado infeiror
-                            
+
                             has_line_of_sight = False
                             break
 
@@ -359,24 +359,24 @@ class Monster(Entity):
                         # Intercepta o topo
                         if top_left[1] / ang_coeff >= top_left[0] and \
                            top_right[1] / ang_coeff <= top_right[0]:
-                            
+
                             has_line_of_sight = False
                             break
-                        
+
                         # Intercepta o lado infeiror
                         if botton_left[1] / ang_coeff >= botton_left[0] and \
                            botton_right[1] / ang_coeff <= botton_right[0]:
 
                             has_line_of_sight = False
                             break
-                        
+
                         # Intercepta a esquerda
                         if botton_left[0] * ang_coeff >= botton_left[1] and \
                            top_left[0] * ang_coeff <= top_left[1]:
 
                             has_line_of_sight = False
                             break
-                        
+
                         # Intercepta a direita
                         if botton_right[0] * ang_coeff >= botton_right[1] and \
                            top_right[0] * ang_coeff <= top_right[1]:
@@ -391,7 +391,7 @@ class Monster(Entity):
 
                     if self.position[0] < player_position[0]: # Se o jogador está na direita do monstro
 
-                        self.direction[0] = 1   
+                        self.direction[0] = 1
                         self.velocity[0] = self.speed
                     elif self.position[0] > player_position[0]: # Se o jogador está na esquerda do monstro
 
@@ -427,7 +427,7 @@ class Monster(Entity):
 
             self.direction[0] = 0
             self.direction[1] = 0
-        
+
         if self._state == EntityState.ATTACKING: # Faz a contagem do ataque e o redefine caso necessário
 
             self._attack_time_counter += 1
@@ -444,7 +444,7 @@ class Monster(Entity):
 
                 self._stun_time_counter = 0
                 self._state = EntityState.IDLING
-    
+
     def drop(self, entities, key):
 
         '''

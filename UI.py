@@ -43,7 +43,7 @@ class UIBase():
         self.buttons = {}
         self.surface = pygame.Surface(size)
         self.selection_sound = pygame.mixer.Sound(os.path.join("Audio", "Selection.wav"))
-    
+
     def update(self, display):
 
         '''
@@ -55,15 +55,15 @@ class UIBase():
         for key in self.buttons:
 
             self.buttons[key].sprites.draw(self.surface)
-        
+
         for text in self.texts:
 
             self.surface.blit(text.text, text.position)
-        
+
         display.blit(self.surface, self.position)
 
         pygame.display.update()
-    
+
     def check_buttons(self, click_position):
 
         '''
@@ -75,7 +75,7 @@ class UIBase():
             if self.buttons[key].is_clicked(click_position):
 
                 return key
-    
+
     def delete(self):
 
         '''
@@ -112,10 +112,10 @@ class Button():
         else:
 
             self.position = ((screen_size[0] - size[0]) / 2 + position[0], (screen_size[1] - size[1]) / 2 - position[1])
-        
+
         self.sprites.add(graphics.RectangleSprite(self.position, size, (255, 223, 0)))
         self.sprites.add(graphics.RectangleSprite((self.position[0] + 10, self.position[1] + 10), (size[0] - 20, size[1] - 20), (20, 20, 20)))
-    
+
     def is_clicked(self, click_position):
 
         '''
@@ -131,7 +131,7 @@ class Button():
         else:
 
             return False
-    
+
     def delete(self):
 
         '''
@@ -170,7 +170,7 @@ class Text():
         else:
 
             self.position = ((screen_size[0] - self.text.get_rect().width) / 2 + position[0], (screen_size[1] - self.text.get_rect().height) / 2 - position[1])
-    
+
     def update(self, text):
 
         '''
@@ -195,11 +195,11 @@ class Background():
         for i in range(ceil(size[1] / 256.0)):
 
             for j in range(ceil(size[0] / 256.0)):
-                
+
                 self.sprites.add(graphics.BackgroundSprite((j * 256.0, i * 256.0)))
-    
+
     def delete(self):
-        
+
         '''
         Libera os sprites
         '''
@@ -234,7 +234,7 @@ class Bar():
 
         self.sprites.add(graphics.RectangleSprite((self.position[0] - 5, self.position[1] - 5), (self.size[0] + 10, self.size[1] + 10), border_color))
         self.sprites.add(graphics.RectangleSprite(self.position, self.size, color))
-    
+
     def update(self, value):
 
         '''
@@ -242,7 +242,7 @@ class Bar():
         '''
 
         self.sprites.sprites()[1].update(self.position, [int((self.size[0] / 100.0) * value), 35])
-    
+
     def delete(self):
 
         '''
@@ -288,13 +288,13 @@ class Menu(UIBase):
         for key in self.buttons:
 
             self.buttons[key].sprites.draw(self.surface)
-        
+
         for text in self.texts:
 
             self.surface.blit(text.text, text.position)
-        
+
         display.blit(self.surface, self.position)
-    
+
     def delete(self):
 
         '''
@@ -419,7 +419,7 @@ class HUD(UIBase):
         self.texts.append(Text("", Alignment.TOP_RIGHT, (120, 0), 15, (255, 255, 255), screen_size))
         self.texts.append(Text("", Alignment.TOP_RIGHT, (160, 20), 15, (255, 255, 255), screen_size))
         self.texts.append(Text("", Alignment.TOP_RIGHT, (160, 40), 15, (255, 255, 255), screen_size))
-    
+
     def update(self, display, life, kill_count, FPS, room, monster_ammount, level, max_level):
 
         '''
@@ -427,7 +427,7 @@ class HUD(UIBase):
         '''
 
         self.surface.fill((20, 20, 20))
-        
+
         self.life_bar.update(life)
         self.life_bar.sprites.draw(self.surface)
 
@@ -443,7 +443,7 @@ class HUD(UIBase):
         for text in self.texts:
 
             self.surface.blit(text.text, text.position)
-        
+
         display.blit(self.surface, self.position)
 
         pygame.display.update()

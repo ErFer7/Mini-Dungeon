@@ -23,7 +23,7 @@ import graphics
 import physics
 import UI
 
-VERSION = "1.0.7" # Esta variável é usada apenas para a identificação da versão
+VERSION = "1.0.8" # Esta variável é usada apenas para a identificação da versão
 
 seed(time_ns()) # Inicializa o gerador de números com o tempo como a seed
 
@@ -75,7 +75,7 @@ def update_events():
         if game_state.state == states.State.MENU: # No menu
 
             if event is not None:
-                
+
                 if event.type == pygame.KEYDOWN: # Caso uma tecla seja precionada
 
                     if event.key == pygame.K_ESCAPE or event.type == pygame.QUIT: # Sai do jogo
@@ -302,10 +302,10 @@ while game_state.state != states.State.EXITING:
         player,     \
         rooms,      \
         room_index, \
-        initial_monster_ammount = dungeons.generate_dungeon((display.get_width(), display.get_height()), 
+        initial_monster_ammount = dungeons.generate_dungeon((display.get_width(), display.get_height()),
                                                             game_state.level + 1,
                                                             game_state.level + 1)
-        
+
         # Define que toda a tela deve ser atualizada
         render_control.update_all = True
 

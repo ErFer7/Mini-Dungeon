@@ -46,7 +46,7 @@ class RenderControl():
                 overlap_group = pygame.sprite.RenderPlain() # Cria um grupo de sprites
 
                 for group in [room.collision_sprites, room.trigger_sprites, room.sprites]: # Loop para cada grupo
-                    
+
                     # Obtém uma lista com todos os sprites que o sprite de área de renderização da entidade
                     # está colidindo
                     overlap = pygame.sprite.spritecollide(room.entities[key].sprites.sprites()[0].render_area,
@@ -105,7 +105,7 @@ class RectangleSprite(pygame.sprite.Sprite):
         self.rect.x = position[0]
         self.rect.y = position[1]
         self.image.fill(color)
-    
+
     def update(self, position, size):
 
         '''
@@ -115,7 +115,7 @@ class RectangleSprite(pygame.sprite.Sprite):
         if size[0] == 0:
 
             size[0] = 1
-        
+
         if size[1] == 0:
 
             size[1] = 1
@@ -193,7 +193,7 @@ class WallSprite(pygame.sprite.Sprite):
         # O sprite é definido com base no caractere do mapa
 
         if wall_type == '#':
-            
+
             random_number = 0
 
             if randint(0, 9) == 0: # 1/10 de chance de gerar uma parede diferente da simples
@@ -231,7 +231,7 @@ class WallSprite(pygame.sprite.Sprite):
         else:
 
             self.image = pygame.transform.scale(pygame.image.load(os.path.join("Sprites", "Wall", "Wall - Top - Right.png")), (32, 32))
-        
+
         self.rect = self.image.get_rect()
         self.rect.x = position[0]
         self.rect.y = position[1]
@@ -328,7 +328,7 @@ class EntityBaseSprite(pygame.sprite.Sprite):
         self.entity_sprites = pygame.sprite.RenderPlain()
         self.render_area = RenderAreaSprite((self.rect.centerx, self.rect.centery), (48, 48))
         self._old_attacking_state = False
-    
+
     def update(self, position, horizontal_orientation, attacking):
 
         '''
@@ -378,9 +378,9 @@ class EntitySprite(pygame.sprite.Sprite):
         self._old_horizontal_orientation = 1
         self.walking_freq = 1.0
         self.walking_amp = 1.0
-    
+
     def update(self, position, horizontal_orientation):
-        
+
         '''
         Atualiza o sprite
         '''
@@ -405,7 +405,7 @@ class EntitySprite(pygame.sprite.Sprite):
             elif horizontal_orientation > 0 and self._old_horizontal_orientation <= 0:
 
                 self.image = pygame.transform.flip(self.image, True, False)
-            
+
             self._old_horizontal_orientation = horizontal_orientation
 
 class RenderAreaSprite(pygame.sprite.Sprite):
@@ -527,7 +527,7 @@ class SwordSprite(pygame.sprite.Sprite):
         self.rect.x = position[0] + 14
         self.rect.y = position[1] + 16
         self._old_horizontal_orientation = 1
-    
+
     def update(self, position, horizontal_orientation):
 
         '''

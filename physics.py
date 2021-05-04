@@ -8,7 +8,7 @@ import pygame
 import states
 
 def update_physics(rooms, room_index, render_control, game_state, monster_ammount, sound_channel):
-    
+
     '''
     Atualiza toda a física
     '''
@@ -67,7 +67,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                                 entities[sub_key].velocity[0] -= 3.0
 
                             if entities[sub_key].is_dead(): # Caso a entidade tenha ficado com 0 de vida
-                                
+
                                 # Caso a entidade seja um monstro
                                 if sub_key != "Player":
 
@@ -107,7 +107,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                             # Toca o som da poção
                             sound_channel.stop()
                             sound_channel.play(entities[key].heal_sound)
-                            
+
                             entities["Player"].change_life(20) # Modifica a vida do jogador
                             dead_entities_keys.append(key) # Adiciona a poção na lista de eliminações
                             render_control.update_all = True # Atualiza a tela toda
@@ -130,7 +130,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
                 entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
                 entities[key].velocity[0] = 0.0
                 entities[key].velocity[1] = 0.0
-                
+
                 # Toca o som de colisão
                 sound_channel.stop()
                 sound_channel.play(entities[key].collision_sound)
@@ -138,7 +138,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
         if key.startswith("Monster"): # Se é um monstro
 
             if trigger is not None:
-                
+
                 # Reverte uma iteração da posição
                 entities[key].position[0] -= entities[key].velocity[0] * (1 + entities[key].drag)
                 entities[key].position[1] -= entities[key].velocity[1] * (1 + entities[key].drag)
@@ -213,7 +213,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
             rooms[room_index[0]][room_index[1]].entities[key].sprites.update(rooms[room_index[0]][room_index[1]].entities[key].position,
                                                                              rooms[room_index[0]][room_index[1]].entities[key].direction[0],
                                                                              rooms[room_index[0]][room_index[1]].entities[key].is_attacking())
-            
+
             render_control.update_all = True # Define que toda a tela deve ser atualizada
             break # Quebra o loop
 
@@ -229,7 +229,7 @@ def update_physics(rooms, room_index, render_control, game_state, monster_ammoun
         if not key.endswith("drop"): # Caso seja um monstro calcula o drop de poções
 
             rooms[room_index[0]][room_index[1]].entities[key].drop(rooms[room_index[0]][room_index[1]].entities, key)
-        
+
         # Deleta a entidade
         rooms[room_index[0]][room_index[1]].entities[key].delete()
         del rooms[room_index[0]][room_index[1]].entities[key]

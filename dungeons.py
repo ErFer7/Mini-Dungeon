@@ -14,7 +14,7 @@ import graphics
 import entities
 
 class Direction(Enum):
-    
+
     '''
     Definições de direções
     '''
@@ -59,7 +59,7 @@ class Room():
 
         # Abre o arquivo da sala
         with open(os.path.join("Rooms", file), 'r', encoding = "utf-8") as room_file:
-            
+
             room_txt = room_file.readlines()
 
         for line in room_txt: # Para cada linha no arquivo
@@ -69,10 +69,10 @@ class Room():
                 if line.startswith('!'): # Caso haja uma mudança de estado
 
                     stage += 1
-                    
+
                     # Obtém o tamanho da sala
                     if stage == 1:
-                        
+
                         line_list = line.split()
                         room_size = [int(line_list[2]), int(line_list[3])]
 
@@ -130,7 +130,7 @@ class Room():
 
                                 self.collision_sprites.add(graphics.WallSprite(position, char))
                             elif char in "qwer^v<>tyui'": # Chão
-                                
+
                                 self.sprites.add(graphics.FloorSprite(position, char))
 
                                 if randint(0, 110) == 110: # Há 1/110 de chance de gerar uma decoração (caveira)
@@ -138,7 +138,7 @@ class Room():
                                     self.sprites.add(graphics.DecorationSprite(position))
 
                             position[0] += 32 # Incrementa a posição lateral
-                        
+
                         # Ajusta as posições
                         position[0] = (screen_size[0] - room_size[0] * 32) / 2
                         position[1] += 32
@@ -152,7 +152,7 @@ class Room():
                             elif char in "0123": # Saída da porta
 
                                 if self.doors[int(char)]:
-                                    
+
                                     self.doors_leaving_position[int(char)] = [position[0] + 16, position[1] + 16]
                             elif char == 'M': # Monstro
 
@@ -161,13 +161,13 @@ class Room():
 
                                     self.entities[f"Monster_{self.monster_ammount}"] = entities.Monster([position[0] + 16, position[1] + 16])
                                     self.monster_ammount += 1
-                            
+
                             position[0] += 32 # Incrementa a posição latera
-                        
+
                         # Ajusta as posições
                         position[0] = (screen_size[0] - room_size[0] * 32) / 2
                         position[1] += 32
-    
+
     def delete(self):
 
         '''
@@ -177,11 +177,11 @@ class Room():
         for key in self.entities:
 
             self.entities[key].delete()
-        
+
         self.collision_sprites.empty()
         self.trigger_sprites.empty()
         self.sprites.empty()
-                
+
 def generate_dungeon(screen_size, width = 1, heigth = 1):
 
     '''
@@ -192,7 +192,7 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
     '''
 
     structure = []
-    
+
     # Gera a matriz de estrutura de portas
     for i in range(heigth):
 
@@ -221,22 +221,22 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
         if len(room_struct_list) >= width * heigth: # Caso todas as posições sejam processadas termina o loop
 
             break
-        
+
         # Caso seja possível ir para cima
         if position[1] > 0 and ([position[0], position[1] - 1] not in room_struct_list) and not (structure[position[1]][position[0]][0] or structure[position[1] - 1][position[0]][1]):
 
             directions.append(Direction.UP)
-        
+
         # Caso seja possível ir para baixo
         if position[1] < heigth - 1 and ([position[0], position[1] + 1] not in room_struct_list) and not (structure[position[1]][position[0]][1] or structure[position[1] + 1][position[0]][0]):
 
             directions.append(Direction.DOWN)
-        
+
         # Caso seja possível ir para a direita
         if position[0] < width - 1 and ([position[0] + 1, position[1]] not in room_struct_list) and not (structure[position[1]][position[0]][2] or structure[position[1]][position[0] + 1][3]):
 
             directions.append(Direction.RIGHT)
-        
+
         # Caso seja possível ir para a esquerda
         if position[0] > 0 and ([position[0] - 1, position[1]] not in room_struct_list) and not (structure[position[1]][position[0]][3] or structure[position[1]][position[0] - 1][2]):
 
@@ -280,7 +280,7 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
                 structure[position[1]][position[0] - 1][2] = True
 
                 position[0] -= 1
-    
+
     rooms = [] # Lista de salas
     initial_monster_ammount = 0 # Quantidade de monstros
 
@@ -295,7 +295,7 @@ def generate_dungeon(screen_size, width = 1, heigth = 1):
         for j in range(width):
 
             room = Room(structure[i][j], choice(os.listdir("Rooms")), screen_size, abs(i - player_ln) + abs(j - player_col), initial_monster_ammount)
-            
+
             initial_monster_ammount += room.monster_ammount # Soma a quantidade de monstros
 
             rooms[i].append(room)
