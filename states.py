@@ -6,6 +6,7 @@ Neste módulo estão definidos os estados do jogo
 
 from enum import Enum
 
+
 class State(Enum):
 
     '''
@@ -20,6 +21,7 @@ class State(Enum):
     FINISHED = 6
     RESTARTING = 7
     EXITING = 8
+
 
 class GameState():
 
