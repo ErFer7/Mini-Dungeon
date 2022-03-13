@@ -1,3 +1,6 @@
 [submodule "Very-Simple-Engine"]
 	path = Very-Simple-Engine
 	url = https://github.com/ErFer7/Very-Simple-Engine.git
+[submodule "VSEngine"]
+	path = VSEngine
+	url = https://github.com/ErFer7/VSEngine.git
