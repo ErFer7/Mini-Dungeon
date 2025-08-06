@@ -2,7 +2,6 @@
 #include "../../include/entities/entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
-#include "utils/transform.hpp"
 
 TransformComponent::TransformComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity, true) {
     this->_transform_system = TransformSystem();

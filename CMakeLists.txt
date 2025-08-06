@@ -34,7 +34,7 @@ target_link_libraries(mini_dungeon PUBLIC raylib)
 add_custom_command(
     TARGET mini_dungeon POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_CURRENT_LIST_DIR}/runtime-test/assets"
+    "${CMAKE_CURRENT_LIST_DIR}/assets"
     "$<TARGET_FILE_DIR:mini_dungeon>/assets"
 )
 

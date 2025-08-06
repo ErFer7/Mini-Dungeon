@@ -16,43 +16,15 @@ release:
 
 .PHONY: run
 run:
-	./build/runtime_test
+	./build/mini_dungeon
 
 .PHONY: gdb
 gdb:
-	gdb ./build/runtime_test
+	gdb ./build/mini_dungeon
 
 .PHONY: valgrind
 valgrind:
-	valgrind --leak-check=full ./build/runtime_test
-
-.PHONY: engine
-engine:
-	cmake --build build --target engine
-
-.PHONY: engine_debug
-engine_debug:
-	cmake --build build --config Debug --target engine
-
-.PHONY: engine_release
-engine_release:
-	cmake --build build --config Release --target engine
-
-.PHONY: test
-test:
-	cmake --build build --target test
-
-.PHONY: test_run
-test_run: test
-	./build/test
-
-.PHONY: test_debug
-test_debug: test
-	cmake --build build --config Debug --target test
-
-.PHONY: gdb_test
-gdb_test: test
-	gdb ./build/test
+	valgrind --leak-check=full ./build/mini_dungeon
 
 .PHONY: clean
 clean:

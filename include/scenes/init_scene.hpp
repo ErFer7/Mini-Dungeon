@@ -9,5 +9,11 @@ class InitScene : public Scene {
 
     InitScene(GameCore *game_core) : Scene(game_core){};
 
-    ~InitScene();
+    ~InitScene(){};
+
+    void init() override {};
+
+    void update() override {};
+
+    void exit() override {};
 };

@@ -2,13 +2,11 @@
 
 #include <memory>
 
-#include "managers/manager.hpp"
-#include "scenes/init_scene.hpp"
+#include "../types.hpp"
+#include "manager.hpp"
 
 class GameManager : public Manager {
    public:
-    GameManager();
-
     GameManager(GameCore *game_core);
 
     ~GameManager();

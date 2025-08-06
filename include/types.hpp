@@ -15,6 +15,10 @@ class EntityContainer;
 class AssetContainer;
 class GameManager;
 
+// Scenes
+class Scene;
+class InitScene;
+
 // Entities
 class Entity;
 class Entity2D;

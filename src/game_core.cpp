@@ -13,6 +13,7 @@ GameCore::GameCore(int screen_width, int screen_height, const char *title, int t
 }
 
 GameCore::~GameCore() {
+    // TODO: Check if this is really necessary
     this->_entity_container.reset();
     this->_graphics_component_manager.reset();
     this->_behavior_component_manager.reset();

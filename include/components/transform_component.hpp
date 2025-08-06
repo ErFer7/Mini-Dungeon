@@ -5,7 +5,6 @@
 #include "../utils/transform_system.hpp"
 #include "component.hpp"
 #include "raylib.h"
-#include "utils/transform.hpp"
 
 class TransformComponent : public Component {
    public:
