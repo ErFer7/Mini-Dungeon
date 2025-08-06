@@ -1,10 +1,10 @@
-#include "../../include/managers/graphics_manager.hpp"
+#include "../../include/managers/graphics_component_manager.hpp"
 
-#include "../../include/components/graphics2D_component.hpp"
+#include "../../include/components/graphics_component.hpp"
 
-void Space::add_component(Graphics2DComponent *component) { this->_components->push_back(component); }
+void Space::add_component(GraphicsComponent *component) { this->_components->push_back(component); }
 
-void Space::remove_component(Graphics2DComponent *component) {
+void Space::remove_component(GraphicsComponent *component) {
     this->_components->erase(std::remove(this->_components->begin(), this->_components->end(), component), this->_components->end());
 }
 
@@ -12,7 +12,7 @@ void Space::sort() {
     switch (this->_sorting_mode) {
         case SortingMode::NONE:
             std::sort(
-                this->_components->begin(), this->_components->end(), [](Graphics2DComponent *comp_a, Graphics2DComponent *comp_b) -> bool {
+                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
                     if (comp_a == nullptr) {
                         return true;
                     } else if (comp_b == nullptr) {
@@ -24,7 +24,7 @@ void Space::sort() {
             break;
         case SortingMode::TOP_TO_DOWN:
             std::sort(
-                this->_components->begin(), this->_components->end(), [](Graphics2DComponent *comp_a, Graphics2DComponent *comp_b) -> bool {
+                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
                     if (comp_a == nullptr) {
                         return true;
                     } else if (comp_b == nullptr) {
@@ -40,7 +40,7 @@ void Space::sort() {
             break;
         case SortingMode::ISOMETRIC:
             std::sort(
-                this->_components->begin(), this->_components->end(), [](Graphics2DComponent *comp_a, Graphics2DComponent *comp_b) -> bool {
+                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
                     if (comp_a == nullptr) {
                         return true;
                     } else if (comp_b == nullptr) {
@@ -68,7 +68,7 @@ void Space::draw() {
     }
 }
 
-GraphicsManager::GraphicsManager(EngineCore *engine_core,
+GraphicsComponentManager::GraphicsComponentManager(GameCore *game_core,
                                  int screen_width,
                                  int screen_height,
                                  const char *title,
@@ -76,7 +76,7 @@ GraphicsManager::GraphicsManager(EngineCore *engine_core,
                                  bool resizable,
                                  bool fullscreen,
                                  bool show_fps)
-    : ComponentManager(engine_core) {
+    : ComponentManager(game_core) {
     this->_screen_width = screen_width;
     this->_screen_height = screen_height;
     this->_title = title;
@@ -87,7 +87,7 @@ GraphicsManager::GraphicsManager(EngineCore *engine_core,
     this->_camera2D = {Vector2{0.0f, 0.0f}, Vector2{0.0f, 0.0f}, 0.0f, 1.0f};
 }
 
-void GraphicsManager::init() {
+void GraphicsComponentManager::init() {
     InitWindow(this->_screen_width, this->_screen_height, this->_title.c_str());
 
     if (this->_resizable) {
@@ -103,7 +103,7 @@ void GraphicsManager::init() {
     this->_camera2D.offset = {(float)this->_screen_width / 2.0f, (float)this->_screen_height / 2.0f};
 }
 
-void GraphicsManager::update() {
+void GraphicsComponentManager::update() {
     if (IsWindowResized()) {
         this->_screen_width = GetScreenWidth();
         this->_screen_height = GetScreenHeight();
@@ -129,12 +129,12 @@ void GraphicsManager::update() {
     EndDrawing();
 }
 
-void GraphicsManager::exit() { CloseWindow(); }
+void GraphicsComponentManager::exit() { CloseWindow(); }
 
-void GraphicsManager::register_component(Component *component) {
+void GraphicsComponentManager::register_component(Component *component) {
     ComponentManager::register_component(component);
 
-    Graphics2DComponent *graphics2D_component = static_cast<Graphics2DComponent *>(component);
+    GraphicsComponent *graphics2D_component = static_cast<GraphicsComponent *>(component);
     RenderingMode rendering_mode = graphics2D_component->get_rendering_mode();
 
     if (rendering_mode == RenderingMode::WORLD_SPACE_2D) {
@@ -144,8 +144,8 @@ void GraphicsManager::register_component(Component *component) {
     }
 }
 
-void GraphicsManager::unregister_component(Component *component) {
-    Graphics2DComponent *graphics2D_component = static_cast<Graphics2DComponent *>(component);
+void GraphicsComponentManager::unregister_component(Component *component) {
+    GraphicsComponent *graphics2D_component = static_cast<GraphicsComponent *>(component);
 
     RenderingMode rendering_mode = graphics2D_component->get_rendering_mode();
 

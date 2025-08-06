@@ -1,0 +1,17 @@
+#pragma once
+
+#include "../types.hpp"
+#include "component_manager.hpp"
+
+class BehaviorComponentManager : public ComponentManager {
+    friend class BehaviorComponent;
+
+   public:
+    BehaviorComponentManager(GameCore *game_core) : ComponentManager(game_core){};
+
+    ~BehaviorComponentManager() override = default;
+
+    void init() override;
+    void update() override;
+    void exit() override;
+};

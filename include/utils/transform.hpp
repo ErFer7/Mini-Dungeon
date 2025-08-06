@@ -10,12 +10,3 @@ struct Transform2D {
     float rotation;
     Vector2 scale;
 };
-
-struct Transform3D {
-    Transform3D() : position(Vector3Zero()), rotation(Vector3Zero()), scale(Vector3One()) {}
-    Transform3D(Vector3 position, Vector3 rotation, Vector3 scale) : position(position), rotation(rotation), scale(scale) {}
-
-    Vector3 position;
-    Vector3 rotation;
-    Vector3 scale;
-};

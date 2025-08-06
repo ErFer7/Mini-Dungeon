@@ -3,11 +3,11 @@
 #include "../types.hpp"
 #include "component.hpp"
 
-class BehaviourComponent : public Component {
+class BehaviorComponent : public Component {
    public:
-    BehaviourComponent(EngineCore *engine_core, Entity *entity, bool unique) : Component(engine_core, entity, unique) {}
+    BehaviorComponent(GameCore *game_core, Entity *entity, bool unique) : Component(game_core, entity, unique) {}
 
-    ~BehaviourComponent() override;
+    ~BehaviorComponent() override;
 
     virtual void start() = 0;
 

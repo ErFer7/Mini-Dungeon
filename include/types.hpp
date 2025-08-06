@@ -5,13 +5,15 @@ class GameCore;
 
 // Components
 class Component;
-class Transform2DComponent;
-class BehaviourComponent;
-class Graphics2DComponent;
+class TransformComponent;
+class BehaviorComponent;
+class GraphicsComponent;
+class PhysicsComponent;
 
 // Containers
 class EntityContainer;
-class ResourceContainer;
+class AssetContainer;
+class GameManager;
 
 // Entities
 class Entity;
@@ -20,8 +22,8 @@ class Entity2D;
 // Managers
 class Manager;
 class ComponentManager;
-class BehaviourManager;
-class GraphicsManager;
+class BehaviorComponentManager;
+class GraphicsComponentManager;
 class MainBehaviourManager;
 
 // Enums

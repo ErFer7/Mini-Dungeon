@@ -5,11 +5,11 @@
 #include "raymath.h"
 #include "transform.hpp"
 
-class TransformSystem2D {
+class TransformSystem {
    public:
-    TransformSystem2D(){};
+    TransformSystem(){};
 
-    ~TransformSystem2D() = default;
+    ~TransformSystem() = default;
 
     inline const Transform2D get_absolute() const { return this->_absolute; }
 

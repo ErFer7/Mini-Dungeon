@@ -15,7 +15,7 @@ class ComponentManager : public Manager {
 
     ComponentManager(ComponentManager &&other) noexcept = delete;
 
-    ComponentManager(EngineCore *engine_core) : Manager(engine_core) { this->_components = std::make_unique<ComponentVector>(); }
+    ComponentManager(GameCore *game_core) : Manager(game_core) { this->_components = std::make_unique<ComponentVector>(); }
 
     ~ComponentManager() override = default;
 

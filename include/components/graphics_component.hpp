@@ -3,17 +3,17 @@
 #include "../types.hpp"
 #include "component.hpp"
 #include "raylib.h"
-#include "transform2D_component.hpp"
+#include "transform_component.hpp"
 
-enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D, WORLD_SPACE_3D };
+enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D };
 
-class Graphics2DComponent : public Component {
+class GraphicsComponent : public Component {
     friend class Space;
 
    public:
-    Graphics2DComponent(EngineCore *engine_core, Entity *entity);
+    GraphicsComponent(GameCore *game_core, Entity *entity);
 
-    ~Graphics2DComponent() override;
+    ~GraphicsComponent() override;
 
     inline Texture2D get_texture() const { return this->_texture; }
 
@@ -45,7 +45,7 @@ class Graphics2DComponent : public Component {
 
    private:
     Texture2D _texture;
-    Transform2DComponent *_transform_component;
+    TransformComponent *_transform_component;
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
     Vector2 _origin;
@@ -53,5 +53,5 @@ class Graphics2DComponent : public Component {
     Color _tint;
     RenderingMode _rendering_mode;
     int _layer;
-    Transform2DComponent::TransformUpdateListener _transform_update_listener;
+    TransformComponent::TransformUpdateListener _transform_update_listener;
 };

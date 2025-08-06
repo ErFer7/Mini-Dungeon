@@ -1,11 +1,39 @@
 #include "../../include/containers/entity_container.hpp"
 
+#include <cassert>
+
 #include "../../include/entities/entity.hpp"
 
-EntityContainer::EntityContainer(EngineCore *engine_core) : EngineCoreDependencyInjector(engine_core) {
-    this->_root = this->create_unique<Entity>(nullptr);
+EntityContainer::EntityContainer(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
+    this->_entities = std::make_unique<EntityVector>();
 }
 
 EntityContainer::~EntityContainer() { this->destroy_all_entities(); }
 
-void EntityContainer::destroy_all_entities() { this->_root->destroy_all_children(); }
+int EntityContainer::get_entity_index(Entity *entity) const {
+    for (size_t i = 0; i < this->_entities->size(); i++) {
+        if (this->_entities->at(i).get() == entity) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void EntityContainer::destroy_entity(unsigned int index) {
+    Entity *entity = this->_entities->at(index).get();
+
+    entity->get_on_destroy_event().invoke(entity);
+    this->_entities->erase(this->_entities->begin() + index);
+}
+
+void EntityContainer::destroy_all_entities() {
+    assert(this->_entities != nullptr);
+
+    for (auto it = this->_entities->begin(); it != this->_entities->end(); ++it) {
+        Entity *entity = it->get();
+        entity->get_on_destroy_event().invoke(entity);
+    }
+
+    this->_entities->clear();
+}

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../types.hpp"
-#include "../utils/engine_core_dependency_injector.hpp"
+#include "../utils/game_core_dependency_injector.hpp"
 
-class Manager : public EngineCoreDependencyInjector {
+class Manager : public GameCoreDependencyInjector {
    public:
-    Manager(EngineCore *engine_core) : EngineCoreDependencyInjector(engine_core){};
+    Manager(GameCore *game_core) : GameCoreDependencyInjector(game_core){};
 
     virtual ~Manager() = default;
 

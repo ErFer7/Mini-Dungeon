@@ -15,7 +15,7 @@ enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
 // TODO: Move this to a separate file
 class Space {
    public:
-    Space() : _sorting_mode(SortingMode::NONE) { this->_components = std::make_unique<std::vector<Graphics2DComponent *>>(); }
+    Space() : _sorting_mode(SortingMode::NONE) { this->_components = std::make_unique<std::vector<GraphicsComponent *>>(); }
 
     Space(const Space &other) { this->_copy(other); }
 
@@ -33,9 +33,9 @@ class Space {
 
     inline void set_sorting_mode(SortingMode sorting_mode) { this->_sorting_mode = sorting_mode; }
 
-    void add_component(Graphics2DComponent *component);
+    void add_component(GraphicsComponent *component);
 
-    void remove_component(Graphics2DComponent *component);
+    void remove_component(GraphicsComponent *component);
 
     void sort();
 
@@ -49,20 +49,20 @@ class Space {
 
     inline void _copy(const Space &other) {
         this->_components.reset();
-        this->_components = std::make_unique<std::vector<Graphics2DComponent *>>(*other._components);
+        this->_components = std::make_unique<std::vector<GraphicsComponent *>>(*other._components);
     }
 
    private:
     SortingMode _sorting_mode;
 
-    std::unique_ptr<std::vector<Graphics2DComponent *>> _components;
+    std::unique_ptr<std::vector<GraphicsComponent *>> _components;
 };
 
-class GraphicsManager : public ComponentManager {
-    friend class Graphics2DComponent;
+class GraphicsComponentManager : public ComponentManager {
+    friend class GraphicsComponent;
 
    public:
-    GraphicsManager(EngineCore *engine_core,
+    GraphicsComponentManager(GameCore *game_core,
                     int screen_width,
                     int screen_height,
                     const char *title,
@@ -71,7 +71,7 @@ class GraphicsManager : public ComponentManager {
                     bool fullscreen = false,
                     bool show_fps = false);
 
-    ~GraphicsManager() override = default;
+    ~GraphicsComponentManager() override = default;
 
     void init() override;
 

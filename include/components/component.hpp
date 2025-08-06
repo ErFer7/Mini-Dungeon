@@ -1,19 +1,19 @@
 #pragma once
 
 #include "../types.hpp"
-#include "../utils/engine_core_dependency_injector.hpp"
+#include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/event.hpp"
 #include "../utils/restricted_instance.hpp"
 
 // TODO: Implement an activity state
 // TODO: Implement name with a hash map
 
-class Component : public EngineCoreDependencyInjector, RestrictedInstance {
+class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;
 
    public:
-    Component(EngineCore *engine_core, Entity *entity, bool unique = false)
-        : EngineCoreDependencyInjector(engine_core), _unique(unique), _entity(entity) {}
+    Component(GameCore *game_core, Entity *entity, bool unique = false)
+        : GameCoreDependencyInjector(game_core), _unique(unique), _entity(entity) {}
 
     inline bool is_unique() const { return this->_unique; }
 

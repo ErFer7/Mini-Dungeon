@@ -9,54 +9,11 @@
 
 #include "../../include/components/component.hpp"
 
-Entity::Entity(EngineCore *engine_core, Entity *parent) : EngineCoreDependencyInjector(engine_core) {
-    this->_parent = parent;
-    this->_children = std::make_unique<ChildrenVector>();
+Entity::Entity(GameCore *game_core, Entity *parent) : GameCoreDependencyInjector(game_core) {
     this->_components = std::make_unique<ComponentsVector>();
 }
 
-Entity::~Entity() {
-    this->destroy_all_children();
-    this->destroy_all_components();
-}
-
-int Entity::get_child_index(Entity *entity) const {
-    for (size_t i = 0; i < this->_children->size(); i++) {
-        if (this->_children->at(i).get() == entity) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-void Entity::destroy_child(unsigned int index) {
-    Entity *child = this->_children->at(index).get();
-
-    child->get_on_destroy_event().invoke(child);
-    this->_on_child_destroy_event.invoke(child);
-    child->destroy_all_children();
-    this->_children->erase(this->_children->begin() + index);
-}
-
-void Entity::destroy_all_children() {
-    assert(this->_children != nullptr);
-
-    for (auto it = this->_children->begin(); it != this->_children->end(); ++it) {
-        Entity *child = it->get();
-        child->get_on_destroy_event().invoke(child);
-        this->_on_child_destroy_event.invoke(child);
-        child->destroy_all_children();
-    }
-
-    this->_children->clear();
-}
-
-void Entity::destroy() {
-    assert(this->_parent != nullptr);
-
-    this->_parent->destroy_child(this->_parent->get_child_index(this));
-}
+Entity::~Entity() { this->destroy_all_components(); }
 
 Component *Entity::get_component(unsigned int index) const { return this->_components->at(index).get(); }
 
