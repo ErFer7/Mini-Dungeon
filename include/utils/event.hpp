@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+namespace utils {
+
 template <typename... Args>
 class Event {
     friend class Listener;
@@ -102,6 +104,8 @@ class Event {
         }
     }
 
+    inline bool has_listeners() { return !this->_listeners->empty(); }
+
    private:
     inline void _add_listener(Listener *listener) { this->_listeners->push_back(listener); }
 
@@ -126,3 +130,5 @@ class Event {
    private:
     std::unique_ptr<ListenerVector> _listeners;
 };
+
+}  // namespace game

@@ -5,6 +5,8 @@
 
 class GameCore;
 
+namespace utils {
+
 class GameCoreDependencyInjector {
    public:
     GameCoreDependencyInjector() = default;
@@ -33,3 +35,5 @@ class GameCoreDependencyInjector {
    private:
     GameCore *_game_core;
 };
+
+}  // namespace utils

@@ -2,6 +2,8 @@
 
 #include "../utils/game_core_dependency_injector.hpp"
 
+using utils::GameCoreDependencyInjector;
+
 class Scene : public GameCoreDependencyInjector {
    public:
     Scene() = default;

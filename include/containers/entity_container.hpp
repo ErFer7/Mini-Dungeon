@@ -7,6 +7,8 @@
 #include "../types.hpp"
 #include "../utils/game_core_dependency_injector.hpp"
 
+using utils::GameCoreDependencyInjector;
+
 class EntityContainer : public GameCoreDependencyInjector {
    public:
     typedef std::vector<std::unique_ptr<Entity>> EntityVector;

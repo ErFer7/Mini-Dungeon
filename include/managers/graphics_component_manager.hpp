@@ -63,13 +63,13 @@ class GraphicsComponentManager : public ComponentManager {
 
    public:
     GraphicsComponentManager(GameCore *game_core,
-                    int screen_width,
-                    int screen_height,
-                    const char *title,
-                    int target_fps = 60,
-                    bool resizable = false,
-                    bool fullscreen = false,
-                    bool show_fps = false);
+                             int screen_width,
+                             int screen_height,
+                             const char *title,
+                             int target_fps = 60,
+                             bool resizable = false,
+                             bool fullscreen = false,
+                             bool show_fps = false);
 
     ~GraphicsComponentManager() override = default;
 

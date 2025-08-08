@@ -4,55 +4,81 @@
 #include "raymath.h"
 
 TransformComponent::TransformComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity, true) {
-    this->_transform_system = TransformSystem();
+    this->_transform = utils::Transform();
 }
 
 void TransformComponent::set_position(Vector2 position) {
-    Vector2 old_position = this->_transform_system.get_absolute_position();
-    Vector2 diff_position = Vector2Subtract(position, old_position);
-    Transform2D diff_transform = Transform2D(diff_position, 0.0f, Vector2One());
+    if (this->_on_update_event.has_listeners()) {
+        Vector2 old_position = this->_transform.get_position();
+        Vector2 diff_position = Vector2Subtract(position, old_position);
+        TransformData diff_transform = TransformData(diff_position, 0.0f, Vector2One());
 
-    this->_transform_system.set_absolute_position(position);
-    this->_on_update_event.invoke(position, diff_transform);
+        this->_transform.set_position(position);
+        this->_on_update_event.invoke(position, diff_transform);
+    } else {
+        this->_transform.set_position(position);
+    }
 }
 
 void TransformComponent::set_rotation(float rotation) {
-    float old_rotation = this->_transform_system.get_absolute_rotation();
-    float diff_rotation = rotation - old_rotation;
-    Transform2D diff_transform = Transform2D(Vector2Zero(), diff_rotation, Vector2One());
+    if (this->_on_update_event.has_listeners()) {
+        float old_rotation = this->_transform.get_rotation();
+        float diff_rotation = rotation - old_rotation;
+        TransformData diff_transform = TransformData(Vector2Zero(), diff_rotation, Vector2One());
 
-    this->_transform_system.set_absolute_rotation(rotation);
-    this->_on_update_event.invoke(this->_transform_system.get_absolute_position(), diff_transform);
+        this->_transform.set_rotation(rotation);
+        this->_on_update_event.invoke(this->_transform.get_position(), diff_transform);
+    } else {
+        this->_transform.set_rotation(rotation);
+    }
 }
 
 void TransformComponent::set_scale(Vector2 scale) {
-    Vector2 old_scale = this->_transform_system.get_absolute_scale();
-    Vector2 diff_scale = Vector2Divide(scale, old_scale);
-    Transform2D diff_transform = Transform2D(Vector2Zero(), 0.0f, diff_scale);
+    if (this->_on_update_event.has_listeners()) {
+        Vector2 old_scale = this->_transform.get_scale();
+        Vector2 diff_scale = Vector2Divide(scale, old_scale);
+        TransformData diff_transform = TransformData(Vector2Zero(), 0.0f, diff_scale);
 
-    this->_transform_system.set_absolute_scale(scale);
-    this->_on_update_event.invoke(this->_transform_system.get_absolute_position(), diff_transform);
+        this->_transform.set_scale(scale);
+        this->_on_update_event.invoke(this->_transform.get_position(), diff_transform);
+    } else {
+        this->_transform.set_scale(scale);
+    }
 }
 
 void TransformComponent::translate(Vector2 translation) {
-    Transform2D diff_transform = Transform2D(translation, 0.0f, Vector2One());
+    if (this->_on_update_event.has_listeners()) {
+        TransformData diff_transform = TransformData(translation, 0.0f, Vector2One());
 
-    this->_transform_system.translate(translation);
-    this->_on_update_event.invoke(this->_transform_system.get_absolute_position(), diff_transform);
+        this->_transform.translate(translation);
+        this->_on_update_event.invoke(this->_transform.get_position(), diff_transform);
+    } else {
+        this->_transform.translate(translation);
+    }
 }
 
 void TransformComponent::rotate(float rotation) {
-    Transform2D diff_transform = Transform2D(Vector2Zero(), rotation, Vector2One());
-    Vector2 origin = this->_transform_system.get_absolute_position();
+    Vector2 origin = this->_transform.get_position();
 
-    this->_transform_system.rotate(origin, rotation);
-    this->_on_update_event.invoke(origin, diff_transform);
+    if (this->_on_update_event.has_listeners()) {
+        TransformData diff_transform = TransformData(Vector2Zero(), rotation, Vector2One());
+
+        this->_transform.rotate(origin, rotation);
+        this->_on_update_event.invoke(origin, diff_transform);
+    } else {
+        this->_transform.rotate(origin, rotation);
+    }
 }
 
 void TransformComponent::scale(Vector2 scale) {
-    Transform2D diff_transform = Transform2D(Vector2Zero(), 0.0f, scale);
-    Vector2 origin = this->_transform_system.get_absolute_position();
+    Vector2 origin = this->_transform.get_position();
 
-    this->_transform_system.scale(origin, scale);
-    this->_on_update_event.invoke(origin, diff_transform);
+    if (this->_on_update_event.has_listeners()) {
+        TransformData diff_transform = TransformData(Vector2Zero(), 0.0f, scale);
+
+        this->_transform.scale(origin, scale);
+        this->_on_update_event.invoke(origin, diff_transform);
+    } else {
+        this->_transform.scale(origin, scale);
+    }
 }

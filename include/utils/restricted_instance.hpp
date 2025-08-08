@@ -1,5 +1,7 @@
 #pragma once
 
+namespace utils {
+
 class RestrictedInstance {
    public:
     RestrictedInstance() = default;
@@ -18,3 +20,5 @@ class RestrictedInstance {
 
     const RestrictedInstance operator*() const = delete;
 };
+
+}  // namespace utils

@@ -6,14 +6,18 @@
 #include <vector>
 
 #include "../types.hpp"
-#include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/event.hpp"
+#include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/restricted_instance.hpp"
 
 // TODO: Implement an activity state
 // TODO: Implement name with a hash map
 // TODO: Optimize component creation
 // TODO: Event listeners
+
+using utils::Event;
+using utils::GameCoreDependencyInjector;
+using utils::RestrictedInstance;
 
 class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     friend class EntityContainer;
@@ -27,10 +31,6 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     virtual ~Entity() override;
 
     inline Event<Entity *> &get_on_destroy_event() { return this->_on_destroy_event; }
-
-    inline Event<Entity *, Component *> &get_on_component_create_event() { return this->_on_component_create_event; }
-
-    inline Event<Entity *, Component *> &get_on_component_destroy_event() { return this->_on_component_destroy_event; }
 
     template <typename T, typename... Args>
     T *create_component(Args &&...args) {
@@ -81,6 +81,4 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
    private:
     std::unique_ptr<ComponentsVector> _components;
     Event<Entity *> _on_destroy_event;
-    Event<Entity *, Component *> _on_component_create_event;
-    Event<Entity *, Component *> _on_component_destroy_event;
 };

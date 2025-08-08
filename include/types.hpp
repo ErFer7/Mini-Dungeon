@@ -17,7 +17,7 @@ class GameManager;
 
 // Scenes
 class Scene;
-class InitScene;
+class MainMenuScene;
 
 // Entities
 class Entity;

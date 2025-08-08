@@ -31,6 +31,8 @@ class GraphicsComponent : public Component {
 
     inline void set_layer(int layer) { this->_layer = layer; }
 
+    Rectangle get_rectangle() const;
+
     void draw();
 
    protected:

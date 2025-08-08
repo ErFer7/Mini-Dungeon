@@ -1,12 +1,15 @@
 #pragma once
 
 #include "../types.hpp"
-#include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/event.hpp"
+#include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/restricted_instance.hpp"
 
 // TODO: Implement an activity state
-// TODO: Implement name with a hash map
+
+using utils::Event;
+using utils::GameCoreDependencyInjector;
+using utils::RestrictedInstance;
 
 class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;
@@ -22,6 +25,7 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     inline Event<Component *> *get_on_destroy_event() { return &this->_on_destroy_event; }
 
    protected:
+    // TODO: Standardize this usage of {}, = 0 or = default
     virtual void register_component() {};
 
     virtual void unregister_component() {};
