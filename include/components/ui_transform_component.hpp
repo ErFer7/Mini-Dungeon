@@ -6,16 +6,13 @@
 #include "components/transform_component.hpp"
 #include "graphics_component.hpp"
 #include "raylib.h"
-#include "utils/transform.hpp"
 
 enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
 
+// TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent : public Component {
    public:
-    UITransformComponent(GameCore *game_core,
-                             Entity *entity,
-                             UIOrigin ui_origin,
-                             UITransformComponent *parent_ui_transform = nullptr);
+    UITransformComponent(GameCore *game_core, Entity *entity, UIOrigin ui_origin, UITransformComponent *parent_ui_transform = nullptr);
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override { this->unregister_component(); };
@@ -24,11 +21,11 @@ class UITransformComponent : public Component {
 
     // TODO: Handle case where the parent is null
     inline float get_rotation() const {
-        return this->_transform_component->get_transform().get_relative_rotation(this->_parent_transform_component->get_rotation());
+        return this->_transform_component->get_relative_rotation(this->_parent_transform_component->get_rotation());
     }
 
     inline Vector2 get_scale() const {
-        return this->_transform_component->get_transform().get_relative_scale(this->_parent_transform_component->get_scale());
+        return this->_transform_component->get_relative_scale(this->_parent_transform_component->get_scale());
     }
 
     void set_position(Vector2 position);

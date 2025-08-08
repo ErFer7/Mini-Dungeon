@@ -74,12 +74,11 @@ void UITransformComponent::set_rotation(float rotation) {
         origin = this->_parent_transform_component->get_position();
         origin_rotation = this->_parent_transform_component->get_rotation();
     } else {
-        origin = Vector2Zero();
+        origin = this->_transform_component->get_position();
         origin_rotation = 0.0f;
     }
 
-    // TODO: Fix the access, this won't work
-    this->_transform_component->get_transform().set_relative_rotation(origin, origin_rotation, rotation);
+    this->_transform_component->set_relative_rotation(origin, origin_rotation, rotation);
 }
 
 void UITransformComponent::set_scale(Vector2 scale) {
@@ -90,11 +89,11 @@ void UITransformComponent::set_scale(Vector2 scale) {
         origin = this->_parent_transform_component->get_position();
         origin_scale = this->_parent_transform_component->get_scale();
     } else {
-        origin = Vector2Zero();
-        origin_scale = Vector2Zero();
+        origin = this->_transform_component->get_position();
+        origin_scale = Vector2One();
     }
 
-    this->_transform_component->get_transform().set_relative_scale(origin, origin_scale, scale);
+    this->_transform_component->set_relative_scale(origin, origin_scale, scale);
 }
 
 Vector2 UITransformComponent::_get_origin() const {

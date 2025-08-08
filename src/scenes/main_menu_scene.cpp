@@ -12,3 +12,5 @@ void MainMenuScene::init() {
     this->_test_entity->get_ui_rect_transform_component()->set_position(Vector2Zero());
     this->_test_entity->get_ui_rect_transform_component()->set_scale(Vector2{5.0f, 5.0f});
 }
+
+void MainMenuScene::exit() { UnloadTexture(this->_test_entity->get_graphics_component()->get_texture()); }

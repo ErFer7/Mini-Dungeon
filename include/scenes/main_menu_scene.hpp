@@ -15,7 +15,7 @@ class MainMenuScene : public Scene {
 
     void update() override {};
 
-    void exit() override {};
+    void exit() override;
 
    private:
     UIEntity *_test_entity;
