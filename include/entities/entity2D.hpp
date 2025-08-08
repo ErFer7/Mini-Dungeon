@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../types.hpp"
+#include "../components/graphics_component.hpp"
 #include "entity.hpp"
 
 class Entity2D : public Entity {
    public:
-    Entity2D(GameCore *game_core, Entity *parent);
+    Entity2D(GameCore *game_core, RenderingMode rendering_mode);
 
     ~Entity2D() override = default;
 

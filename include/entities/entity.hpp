@@ -26,7 +26,7 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     typedef std::vector<std::unique_ptr<Component>> ComponentsVector;
 
    public:
-    Entity(GameCore *game_core, Entity *parent);
+    Entity(GameCore *game_core);
 
     virtual ~Entity() override;
 

@@ -9,9 +9,7 @@
 
 #include "../../include/components/component.hpp"
 
-Entity::Entity(GameCore *game_core, Entity *parent) : GameCoreDependencyInjector(game_core) {
-    this->_components = std::make_unique<ComponentsVector>();
-}
+Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) { this->_components = std::make_unique<ComponentsVector>(); }
 
 Entity::~Entity() { this->destroy_all_components(); }
 

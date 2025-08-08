@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../entities/user_interface/ui_entity.hpp"
 #include "scene.hpp"
 
 class MainMenuScene : public Scene {
@@ -10,9 +11,12 @@ class MainMenuScene : public Scene {
 
     ~MainMenuScene(){};
 
-    void init() override {};
+    void init() override;
 
     void update() override {};
 
     void exit() override {};
+
+   private:
+    UIEntity *_test_entity;
 };

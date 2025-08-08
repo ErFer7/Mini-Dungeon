@@ -18,6 +18,6 @@ class GameManager : public Manager {
     void exit() override {};
 
    private:
-    std::unique_ptr<MainMenuScene> _init_scene;
+    std::unique_ptr<MainMenuScene> _main_menu_scene;
     Scene *_current_scene;
 };

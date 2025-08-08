@@ -5,9 +5,9 @@
 #include "raymath.h"
 
 UITransformComponent::UITransformComponent(GameCore *game_core,
-                                                   Entity *entity,
-                                                   UIOrigin ui_origin,
-                                                   UITransformComponent *parent_ui_transform)
+                                           Entity *entity,
+                                           UIOrigin ui_origin,
+                                           UITransformComponent *parent_ui_transform)
     : Component(game_core, entity, true) {
     this->_ui_origin = ui_origin;
     this->_parent_ui_transform = parent_ui_transform;
@@ -47,7 +47,7 @@ void UITransformComponent::set_position(Vector2 position) {
             calculated_position = Vector2{diff.x + rect.width / 2.0f, diff.y};
             break;
         case UIOrigin::CENTER:
-            calculated_position = Vector2{diff.x, diff.y};
+            calculated_position = diff;
             break;
         case UIOrigin::RIGHT:
             calculated_position = Vector2{diff.x - rect.width / 2.0f, diff.y};
@@ -67,15 +67,32 @@ void UITransformComponent::set_position(Vector2 position) {
 }
 
 void UITransformComponent::set_rotation(float rotation) {
-    Vector2 origin = this->_parent_transform_component->get_position();
-    float origin_rotation = this->_parent_transform_component->get_rotation();
+    Vector2 origin;
+    float origin_rotation;
 
+    if (this->_parent_graphics_component != nullptr) {
+        origin = this->_parent_transform_component->get_position();
+        origin_rotation = this->_parent_transform_component->get_rotation();
+    } else {
+        origin = Vector2Zero();
+        origin_rotation = 0.0f;
+    }
+
+    // TODO: Fix the access, this won't work
     this->_transform_component->get_transform().set_relative_rotation(origin, origin_rotation, rotation);
 }
 
 void UITransformComponent::set_scale(Vector2 scale) {
-    Vector2 origin = this->_parent_transform_component->get_position();
-    Vector2 origin_scale = this->_parent_transform_component->get_scale();
+    Vector2 origin;
+    Vector2 origin_scale;
+
+    if (this->_parent_graphics_component != nullptr) {
+        origin = this->_parent_transform_component->get_position();
+        origin_scale = this->_parent_transform_component->get_scale();
+    } else {
+        origin = Vector2Zero();
+        origin_scale = Vector2Zero();
+    }
 
     this->_transform_component->get_transform().set_relative_scale(origin, origin_scale, scale);
 }
@@ -117,4 +134,6 @@ Vector2 UITransformComponent::_rect_point_by_ui_origin(Rectangle rectangle) cons
         case UIOrigin::BOTTOM_RIGHT:
             return Vector2{rectangle.x + rectangle.width, rectangle.y + rectangle.height};
     }
+
+    return Vector2Zero();
 }

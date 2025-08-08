@@ -8,11 +8,13 @@ setup:
 
 .PHONY: debug
 debug:
-	cmake --build build --config Debug
+	cmake -B build -DCMAKE_BUILD_TYPE=Debug
+	cmake --build build
 
 .PHONY: release
 release:
-	cmake --build build --config Release
+	cmake -B build -DCMAKE_BUILD_TYPE=Release
+	cmake --build build
 
 .PHONY: run
 run:

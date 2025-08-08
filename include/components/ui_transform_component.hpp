@@ -22,6 +22,7 @@ class UITransformComponent : public Component {
 
     Vector2 get_position() const;
 
+    // TODO: Handle case where the parent is null
     inline float get_rotation() const {
         return this->_transform_component->get_transform().get_relative_rotation(this->_parent_transform_component->get_rotation());
     }

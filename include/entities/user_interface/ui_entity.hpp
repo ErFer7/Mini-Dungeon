@@ -6,7 +6,7 @@
 
 class UIEntity : public Entity2D {
    public:
-    UIEntity(GameCore *game_core, Entity *parent, UIOrigin ui_origin, UITransformComponent *parent_ui_transform = nullptr);
+    UIEntity(GameCore *game_core, UIOrigin ui_origin, UITransformComponent *parent_ui_transform = nullptr);
 
     // TODO: Destroy the entity subtree
     ~UIEntity() override = default;

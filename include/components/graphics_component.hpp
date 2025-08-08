@@ -11,7 +11,7 @@ class GraphicsComponent : public Component {
     friend class Space;
 
    public:
-    GraphicsComponent(GameCore *game_core, Entity *entity);
+    GraphicsComponent(GameCore *game_core, Entity *entity, RenderingMode rendering_mode);
 
     ~GraphicsComponent() override;
 
@@ -24,8 +24,6 @@ class GraphicsComponent : public Component {
     inline void set_color(Color color) { this->_tint = color; }
 
     inline RenderingMode get_rendering_mode() const { return this->_rendering_mode; }
-
-    inline void set_rendering_mode(RenderingMode rendering_mode) { this->_rendering_mode = rendering_mode; }  // TODO: Fix this
 
     inline int get_layer() { return this->_layer; }
 
