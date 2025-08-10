@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../entities/user_interface/ui_entity.hpp"
+#include "../entities/user_interface/text.hpp"
 #include "scene.hpp"
 
 class MainMenuScene : public Scene {
@@ -18,5 +18,5 @@ class MainMenuScene : public Scene {
     void exit() override;
 
    private:
-    UIEntity *_test_entity;
+    Text *_title;
 };

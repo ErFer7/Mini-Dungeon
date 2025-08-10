@@ -5,7 +5,7 @@
 
 class BehaviorComponent : public Component {
    public:
-    BehaviorComponent(GameCore *game_core, Entity *entity, bool unique) : Component(game_core, entity, unique) {}
+    BehaviorComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity) {}
 
     ~BehaviorComponent() override;
 

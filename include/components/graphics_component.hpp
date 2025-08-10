@@ -11,6 +11,7 @@ class GraphicsComponent : public Component {
     friend class Space;
 
    public:
+    // TODO: Pass all the necessary parameters
     GraphicsComponent(GameCore *game_core, Entity *entity, RenderingMode rendering_mode);
 
     ~GraphicsComponent() override;

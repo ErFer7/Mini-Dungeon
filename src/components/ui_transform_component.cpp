@@ -8,7 +8,7 @@ UITransformComponent::UITransformComponent(GameCore *game_core,
                                            Entity *entity,
                                            UIOrigin ui_origin,
                                            UITransformComponent *parent_ui_transform)
-    : Component(game_core, entity, true) {
+    : Component(game_core, entity) {
     this->_ui_origin = ui_origin;
     this->_parent_ui_transform = parent_ui_transform;
 

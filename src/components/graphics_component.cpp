@@ -5,8 +5,7 @@
 #include "../../include/entities/entity.hpp"
 #include "../../include/game_core.hpp"
 
-GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, RenderingMode rendering_mode)
-    : Component(game_core, entity, false) {
+GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, RenderingMode rendering_mode) : Component(game_core, entity) {
     this->_texture = Texture2D();
     this->_source_rectangle = {0, 0, 0, 0};
     this->_destination_rectangle = {0, 0, 0, 0};

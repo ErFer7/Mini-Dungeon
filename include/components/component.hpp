@@ -15,10 +15,7 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;
 
    public:
-    Component(GameCore *game_core, Entity *entity, bool unique = false)
-        : GameCoreDependencyInjector(game_core), _unique(unique), _entity(entity) {}
-
-    inline bool is_unique() const { return this->_unique; }
+    Component(GameCore *game_core, Entity *entity) : GameCoreDependencyInjector(game_core), _entity(entity) {}
 
     inline Entity *get_entity() const { return this->_entity; }
 
@@ -31,7 +28,6 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     virtual void unregister_component() {};
 
    private:
-    bool _unique;
     Entity *_entity;
     Event<Component *> _on_destroy_event;
 };

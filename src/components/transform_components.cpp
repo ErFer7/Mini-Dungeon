@@ -4,7 +4,7 @@
 #include "raymath.h"
 #include "utils/transform_data.hpp"
 
-TransformComponent::TransformComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity, true) {
+TransformComponent::TransformComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity) {
     this->_transform = utils::Transform();
 }
 
