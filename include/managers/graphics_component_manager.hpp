@@ -8,6 +8,12 @@
 #include "component_manager.hpp"
 #include "raylib.h"
 
+using std::make_unique;
+using std::move;
+using std::string;
+using std::unique_ptr;
+using std::vector;
+
 // TODO: Quad tree
 
 enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
@@ -15,11 +21,11 @@ enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
 // TODO: Move this to a separate file
 class Space {
    public:
-    Space() : _sorting_mode(SortingMode::NONE) { this->_components = std::make_unique<std::vector<GraphicsComponent *>>(); }
+    Space() : _sorting_mode(SortingMode::NONE) { this->_components = make_unique<vector<GraphicsComponent *>>(); }
 
     Space(const Space &other) { this->_copy(other); }
 
-    Space(Space &&other) { this->_move(std::move(other)); }
+    Space(Space &&other) { this->_move(move(other)); }
 
     ~Space() = default;
 
@@ -44,24 +50,26 @@ class Space {
    private:
     inline void _move(Space &&other) {
         this->_components.reset();
-        this->_components = std::move(other._components);
+        this->_components = move(other._components);
     }
 
     inline void _copy(const Space &other) {
         this->_components.reset();
-        this->_components = std::make_unique<std::vector<GraphicsComponent *>>(*other._components);
+        this->_components = make_unique<vector<GraphicsComponent *>>(*other._components);
     }
 
    private:
     SortingMode _sorting_mode;
 
-    std::unique_ptr<std::vector<GraphicsComponent *>> _components;
+    unique_ptr<vector<GraphicsComponent *>> _components;
 };
 
 class GraphicsComponentManager : public ComponentManager {
     friend class GraphicsComponent;
 
    public:
+    GraphicsComponentManager() = default;
+
     GraphicsComponentManager(GameCore *game_core,
                              int screen_width,
                              int screen_height,
@@ -83,7 +91,7 @@ class GraphicsComponentManager : public ComponentManager {
 
     inline int get_screen_height() const { return this->_screen_height; }
 
-    inline std::string get_title() const { return this->_title; }
+    inline string get_title() const { return this->_title; }
 
     inline bool is_resizable() const { return this->_resizable; }
 
@@ -112,12 +120,12 @@ class GraphicsComponentManager : public ComponentManager {
     // TODO: Implement set methods for all of these
     int _screen_width;
     int _screen_height;
-    std::string _title;
+    string _title;
     bool _resizable;
     bool _fullscreen;
     bool _show_fps;
     int _target_fps;
-    Camera2D _camera2D;
+    Camera2D _camera2D;  // TODO: Fix pixel perfect camera
     Space _screen_space;
     Space _world2D_space;
 };

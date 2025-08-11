@@ -1,11 +1,14 @@
 #include "../../include/containers/entity_container.hpp"
 
 #include <cassert>
+#include <memory>
 
 #include "../../include/entities/entity.hpp"
 
+using std::make_unique;
+
 EntityContainer::EntityContainer(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
-    this->_entities = std::make_unique<EntityVector>();
+    this->_entities = make_unique<EntityVector>();
 }
 
 EntityContainer::~EntityContainer() { this->destroy_all_entities(); }

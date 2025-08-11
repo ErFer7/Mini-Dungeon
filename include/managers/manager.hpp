@@ -7,6 +7,8 @@ using utils::GameCoreDependencyInjector;
 
 class Manager : public GameCoreDependencyInjector {
    public:
+    Manager() = default;
+
     Manager(GameCore *game_core) : GameCoreDependencyInjector(game_core){};
 
     virtual ~Manager() = default;

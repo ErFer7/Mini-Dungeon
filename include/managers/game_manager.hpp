@@ -5,8 +5,12 @@
 #include "../types.hpp"
 #include "manager.hpp"
 
+using std::unique_ptr;
+
 class GameManager : public Manager {
    public:
+    GameManager() = default;
+
     GameManager(GameCore *game_core);
 
     ~GameManager();
@@ -18,6 +22,6 @@ class GameManager : public Manager {
     void exit() override {};
 
    private:
-    std::unique_ptr<MainMenuScene> _main_menu_scene;
+    unique_ptr<MainMenuScene> _main_menu_scene;
     Scene *_current_scene;
 };

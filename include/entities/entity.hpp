@@ -15,6 +15,10 @@
 // TODO: Optimize component creation
 // TODO: Event listeners
 
+using std::forward;
+using std::type_info;
+using std::unique_ptr;
+using std::vector;
 using utils::Event;
 using utils::GameCoreDependencyInjector;
 using utils::RestrictedInstance;
@@ -23,7 +27,7 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     friend class EntityContainer;
 
    public:
-    typedef std::vector<std::unique_ptr<Component>> ComponentsVector;
+    typedef vector<unique_ptr<Component>> ComponentsVector;
 
    public:
     Entity(GameCore *game_core);
@@ -34,7 +38,7 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
 
     template <typename T, typename... Args>
     T *create_component(Args &&...args) {
-        return static_cast<T *>(this->_register_created_component(this->create_unique<T>(this, std::forward<Args>(args)...)));
+        return static_cast<T *>(this->_register_created_component(this->create_unique<T>(this, forward<Args>(args)...)));
     }
 
     Component *get_component(unsigned int index) const;
@@ -68,17 +72,17 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     }
 
    private:
-    Component *_register_created_component(std::unique_ptr<Component> component);
+    Component *_register_created_component(unique_ptr<Component> component);
 
-    bool _has_component(const std::type_info &type_info) const;
+    bool _has_component(const type_info &type_info) const;
 
-    Component *_get_component(const std::type_info &type_info) const;
+    Component *_get_component(const type_info &type_info) const;
 
-    int _get_component_index(const std::type_info &type_info) const;
+    int _get_component_index(const type_info &type_info) const;
 
-    void _destroy_component(const std::type_info &type_info);
+    void _destroy_component(const type_info &type_info);
 
    private:
-    std::unique_ptr<ComponentsVector> _components;
+    unique_ptr<ComponentsVector> _components;
     Event<Entity *> _on_destroy_event;
 };

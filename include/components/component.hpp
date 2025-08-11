@@ -22,10 +22,9 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     inline Event<Component *> *get_on_destroy_event() { return &this->_on_destroy_event; }
 
    protected:
-    // TODO: Standardize this usage of {}, = 0 or = default
-    virtual void register_component() {};
+    virtual void register_component() = 0;
 
-    virtual void unregister_component() {};
+    virtual void unregister_component() = 0;
 
    private:
     Entity *_entity;

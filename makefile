@@ -34,4 +34,4 @@ clean:
 
 .PHONY: veryclean
 veryclean:
-	rm -rf build
+	rm -rf build .cache

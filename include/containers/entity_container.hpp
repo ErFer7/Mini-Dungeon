@@ -2,16 +2,20 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 
 #include "../entities/entity.hpp"
 #include "../types.hpp"
 #include "../utils/game_core_dependency_injector.hpp"
 
+using std::unique_ptr;
+using std::vector;
+using std::forward;
 using utils::GameCoreDependencyInjector;
 
 class EntityContainer : public GameCoreDependencyInjector {
    public:
-    typedef std::vector<std::unique_ptr<Entity>> EntityVector;
+    typedef vector<unique_ptr<Entity>> EntityVector;
 
    public:
     EntityContainer() = default;
@@ -20,10 +24,9 @@ class EntityContainer : public GameCoreDependencyInjector {
 
     ~EntityContainer();
 
-    // TODO: Check the args
     template <typename T, typename... Args>
     T *create_entity(Args &&...args) {
-        this->_entities->push_back(this->create_unique<T>(std::forward<Args>(args)...));
+        this->_entities->push_back(this->create_unique<T>(forward<Args>(args)...));
 
         Entity *entity = this->_entities->back().get();
 
@@ -43,5 +46,5 @@ class EntityContainer : public GameCoreDependencyInjector {
     void destroy_all_entities();
 
    private:
-    std::unique_ptr<EntityVector> _entities;
+    unique_ptr<EntityVector> _entities;
 };

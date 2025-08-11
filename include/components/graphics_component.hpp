@@ -12,7 +12,12 @@ class GraphicsComponent : public Component {
 
    public:
     // TODO: Pass all the necessary parameters
-    GraphicsComponent(GameCore *game_core, Entity *entity, RenderingMode rendering_mode);
+    GraphicsComponent(GameCore *game_core,
+                      Entity *entity,
+                      Texture2D texture,
+                      RenderingMode rendering_mode,
+                      Color color = WHITE,
+                      int layer = 0);
 
     ~GraphicsComponent() override;
 
@@ -20,9 +25,9 @@ class GraphicsComponent : public Component {
 
     void set_texture(Texture2D texture);
 
-    inline Color get_color() const { return this->_tint; }
+    inline Color get_color() const { return this->_color; }
 
-    inline void set_color(Color color) { this->_tint = color; }
+    inline void set_color(Color color) { this->_color = color; }
 
     inline RenderingMode get_rendering_mode() const { return this->_rendering_mode; }
 
@@ -42,7 +47,8 @@ class GraphicsComponent : public Component {
    private:
     inline Vector2 _get_position() { return this->_transform_component->get_position(); }
 
-    void _update_transform();
+    // TODO: Check the way that methods are divided
+    void _update_drawing_transform();
 
    private:
     Texture2D _texture;
@@ -51,7 +57,7 @@ class GraphicsComponent : public Component {
     Rectangle _destination_rectangle;
     Vector2 _origin;
     float _rotation;
-    Color _tint;
+    Color _color;
     RenderingMode _rendering_mode;
     int _layer;
     TransformComponent::TransformUpdateListener _transform_update_listener;

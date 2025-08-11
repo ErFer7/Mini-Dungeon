@@ -6,7 +6,15 @@
 
 class UIEntity : public Entity2D {
    public:
-    UIEntity(GameCore *game_core, UIOrigin ui_origin, UITransformComponent *parent_ui_transform = nullptr);
+    UIEntity(GameCore *game_core,
+             Texture2D texture,
+             UIOrigin ui_origin,
+             Vector2 position = Vector2Zero(),
+             float rotation = 0.0f,
+             Vector2 scale = Vector2One(),
+             Color color = WHITE,
+             int layer = 0,
+             UITransformComponent *parent_ui_transform = nullptr);
 
     // TODO: Destroy the entity subtree
     ~UIEntity() override = default;

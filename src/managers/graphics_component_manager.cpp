@@ -2,10 +2,12 @@
 
 #include "../../include/components/graphics_component.hpp"
 
+using std::remove;
+
 void Space::add_component(GraphicsComponent *component) { this->_components->push_back(component); }
 
 void Space::remove_component(GraphicsComponent *component) {
-    this->_components->erase(std::remove(this->_components->begin(), this->_components->end(), component), this->_components->end());
+    this->_components->erase(remove(this->_components->begin(), this->_components->end(), component), this->_components->end());
 }
 
 void Space::sort() {
@@ -69,13 +71,13 @@ void Space::draw() {
 }
 
 GraphicsComponentManager::GraphicsComponentManager(GameCore *game_core,
-                                 int screen_width,
-                                 int screen_height,
-                                 const char *title,
-                                 int target_fps,
-                                 bool resizable,
-                                 bool fullscreen,
-                                 bool show_fps)
+                                                   int screen_width,
+                                                   int screen_height,
+                                                   const char *title,
+                                                   int target_fps,
+                                                   bool resizable,
+                                                   bool fullscreen,
+                                                   bool show_fps)
     : ComponentManager(game_core) {
     this->_screen_width = screen_width;
     this->_screen_height = screen_height;

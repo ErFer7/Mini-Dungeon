@@ -8,7 +8,7 @@
 void MainMenuScene::init() {
     Font font = LoadFont("assets/fonts/joystix monospace.ttf");
 
-    this->_title = this->get_game_core()->get_entity_container()->create_entity<Text>(UIOrigin::CENTER, "Test", font, 40);
+    this->_title = this->get_game_core()->get_entity_container()->create_entity<Text>("Mini Dungeon", font, 90, UIOrigin::CENTER);
 
     this->_title->get_ui_transform_component()->set_position(Vector2Zero());
 }

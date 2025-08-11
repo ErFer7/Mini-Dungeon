@@ -9,7 +9,9 @@ namespace utils {
 
 class Transform {
    public:
-    Transform(){};
+    Transform() = default;
+
+    Transform(Vector2 position, float rotation, Vector2 scale) : _transform_data(position, rotation, scale) {}
 
     ~Transform() = default;
 
@@ -77,4 +79,4 @@ class Transform {
     TransformData _transform_data;
 };
 
-}  // namespace game
+}  // namespace utils

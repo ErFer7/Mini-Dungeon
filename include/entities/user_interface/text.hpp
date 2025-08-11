@@ -12,11 +12,17 @@ using std::string;
 class Text : public UIEntity {
    public:
     Text(GameCore *game_core,
-         UIOrigin ui_origin,
          string content,
          Font font,
          int font_size,
-         UITransformComponent *parent_ui_transform = nullptr);
+         UIOrigin ui_origin,
+         Vector2 position = Vector2Zero(),
+         float rotation = 0.0f,
+         Vector2 scale = Vector2One(),
+         Color color = WHITE,
+         int layer = 0,
+         UITransformComponent *parent_ui_transform = nullptr,
+         float spacing = 1.0f);
 
     ~Text() override = default;
 

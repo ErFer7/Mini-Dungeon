@@ -3,11 +3,15 @@
 #include "raylib.h"
 
 TextComponent::TextComponent(GameCore *game_core, Entity *entity, string content, Font font, int font_size, float spacing, Color color)
-    : Component(game_core, entity), _content(content), _font(font), _font_size(font_size), _spacing(spacing), _color(color) {
+    : Component(game_core, entity),
+      _content(content),
+      _font(font),
+      _font_size(font_size),
+      _spacing(spacing),
+      _color(color),
+      _text_image(Image()),
+      _text_texture(Texture2D()) {
     this->_graphics_component = entity->get_component<GraphicsComponent>();
-
-    this->_text_image.data = nullptr;
-    this->_text_texture.id = -1;
 
     this->_update_texture();
 }
@@ -15,11 +19,13 @@ TextComponent::TextComponent(GameCore *game_core, Entity *entity, string content
 TextComponent::~TextComponent() {
     this->unregister_component();
 
-    if (this->_text_image.data != nullptr) {
+    if (IsImageValid(this->_text_image)) {
         UnloadImage(this->_text_image);
     }
 
-    UnloadTexture(this->_text_texture);
+    if (IsTextureValid(this->_text_texture)) {
+        UnloadTexture(this->_text_texture);
+    }
 }
 
 void TextComponent::set_content(string content) {
@@ -48,11 +54,13 @@ void TextComponent::set_color(Color color) {
 }
 
 void TextComponent::_update_texture() {
-    if (this->_text_image.data != nullptr) {
+    if (IsImageValid(this->_text_image)) {
         UnloadImage(this->_text_image);
     }
 
-    UnloadTexture(this->_text_texture);
+    if (IsTextureValid(this->_text_texture)) {
+        UnloadTexture(this->_text_texture);
+    }
 
     this->_text_image = ImageTextEx(this->_font, this->_content.c_str(), this->_font_size, this->_spacing, this->_color);
     this->_text_texture = LoadTextureFromImage(this->_text_image);

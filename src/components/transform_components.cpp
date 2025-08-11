@@ -4,8 +4,9 @@
 #include "raymath.h"
 #include "utils/transform_data.hpp"
 
-TransformComponent::TransformComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity) {
-    this->_transform = utils::Transform();
+TransformComponent::TransformComponent(GameCore *game_core, Entity *entity, Vector2 position, float rotation, Vector2 scale)
+    : Component(game_core, entity) {
+    this->_transform = utils::Transform(position, rotation, scale);
 }
 
 void TransformComponent::set_position(Vector2 position) {

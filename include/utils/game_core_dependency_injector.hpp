@@ -3,6 +3,10 @@
 #include <memory>
 #include <utility>
 
+using std::forward;
+using std::make_unique;
+using std::unique_ptr;
+
 class GameCore;
 
 namespace utils {
@@ -19,17 +23,17 @@ class GameCoreDependencyInjector {
 
     template <typename T, typename... Args>
     T create(Args &&...args) {
-        return T(this->_game_core, std::forward<Args>(args)...);
+        return T(this->_game_core, forward<Args>(args)...);
     }
 
     template <typename T, typename... Args>
     T *create_heap_allocated(Args &&...args) {
-        return new T(this->_game_core, std::forward<Args>(args)...);
+        return new T(this->_game_core, forward<Args>(args)...);
     }
 
     template <typename T, typename... Args>
-    std::unique_ptr<T> create_unique(Args &&...args) {
-        return std::make_unique<T>(this->_game_core, std::forward<Args>(args)...);
+    unique_ptr<T> create_unique(Args &&...args) {
+        return make_unique<T>(this->_game_core, forward<Args>(args)...);
     }
 
    private:

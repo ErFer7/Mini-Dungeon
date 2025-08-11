@@ -7,22 +7,29 @@
 UITransformComponent::UITransformComponent(GameCore *game_core,
                                            Entity *entity,
                                            UIOrigin ui_origin,
-                                           UITransformComponent *parent_ui_transform)
-    : Component(game_core, entity) {
-    this->_ui_origin = ui_origin;
-    this->_parent_ui_transform = parent_ui_transform;
-
+                                           UITransformComponent *parent_ui_transform,
+                                           Vector2 position,
+                                           float rotation,
+                                           Vector2 scale)
+    : Component(game_core, entity),
+      _ui_origin(ui_origin),
+      _parent_ui_transform(parent_ui_transform),
+      _parent_transform_component(nullptr),
+      _parent_graphics_component(nullptr) {
     if (this->_parent_ui_transform != nullptr) {
         Entity *parent = this->_parent_ui_transform->get_entity();
         this->_parent_transform_component = parent->get_component<TransformComponent>();
         this->_parent_graphics_component = parent->get_component<GraphicsComponent>();
-    } else {
-        this->_parent_transform_component = nullptr;
-        this->_parent_graphics_component = nullptr;
     }
 
     this->_transform_component = entity->get_component<TransformComponent>();
     this->_graphics_component = entity->get_component<GraphicsComponent>();
+
+    // TODO: Improve the "clean code"
+    // TODO: Implement set methods that don't emit events, thus avoiding multiple event invocations
+    this->set_position(position);
+    this->set_rotation(rotation);
+    this->set_scale(scale);
 }
 
 Vector2 UITransformComponent::get_position() const { return Vector2Subtract(this->_get_anchor_point(), this->_get_origin()); }
@@ -95,6 +102,12 @@ void UITransformComponent::set_scale(Vector2 scale) {
 
     this->_transform_component->set_relative_scale(origin, origin_scale, scale);
 }
+
+void UITransformComponent::translate(Vector2 translation) { this->_transform_component->translate(translation); }
+
+void UITransformComponent::rotate(float rotation) { this->_transform_component->rotate(rotation); }
+
+void UITransformComponent::scale(Vector2 scale) { this->_transform_component->scale(scale); }
 
 Vector2 UITransformComponent::_get_origin() const {
     Rectangle base_rect;

@@ -9,7 +9,12 @@
 
 #include "../../include/components/component.hpp"
 
-Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) { this->_components = std::make_unique<ComponentsVector>(); }
+using std::make_unique;
+using std::move;
+using std::type_info;
+using std::unique_ptr;
+
+Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) { this->_components = make_unique<ComponentsVector>(); }
 
 Entity::~Entity() { this->destroy_all_components(); }
 
@@ -41,9 +46,9 @@ void Entity::destroy_all_components() {
     this->_components->clear();
 }
 
-Component *Entity::_register_created_component(std::unique_ptr<Component> component) {
+Component *Entity::_register_created_component(unique_ptr<Component> component) {
     if (!this->_has_component(typeid(*component))) {
-        this->_components->push_back(std::move(component));
+        this->_components->push_back(move(component));
 
         Component *component_raw_ref = this->_components->back().get();
 
@@ -55,7 +60,7 @@ Component *Entity::_register_created_component(std::unique_ptr<Component> compon
     return nullptr;  // TODO: Throw an exception here
 }
 
-bool Entity::_has_component(const std::type_info &type_info) const {
+bool Entity::_has_component(const type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
             return true;
@@ -65,7 +70,7 @@ bool Entity::_has_component(const std::type_info &type_info) const {
     return false;
 }
 
-Component *Entity::_get_component(const std::type_info &type_info) const {
+Component *Entity::_get_component(const type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
             return component.get();
@@ -75,7 +80,7 @@ Component *Entity::_get_component(const std::type_info &type_info) const {
     return nullptr;
 }
 
-int Entity::_get_component_index(const std::type_info &type_info) const {
+int Entity::_get_component_index(const type_info &type_info) const {
     unsigned int index = 0;
 
     for (auto &component : *this->_components) {
@@ -89,7 +94,7 @@ int Entity::_get_component_index(const std::type_info &type_info) const {
     return -1;
 }
 
-void Entity::_destroy_component(const std::type_info &type_info) {
+void Entity::_destroy_component(const type_info &type_info) {
     unsigned int index = this->_get_component_index(type_info);
     this->destroy_component(index);
 }

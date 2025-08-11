@@ -6,6 +6,7 @@
 #include "../utils/transform_data.hpp"
 #include "component.hpp"
 #include "raylib.h"
+#include "raymath.h"
 
 using utils::TransformData;
 
@@ -15,7 +16,11 @@ class TransformComponent : public Component {
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
-    TransformComponent(GameCore *game_core, Entity *entity);
+    TransformComponent(GameCore *game_core,
+                       Entity *entity,
+                       Vector2 position = Vector2Zero(),
+                       float rotation = 0.0f,
+                       Vector2 scale = Vector2One());
 
     ~TransformComponent() override { this->unregister_component(); };
 

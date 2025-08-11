@@ -1,12 +1,19 @@
 #pragma once
 
-#include "../types.hpp"
 #include "../components/graphics_component.hpp"
+#include "../types.hpp"
 #include "entity.hpp"
 
 class Entity2D : public Entity {
    public:
-    Entity2D(GameCore *game_core, RenderingMode rendering_mode);
+    Entity2D(GameCore *game_core,
+             Texture2D texture,
+             RenderingMode rendering_mode,
+             Vector2 position = Vector2Zero(),
+             float rotation = 0.0f,
+             Vector2 scale = Vector2One(),
+             Color color = WHITE,
+             int layer = 0);
 
     ~Entity2D() override = default;
 

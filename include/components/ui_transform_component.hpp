@@ -12,7 +12,13 @@ enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent : public Component {
    public:
-    UITransformComponent(GameCore *game_core, Entity *entity, UIOrigin ui_origin, UITransformComponent *parent_ui_transform = nullptr);
+    UITransformComponent(GameCore *game_core,
+                         Entity *entity,
+                         UIOrigin ui_origin,
+                         UITransformComponent *parent_ui_transform = nullptr,
+                         Vector2 position = Vector2Zero(),
+                         float rotation = 0.0f,
+                         Vector2 scale = Vector2One());
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override { this->unregister_component(); };
@@ -34,6 +40,12 @@ class UITransformComponent : public Component {
 
     void set_scale(Vector2 scale);
 
+    void translate(Vector2 translation);
+
+    void rotate(float rotation);
+
+    void scale(Vector2 scale);
+
    protected:
     void register_component() override {};
 
@@ -45,10 +57,6 @@ class UITransformComponent : public Component {
     Vector2 _get_anchor_point() const;  // The point in the UI entity that is considered to be the "center" or the origin
 
     Vector2 _rect_point_by_ui_origin(Rectangle rectangle) const;
-
-    Vector2 _position_to_ui_position(Vector2 position) const;
-
-    Vector2 _ui_position_to_position(Vector2 ui_position) const;
 
    private:
     UIOrigin _ui_origin;
