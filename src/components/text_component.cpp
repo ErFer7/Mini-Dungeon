@@ -6,11 +6,11 @@ TextComponent::TextComponent(GameCore *game_core, Entity *entity, string content
     : Component(game_core, entity),
       _content(content),
       _font(font),
-      _font_size(font_size),
       _spacing(spacing),
       _color(color),
       _text_image(Image()),
       _text_texture(Texture2D()) {
+    this->_font_size = font_size != 0 ? font_size : font.baseSize;
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
     this->_update_texture();

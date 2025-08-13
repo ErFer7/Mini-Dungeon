@@ -7,11 +7,7 @@
 
 using std::make_unique;
 
-EntityContainer::EntityContainer(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
-    this->_entities = make_unique<EntityVector>();
-}
-
-EntityContainer::~EntityContainer() { this->destroy_all_entities(); }
+EntityContainer::EntityContainer(GameCore *game_core) : Container(game_core) { this->_entities = make_unique<EntityVector>(); }
 
 int EntityContainer::get_entity_index(Entity *entity) const {
     for (size_t i = 0; i < this->_entities->size(); i++) {
@@ -40,3 +36,5 @@ void EntityContainer::destroy_all_entities() {
 
     this->_entities->clear();
 }
+
+void EntityContainer::free() { this->destroy_all_entities(); }

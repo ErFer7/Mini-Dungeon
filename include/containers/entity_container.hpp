@@ -7,13 +7,14 @@
 #include "../entities/entity.hpp"
 #include "../types.hpp"
 #include "../utils/game_core_dependency_injector.hpp"
+#include "container.hpp"
 
+using std::forward;
 using std::unique_ptr;
 using std::vector;
-using std::forward;
 using utils::GameCoreDependencyInjector;
 
-class EntityContainer : public GameCoreDependencyInjector {
+class EntityContainer : public Container {
    public:
     typedef vector<unique_ptr<Entity>> EntityVector;
 
@@ -22,7 +23,7 @@ class EntityContainer : public GameCoreDependencyInjector {
 
     EntityContainer(GameCore *game_core);
 
-    ~EntityContainer();
+    ~EntityContainer() override = default;
 
     template <typename T, typename... Args>
     T *create_entity(Args &&...args) {
@@ -44,6 +45,8 @@ class EntityContainer : public GameCoreDependencyInjector {
     inline void destroy_entity(Entity *entity) { this->destroy_entity(this->get_entity_index(entity)); };
 
     void destroy_all_entities();
+
+    void free() override;
 
    private:
     unique_ptr<EntityVector> _entities;

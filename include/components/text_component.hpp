@@ -12,7 +12,13 @@ using std::string;
 
 class TextComponent : public Component {
    public:
-    TextComponent(GameCore *game_core, Entity *entity, string content, Font font, int font_size, float spacing = 1.0f, Color color = WHITE);
+    TextComponent(GameCore *game_core,
+                  Entity *entity,
+                  string content,
+                  Font font,
+                  int font_size = 0,
+                  float spacing = 1.0f,
+                  Color color = WHITE);
 
     ~TextComponent() override;
 

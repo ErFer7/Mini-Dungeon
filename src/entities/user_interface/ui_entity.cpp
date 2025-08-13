@@ -14,5 +14,5 @@ UIEntity::UIEntity(GameCore *game_core,
                    int layer,
                    UITransformComponent *parent_ui_transform)
     : Entity2D(game_core, texture, RenderingMode::SCREEN_SPACE, position, rotation, scale, color, layer) {
-    this->_ui_transform_component = this->create_component<UITransformComponent>(ui_origin, parent_ui_transform);
+    this->_ui_transform_component = this->create_component<UITransformComponent>(ui_origin, parent_ui_transform, position, rotation, scale);
 }
