@@ -5,20 +5,15 @@
 #include "../../include/entities/entity.hpp"
 #include "../../include/game_core.hpp"
 
-GraphicsComponent::GraphicsComponent(GameCore *game_core,
-                                     Entity *entity,
-                                     Texture2D texture,
-                                     RenderingMode rendering_mode,
-                                     Color color,
-                                     int layer)
-    : Component(game_core, entity), _rendering_mode(rendering_mode), _color(color), _layer(layer) {
+GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args)
+    : Component(game_core, entity), _rendering_mode(args.rendering_mode), _color(args.color), _layer(args.layer) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_transform_update_listener =
         TransformComponent::TransformUpdateListener([this](const Vector2 &, const TransformData &) { this->_update_drawing_transform(); });
 
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
-    this->set_texture(texture);
+    this->set_texture(args.texture);
 }
 
 GraphicsComponent::~GraphicsComponent() { this->unregister_component(); }

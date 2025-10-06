@@ -10,17 +10,19 @@
 
 using utils::TransformData;
 
+struct TransformComponentArgs {
+    Vector2 position = Vector2Zero();
+    float rotation = 0.0f;
+    Vector2 scale = Vector2One();
+};
+
 class TransformComponent : public Component {
    public:
     typedef Event<Vector2, TransformData> TransformUpdateEvent;
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
-    TransformComponent(GameCore *game_core,
-                       Entity *entity,
-                       Vector2 position = Vector2Zero(),
-                       float rotation = 0.0f,
-                       Vector2 scale = Vector2One());
+    TransformComponent(GameCore *game_core, Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
     ~TransformComponent() override { this->unregister_component(); };
 

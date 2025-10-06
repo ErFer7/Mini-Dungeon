@@ -2,11 +2,12 @@
 
 #include "../../../include/definitions.hpp"
 #include "../../../include/game_core.hpp"
+#include "entities/user_interface/ui_entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
 Background::Background(GameCore *game_core)
-    : UIEntity(game_core, Texture2D(), UIOrigin::CENTER, Vector2Zero(), 0.0f, Vector2One(), WHITE, -1) {
+    : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Zero(), 0.0f, Vector2One(), WHITE, -1}) {
     float virtual_scale = VIRTUAL_SCALE;
     float virtual_screen_width = static_cast<float>(GetScreenWidth()) / virtual_scale;
     float virtual_screen_height = static_cast<float>(GetScreenHeight()) / virtual_scale;

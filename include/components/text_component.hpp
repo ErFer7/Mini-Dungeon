@@ -10,15 +10,17 @@
 
 using std::string;
 
+struct TextComponentArgs {
+    string content;
+    Font font;
+    int font_size = 0;
+    float spacing = 1.0f;
+    Color color = WHITE;
+};
+
 class TextComponent : public Component {
    public:
-    TextComponent(GameCore *game_core,
-                  Entity *entity,
-                  string content,
-                  Font font,
-                  int font_size = 0,
-                  float spacing = 1.0f,
-                  Color color = WHITE);
+    TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args);
 
     ~TextComponent() override;
 

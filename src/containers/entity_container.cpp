@@ -26,6 +26,14 @@ void EntityContainer::destroy_entity(unsigned int index) {
     this->_entities->erase(this->_entities->begin() + index);
 }
 
+void EntityContainer::destroy_entity(Entity *entity) {
+    int index = this->get_entity_index(entity);
+
+    if (index >= 0) {
+        this->destroy_entity(index);
+    }
+};
+
 void EntityContainer::destroy_all_entities() {
     assert(this->_entities != nullptr);
 

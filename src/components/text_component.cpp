@@ -2,15 +2,17 @@
 
 #include "raylib.h"
 
-TextComponent::TextComponent(GameCore *game_core, Entity *entity, string content, Font font, int font_size, float spacing, Color color)
+TextComponent::TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args)
     : Component(game_core, entity),
-      _content(content),
-      _font(font),
-      _spacing(spacing),
-      _color(color),
+      _content(args.content),
+      _font(args.font),
+      _spacing(args.spacing),
+      _color(args.color),
       _text_image(Image()),
       _text_texture(Texture2D()) {
-    this->_font_size = font_size != 0 ? font_size : font.baseSize;
+    int font_size = args.font_size;
+
+    this->_font_size = font_size != 0 ? font_size : args.font.baseSize;
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
     this->_update_texture();

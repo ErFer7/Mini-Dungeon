@@ -42,7 +42,7 @@ class EntityContainer : public Container {
 
     void destroy_entity(unsigned int index);
 
-    inline void destroy_entity(Entity *entity) { this->destroy_entity(this->get_entity_index(entity)); };
+    void destroy_entity(Entity *entity);
 
     void destroy_all_entities();
 

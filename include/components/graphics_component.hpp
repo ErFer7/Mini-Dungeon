@@ -6,18 +6,19 @@
 #include "transform_component.hpp"
 
 enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D };
+struct GraphicsComponentArgs {
+    Texture2D texture;
+    RenderingMode rendering_mode;
+    Color color = WHITE;
+    int layer = 0;
+};
 
 class GraphicsComponent : public Component {
     friend class Space;
 
    public:
     // TODO: Pass all the necessary parameters
-    GraphicsComponent(GameCore *game_core,
-                      Entity *entity,
-                      Texture2D texture,
-                      RenderingMode rendering_mode,
-                      Color color = WHITE,
-                      int layer = 0);
+    GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args);
 
     ~GraphicsComponent() override;
 

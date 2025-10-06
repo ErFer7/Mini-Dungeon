@@ -4,16 +4,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
-UITransformComponent::UITransformComponent(GameCore *game_core,
-                                           Entity *entity,
-                                           UIOrigin ui_origin,
-                                           UITransformComponent *parent_ui_transform,
-                                           Vector2 position,
-                                           float rotation,
-                                           Vector2 scale)
+UITransformComponent::UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args)
     : Component(game_core, entity),
-      _ui_origin(ui_origin),
-      _parent_ui_transform(parent_ui_transform),
+      _ui_origin(args.ui_origin),
+      _parent_ui_transform(args.parent_ui_transform),
       _parent_transform_component(nullptr),
       _parent_graphics_component(nullptr) {
     if (this->_parent_ui_transform != nullptr) {
@@ -25,11 +19,15 @@ UITransformComponent::UITransformComponent(GameCore *game_core,
     this->_transform_component = entity->get_component<TransformComponent>();
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
+    if (this->_parent_graphics_component != nullptr) {
+        this->_graphics_component->set_layer(this->_parent_graphics_component->get_layer() + 1);
+    }
+
     // TODO: Improve the "clean code"
     // TODO: Implement set methods that don't emit events, thus avoiding multiple event invocations
-    this->set_position(position);
-    this->set_rotation(rotation);
-    this->set_scale(scale);
+    this->set_position(args.position);
+    this->set_rotation(args.rotation);
+    this->set_scale(args.scale);
 }
 
 Vector2 UITransformComponent::get_position() const { return Vector2Subtract(this->_get_anchor_point(), this->_get_origin()); }

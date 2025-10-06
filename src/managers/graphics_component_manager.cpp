@@ -64,7 +64,7 @@ void Space::sort() {
 
 void Space::draw() {
     for (auto component : *this->_components) {
-        if (component != nullptr) {
+        if (component->is_active()) {
             component->draw();
         }
     }

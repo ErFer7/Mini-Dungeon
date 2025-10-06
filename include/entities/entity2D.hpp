@@ -4,16 +4,19 @@
 #include "../types.hpp"
 #include "entity.hpp"
 
+struct Entity2DArgs {
+    Texture2D texture;
+    RenderingMode rendering_mode;
+    Vector2 position = Vector2Zero();
+    float rotation = 0.0f;
+    Vector2 scale = Vector2One();
+    Color color = WHITE;
+    int layer = 0;
+};
+
 class Entity2D : public Entity {
    public:
-    Entity2D(GameCore *game_core,
-             Texture2D texture,
-             RenderingMode rendering_mode,
-             Vector2 position = Vector2Zero(),
-             float rotation = 0.0f,
-             Vector2 scale = Vector2One(),
-             Color color = WHITE,
-             int layer = 0);
+    Entity2D(GameCore *game_core, const Entity2DArgs &args);
 
     ~Entity2D() override = default;
 

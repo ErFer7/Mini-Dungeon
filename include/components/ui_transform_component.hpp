@@ -9,16 +9,18 @@
 
 enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
 
+struct UITransformComponentArgs {
+    UIOrigin ui_origin;
+    UITransformComponent *parent_ui_transform = nullptr;
+    Vector2 position = Vector2Zero();
+    float rotation = 0.0f;
+    Vector2 scale = Vector2One();
+};
+
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent : public Component {
    public:
-    UITransformComponent(GameCore *game_core,
-                         Entity *entity,
-                         UIOrigin ui_origin,
-                         UITransformComponent *parent_ui_transform = nullptr,
-                         Vector2 position = Vector2Zero(),
-                         float rotation = 0.0f,
-                         Vector2 scale = Vector2One());
+    UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args);
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override { this->unregister_component(); };

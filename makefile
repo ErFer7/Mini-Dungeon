@@ -1,6 +1,6 @@
 .PHONY: default
 default:
-	cmake --build build
+	cmake --build build -j$(nproc)
 
 .PHONY: setup
 setup:
@@ -9,12 +9,12 @@ setup:
 .PHONY: debug
 debug:
 	cmake -B build -DCMAKE_BUILD_TYPE=Debug
-	cmake --build build
+	cmake --build build -j$(nproc)
 
 .PHONY: release
 release:
 	cmake -B build -DCMAKE_BUILD_TYPE=Release
-	cmake --build build
+	cmake --build build -j$(nproc)
 
 .PHONY: run
 run:

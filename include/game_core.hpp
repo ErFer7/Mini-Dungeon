@@ -37,6 +37,8 @@ class GameCore {
 
     inline AudioComponentManager *get_audio_component_manager() { return &this->_audio_component_manager; };
 
+    inline void exit() { this->_is_exiting = true; }
+
     void init_main_loop();
 
    private:
@@ -47,4 +49,5 @@ class GameCore {
     PhysicsComponentManager _physics_component_manager;
     GraphicsComponentManager _graphics_component_manager;
     AudioComponentManager _audio_component_manager;
+    bool _is_exiting;
 };

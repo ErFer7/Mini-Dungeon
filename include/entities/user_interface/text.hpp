@@ -9,20 +9,23 @@
 
 using std::string;
 
+struct TextArgs {
+    string content;
+    Font font;
+    UIOrigin ui_origin;
+    int font_size = 0;
+    Vector2 position = Vector2Zero();
+    float rotation = 0.0f;
+    Vector2 scale = Vector2One();
+    Color color = WHITE;
+    int layer = 0;
+    UITransformComponent *parent_ui_transform = nullptr;
+    float spacing = 1.0f;
+};
+
 class Text : public UIEntity {
    public:
-    Text(GameCore *game_core,
-         string content,
-         Font font,
-         UIOrigin ui_origin,
-         int font_size = 0,
-         Vector2 position = Vector2Zero(),
-         float rotation = 0.0f,
-         Vector2 scale = Vector2One(),
-         Color color = WHITE,
-         int layer = 0,
-         UITransformComponent *parent_ui_transform = nullptr,
-         float spacing = 1.0f);
+    Text(GameCore *game_core, const TextArgs &args);
 
     ~Text() override = default;
 

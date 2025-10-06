@@ -9,7 +9,9 @@ void BehaviorComponentManager::update() {
     for (auto component : *components) {
         BehaviorComponent *behaviour_component = static_cast<BehaviorComponent *>(component);
 
-        behaviour_component->update();
+        if (behaviour_component->is_active()) {
+            behaviour_component->update();
+        }
     }
 }
 

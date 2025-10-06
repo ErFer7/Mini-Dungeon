@@ -6,9 +6,11 @@
 #include <vector>
 
 #include "../types.hpp"
+#include "../utils/activity_state.hpp"
 #include "../utils/event.hpp"
 #include "../utils/game_core_dependency_injector.hpp"
 #include "../utils/restricted_instance.hpp"
+#include "components/component.hpp"
 
 // TODO: Implement an activity state
 // TODO: Implement name with a hash map
@@ -19,6 +21,7 @@ using std::forward;
 using std::type_info;
 using std::unique_ptr;
 using std::vector;
+using utils::ActivityState;
 using utils::Event;
 using utils::GameCoreDependencyInjector;
 using utils::RestrictedInstance;
@@ -71,6 +74,12 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
         this->_destroy_component(typeid(T));
     }
 
+    inline ActivityState *get_activity_state() { return &this->_activity_state; }
+
+    inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
+
+    inline bool is_active() { return this->_activity_state.is_active(); }
+
    private:
     Component *_register_created_component(unique_ptr<Component> component);
 
@@ -85,4 +94,5 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
    private:
     unique_ptr<ComponentsVector> _components;
     Event<Entity *> _on_destroy_event;
+    ActivityState _activity_state;
 };

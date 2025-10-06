@@ -5,10 +5,12 @@ class GameCore;
 
 // Components
 class Component;
-class TransformComponent;
 class BehaviorComponent;
+class ButtonComponent;
 class GraphicsComponent;
-class PhysicsComponent;
+class TextComponent;
+class TransformComponent;
+class UITransformComponent;
 
 // Containers
 class EntityContainer;
@@ -17,7 +19,7 @@ class GameManager;
 
 // Scenes
 class Scene;
-class MainMenuScene;
+class MenuScene;
 
 // Entities
 class Entity;
