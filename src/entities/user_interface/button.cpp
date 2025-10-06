@@ -11,6 +11,7 @@ Button::Button(GameCore *game_core, const ButtonArgs &args)
                             args.scale,
                             args.color,
                             args.layer,
-                            args.parent_ui_transform}) {
+                            args.parent_ui_transform,
+                            args.parent_activity_state}) {
     this->_button_component = this->create_component<ButtonComponent>();
 }

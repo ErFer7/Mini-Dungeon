@@ -14,6 +14,7 @@ struct ButtonArgs {
     Color color = WHITE;
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;
+    ActivityState *parent_activity_state = nullptr;
 };
 
 class Button : public UIEntity {

@@ -24,21 +24,22 @@ class Event {
        public:
         typedef vector<Event<Args...> *> EventVector;
 
-        Listener() = default;
+        Listener() { this->_events = make_unique<EventVector>(); };
 
-        Listener(function<void(Args...)> callable) : _callable(callable) { this->_events = make_unique<EventVector>(); }
-
-        Listener(const Listener &other) { this->_copy(other); }
+        // Listeners can't be copied because this lead to dangling references in callables
+        Listener(const Listener &other) noexcept = delete;
 
         Listener(Listener &&other) noexcept { this->_move(other); }
 
         ~Listener() { this->unsubscribe_all(); };
 
-        inline Listener &operator=(const Listener &other) {
-            this->_copy(other);
+        inline Listener &operator=(Listener &&other) {
+            this->_move(other);
 
             return *this;
         }
+
+        inline void set_callable(function<void(Args...)> callable) { this->_callable = callable; }
 
         inline function<void(Args...)> get_callable() const { return this->_callable; }
 
@@ -75,14 +76,6 @@ class Event {
             }
         }
 
-        inline void _copy(const Listener &other) {
-            if (this != &other) {
-                this->_callable = other._callable;
-                this->_events.reset();
-                this->_events = make_unique<EventVector>(*other._events);
-            }
-        }
-
         inline void _call(Args... args) { this->_callable(args...); }
 
        private:
@@ -95,7 +88,8 @@ class Event {
    public:
     Event() { this->_listeners = make_unique<ListenerVector>(); }
 
-    Event(const Event &other) { this->_copy(other); }
+    // Events can't be copied because of listeners (see above)
+    Event(const Event &other) noexcept = delete;
 
     Event(Event &&other) noexcept { this->_move(other); }
 
@@ -105,8 +99,10 @@ class Event {
         }
     };
 
-    inline Event &operator=(const Event &other) {
-        this->_copy(other);
+    inline Event &operator=(const Event &other) noexcept = delete;
+
+    inline Event &operator=(Event &&other) {
+        this->_move(other);
 
         return *this;
     }
@@ -130,13 +126,6 @@ class Event {
         if (this != &other) {
             this->_listeners.reset();
             this->_listeners = move(other._listeners);
-        }
-    }
-
-    inline void _copy(const Event &other) {
-        if (this != &other) {
-            this->_listeners.reset();
-            this->_listeners = make_unique<ListenerVector>(*other._listeners);
         }
     }
 

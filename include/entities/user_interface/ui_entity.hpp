@@ -3,6 +3,9 @@
 #include "../../components/ui_transform_component.hpp"
 #include "../../types.hpp"
 #include "../entity2D.hpp"
+#include "utils/activity_state.hpp"
+
+using utils::ActivityState;
 
 struct UIEntityArgs {
     Texture2D texture;
@@ -13,6 +16,7 @@ struct UIEntityArgs {
     Color color = WHITE;
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;
+    ActivityState *parent_activity_state = nullptr;
 };
 
 class UIEntity : public Entity2D {

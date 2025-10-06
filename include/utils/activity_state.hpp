@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "event.hpp"
 
 using std::function;
@@ -21,10 +19,8 @@ class ActivityState {
    public:
     ActivityState(bool active = true, ActivityState *parent_activity_state = nullptr)
         : _is_active(true), _is_self_active(true), _is_parent_active(true), _parent_activity_state(parent_activity_state) {
-        // TODO: Fix this
         if (this->_parent_activity_state != nullptr) {
-            this->_parent_update_listener =
-                ActivityUpdateListener([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
             this->_parent_update_listener.subscribe(this->_parent_activity_state->get_activity_update_event());
         }
     }
@@ -34,7 +30,6 @@ class ActivityState {
     inline void set_active(bool is_active) {
         this->_is_self_active = is_active;
         this->_update_activity();
-        std::cout << "set: " << this->_on_update_event.has_listeners() << std::endl;
         this->_on_update_event.invoke(this->_is_active);
     }
 
@@ -42,10 +37,26 @@ class ActivityState {
 
     inline ActivityUpdateEvent *get_activity_update_event() { return &this->_on_update_event; }
 
+    void set_parent_activity_state(ActivityState *parent_activity_state) {
+        if (this->_parent_activity_state != nullptr) {
+            this->_parent_update_listener.unsubscribe(this->_parent_activity_state->get_activity_update_event());
+        }
+
+        this->_parent_activity_state = parent_activity_state;
+
+        if (this->_parent_activity_state != nullptr) {
+            this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.subscribe(this->_parent_activity_state->get_activity_update_event());
+
+            this->_update_parent_activity(this->_parent_activity_state->is_active());
+        } else {
+            this->_update_parent_activity(true);
+        }
+    }
+
    private:
     void _update_parent_activity(bool is_parent_active) {
         this->_is_parent_active = is_parent_active;
-        std::cout << "debug: " << is_parent_active << std::endl;
         this->_update_activity();
     }
 

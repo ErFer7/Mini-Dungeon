@@ -13,7 +13,8 @@ TextButton::TextButton(GameCore *game_core, const TextButtonArgs &args)
                         args.scale,
                         args.color,
                         args.layer,
-                        args.parent_ui_transform}) {
+                        args.parent_ui_transform,
+                        args.parent_activity_state}) {
     this->_text = this->get_game_core()->get_entity_container()->create_entity<Text>(TextArgs{args.content,
                                                                                               args.font,
                                                                                               args.text_ui_origin,
@@ -24,7 +25,8 @@ TextButton::TextButton(GameCore *game_core, const TextButtonArgs &args)
                                                                                               args.text_color,
                                                                                               0,
                                                                                               this->get_ui_transform_component(),
-                                                                                              args.spacing});
+                                                                                              args.spacing,
+                                                                                              this->get_activity_state()});
 }
 
 TextButton::~TextButton() { this->get_game_core()->get_entity_container()->destroy_entity(this->_text); }

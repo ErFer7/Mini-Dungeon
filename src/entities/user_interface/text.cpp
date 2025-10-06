@@ -13,7 +13,8 @@ Text::Text(GameCore *game_core, const TextArgs &args)
                             args.scale,
                             WHITE,
                             args.layer,
-                            args.parent_ui_transform}) {
+                            args.parent_ui_transform,
+                            args.parent_activity_state}) {
     this->_text_component =
         this->create_component<TextComponent>(TextComponentArgs{args.content, args.font, args.font_size, args.spacing, args.color});
 }

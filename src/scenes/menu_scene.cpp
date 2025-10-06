@@ -53,11 +53,10 @@ void MenuScene::init() {
                                                                                     .position = Vector2{0.0f, 200.0f},
                                                                                     .text_color = golden});
 
-    this->_play_listener =
-        ButtonComponent::ButtonClickListener([this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });
+    this->_play_listener.set_callable([this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });
     this->_play_listener.subscribe(this->_play_button->get_button_component()->get_on_click_event());
 
-    this->_exit_listener = ButtonComponent::ButtonClickListener([this]() { this->get_game_core()->exit(); });
+    this->_exit_listener.set_callable([this]() { this->get_game_core()->exit(); });
     this->_exit_listener.subscribe(this->_exit_button->get_button_component()->get_on_click_event());
 
     this->_was_initialized = true;

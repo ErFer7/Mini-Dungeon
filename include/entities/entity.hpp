@@ -80,6 +80,11 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
 
     inline bool is_active() { return this->_activity_state.is_active(); }
 
+   protected:
+    inline void set_activity_state_parent(ActivityState *activity_state) {
+        this->_activity_state.set_parent_activity_state(activity_state);
+    }
+
    private:
     Component *_register_created_component(unique_ptr<Component> component);
 
