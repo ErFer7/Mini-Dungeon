@@ -6,17 +6,19 @@
 #include "../../types.hpp"
 #include "components/text_component.hpp"
 #include "ui_entity.hpp"
+#include "utils/vector.hpp"
 
 using std::string;
+using utils::Vector2Df;
 
 struct TextArgs {
     string content;
     Font font;
     UIOrigin ui_origin;
     int font_size = 0;
-    Vector2 position = Vector2Zero();
+    Vector2Df position = Vector2Df();
     float rotation = 0.0f;
-    Vector2 scale = Vector2One();
+    Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;

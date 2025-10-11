@@ -4,6 +4,9 @@
 #include "component.hpp"
 #include "raylib.h"
 #include "transform_component.hpp"
+#include "utils/vector.hpp"
+
+using utils::Vector2Df;
 
 enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D };
 struct GraphicsComponentArgs {
@@ -46,7 +49,7 @@ class GraphicsComponent : public Component {
     void unregister_component() override;
 
    private:
-    inline Vector2 _get_position() { return this->_transform_component->get_position(); }
+    inline Vector2Df _get_position() { return this->_transform_component->get_position(); }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();
@@ -56,7 +59,7 @@ class GraphicsComponent : public Component {
     TransformComponent *_transform_component;
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
-    Vector2 _origin;
+    Vector2Df _origin;
     float _rotation;
     Color _color;
     RenderingMode _rendering_mode;

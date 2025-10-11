@@ -3,6 +3,7 @@
 #include "../../include/entities/entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "utils/vector.hpp"
 
 UITransformComponent::UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args)
     : Component(game_core, entity),
@@ -30,41 +31,41 @@ UITransformComponent::UITransformComponent(GameCore *game_core, Entity *entity, 
     this->set_scale(args.scale);
 }
 
-Vector2 UITransformComponent::get_position() const { return Vector2Subtract(this->_get_anchor_point(), this->_get_origin()); }
+Vector2Df UITransformComponent::get_position() const { return this->_get_anchor_point() - this->_get_origin(); }
 
-void UITransformComponent::set_position(Vector2 position) {
-    Vector2 origin = this->_get_origin();
-    Vector2 diff = Vector2Add(origin, position);
+void UITransformComponent::set_position(Vector2Df position) {
+    Vector2Df origin = this->_get_origin();
+    Vector2Df diff = origin + position;
     Rectangle rect = this->_graphics_component->get_rectangle();
-    Vector2 calculated_position;
+    Vector2Df calculated_position;
 
     switch (this->_ui_origin) {
         case UIOrigin::TOP_LEFT:
-            calculated_position = Vector2{diff.x + rect.width / 2.0f, diff.y + rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y + rect.height / 2.0f);
             break;
         case UIOrigin::TOP:
-            calculated_position = Vector2{diff.x, diff.y + rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x, diff.y + rect.height / 2.0f);
             break;
         case UIOrigin::TOP_RIGHT:
-            calculated_position = Vector2{diff.x - rect.width / 2.0f, diff.y + rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y + rect.height / 2.0f);
             break;
         case UIOrigin::LEFT:
-            calculated_position = Vector2{diff.x + rect.width / 2.0f, diff.y};
+            calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y);
             break;
         case UIOrigin::CENTER:
             calculated_position = diff;
             break;
         case UIOrigin::RIGHT:
-            calculated_position = Vector2{diff.x - rect.width / 2.0f, diff.y};
+            calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y);
             break;
         case UIOrigin::BOTTOM_LEFT:
-            calculated_position = Vector2{diff.x + rect.width / 2.0f, diff.y - rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y - rect.height / 2.0f);
             break;
         case UIOrigin::BOTTOM:
-            calculated_position = Vector2{diff.x, diff.y - rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x, diff.y - rect.height / 2.0f);
             break;
         case UIOrigin::BOTTOM_RIGHT:
-            calculated_position = Vector2{diff.x - rect.width / 2.0f, diff.y - rect.height / 2.0f};
+            calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y - rect.height / 2.0f);
             break;
     }
 
@@ -72,7 +73,7 @@ void UITransformComponent::set_position(Vector2 position) {
 }
 
 void UITransformComponent::set_rotation(float rotation) {
-    Vector2 origin;
+    Vector2Df origin;
     float origin_rotation;
 
     if (this->_parent_graphics_component != nullptr) {
@@ -86,28 +87,28 @@ void UITransformComponent::set_rotation(float rotation) {
     this->_transform_component->set_relative_rotation(origin, origin_rotation, rotation);
 }
 
-void UITransformComponent::set_scale(Vector2 scale) {
-    Vector2 origin;
-    Vector2 origin_scale;
+void UITransformComponent::set_scale(Vector2Df scale) {
+    Vector2Df origin;
+    Vector2Df origin_scale;
 
     if (this->_parent_graphics_component != nullptr) {
         origin = this->_parent_transform_component->get_position();
         origin_scale = this->_parent_transform_component->get_scale();
     } else {
         origin = this->_transform_component->get_position();
-        origin_scale = Vector2One();
+        origin_scale = Vector2Df(1.0f);
     }
 
     this->_transform_component->set_relative_scale(origin, origin_scale, scale);
 }
 
-void UITransformComponent::translate(Vector2 translation) { this->_transform_component->translate(translation); }
+void UITransformComponent::translate(Vector2Df translation) { this->_transform_component->translate(translation); }
 
 void UITransformComponent::rotate(float rotation) { this->_transform_component->rotate(rotation); }
 
-void UITransformComponent::scale(Vector2 scale) { this->_transform_component->scale(scale); }
+void UITransformComponent::scale(Vector2Df scale) { this->_transform_component->scale(scale); }
 
-Vector2 UITransformComponent::_get_origin() const {
+Vector2Df UITransformComponent::_get_origin() const {
     Rectangle base_rect;
 
     if (this->_parent_graphics_component != nullptr) {
@@ -119,31 +120,31 @@ Vector2 UITransformComponent::_get_origin() const {
     return this->_rect_point_by_ui_origin(base_rect);
 }
 
-Vector2 UITransformComponent::_get_anchor_point() const {
+Vector2Df UITransformComponent::_get_anchor_point() const {
     return this->_rect_point_by_ui_origin(this->_graphics_component->get_rectangle());
 }
 
-Vector2 UITransformComponent::_rect_point_by_ui_origin(Rectangle rectangle) const {
+Vector2Df UITransformComponent::_rect_point_by_ui_origin(Rectangle rectangle) const {
     switch (this->_ui_origin) {
         case UIOrigin::TOP_LEFT:
-            return Vector2{rectangle.x, rectangle.y};
+            return Vector2Df(rectangle.x, rectangle.y);
         case UIOrigin::TOP:
-            return Vector2{rectangle.x + rectangle.width / 2.0f, rectangle.y};
+            return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y);
         case UIOrigin::TOP_RIGHT:
-            return Vector2{rectangle.x + rectangle.width, rectangle.y};
+            return Vector2Df(rectangle.x + rectangle.width, rectangle.y);
         case UIOrigin::LEFT:
-            return Vector2{rectangle.x, rectangle.y + rectangle.height / 2.0f};
+            return Vector2Df(rectangle.x, rectangle.y + rectangle.height / 2.0f);
         case UIOrigin::CENTER:
-            return Vector2{rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height / 2.0f};
+            return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height / 2.0f);
         case UIOrigin::RIGHT:
-            return Vector2{rectangle.x + rectangle.width, rectangle.y + rectangle.height / 2.0f};
+            return Vector2Df(rectangle.x + rectangle.width, rectangle.y + rectangle.height / 2.0f);
         case UIOrigin::BOTTOM_LEFT:
-            return Vector2{rectangle.x, rectangle.y + rectangle.height};
+            return Vector2Df(rectangle.x, rectangle.y + rectangle.height);
         case UIOrigin::BOTTOM:
-            return Vector2{rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height};
+            return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height);
         case UIOrigin::BOTTOM_RIGHT:
-            return Vector2{rectangle.x + rectangle.width, rectangle.y + rectangle.height};
+            return Vector2Df(rectangle.x + rectangle.width, rectangle.y + rectangle.height);
     }
 
-    return Vector2Zero();
+    return Vector2Df();
 }

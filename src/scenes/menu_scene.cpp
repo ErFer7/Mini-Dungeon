@@ -40,9 +40,9 @@ void MenuScene::init() {
     UnloadImage(button_image);
 
     this->_title = entity_container->create_entity<Text>(TextArgs{
-        .content = "Mini Dungeon", .font = title_font, .ui_origin = UIOrigin::CENTER, .position = Vector2{0.0f, -200.0f}, .color = golden});
+        .content = "Mini Dungeon", .font = title_font, .ui_origin = UIOrigin::CENTER, .position = Vector2Df(0.0f, -200.0f), .color = golden});
     this->_version = entity_container->create_entity<Text>(TextArgs{
-        .content = "v2.0", .font = small_font, .ui_origin = UIOrigin::TOP_LEFT, .position = Vector2{35.0f, 15.0f}  // TODO: Fix the position
+        .content = "v2.0", .font = small_font, .ui_origin = UIOrigin::TOP_LEFT, .position = Vector2Df(35.0f, 15.0f)  // TODO: Fix the position
     });
     this->_play_button = entity_container->create_entity<TextButton>(TextButtonArgs{
         .texture = this->_button_texture, .ui_origin = UIOrigin::CENTER, .content = "PLAY", .font = button_font, .text_color = golden});
@@ -50,7 +50,7 @@ void MenuScene::init() {
                                                                                     .ui_origin = UIOrigin::CENTER,
                                                                                     .content = "QUIT",
                                                                                     .font = button_font,
-                                                                                    .position = Vector2{0.0f, 200.0f},
+                                                                                    .position = Vector2Df(0.0f, 200.0f),
                                                                                     .text_color = golden});
 
     this->_play_listener.set_callable([this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });

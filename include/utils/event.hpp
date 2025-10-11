@@ -43,7 +43,7 @@ class Event {
 
         inline function<void(Args...)> get_callable() const { return this->_callable; }
 
-        inline bool has_events() const { return !this->_events->empty(); }
+        inline bool is_subscribed() const { return !this->_events->empty(); }
 
         inline void subscribe(Event<Args...> *event) {
             this->_events->push_back(event);
@@ -56,10 +56,6 @@ class Event {
         }
 
         void unsubscribe_all() {
-            if (this->_events.get() == nullptr) {
-                return;
-            }
-
             for (auto &event : *this->_events) {
                 event->_remove_listener(this);
             }

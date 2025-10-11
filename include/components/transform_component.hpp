@@ -7,18 +7,20 @@
 #include "component.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "utils/vector.hpp"
 
 using utils::TransformData;
+using utils::Vector2Df;
 
 struct TransformComponentArgs {
-    Vector2 position = Vector2Zero();
+    Vector2Df position = Vector2Df();
     float rotation = 0.0f;
-    Vector2 scale = Vector2One();
+    Vector2Df scale = Vector2Df(1.0f);
 };
 
 class TransformComponent : public Component {
    public:
-    typedef Event<Vector2, TransformData> TransformUpdateEvent;
+    typedef Event<Vector2Df, TransformData> TransformUpdateEvent;
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
@@ -26,37 +28,39 @@ class TransformComponent : public Component {
 
     ~TransformComponent() override { this->unregister_component(); };
 
-    inline Vector2 get_position() const { return this->_transform.get_position(); }
+    inline Vector2Df get_position() const { return this->_transform.get_position(); }
 
     inline float get_rotation() const { return this->_transform.get_rotation(); }
 
-    inline Vector2 get_scale() const { return this->_transform.get_scale(); }
+    inline Vector2Df get_scale() const { return this->_transform.get_scale(); }
 
     inline TransformUpdateEvent *get_on_update_event() { return &this->_on_update_event; }
 
-    void set_position(Vector2 position);
+    void set_position(Vector2Df position);
 
     void set_rotation(float rotation);
 
-    void set_scale(Vector2 scale);
+    void set_scale(Vector2Df scale);
 
-    inline Vector2 get_relative_position(Vector2 origin_position) const { return this->_transform.get_relative_position(origin_position); }
+    inline Vector2Df get_relative_position(Vector2Df origin_position) const {
+        return this->_transform.get_relative_position(origin_position);
+    }
 
     inline float get_relative_rotation(float origin_rotation) const { return this->_transform.get_relative_rotation(origin_rotation); }
 
-    inline Vector2 get_relative_scale(Vector2 origin_scale) const { return this->_transform.get_relative_scale(origin_scale); }
+    inline Vector2Df get_relative_scale(Vector2Df origin_scale) const { return this->_transform.get_relative_scale(origin_scale); }
 
-    void set_relative_position(Vector2 origin, Vector2 position);
+    void set_relative_position(Vector2Df origin, Vector2Df position);
 
-    void set_relative_rotation(Vector2 origin, float origin_rotation, float rotation);
+    void set_relative_rotation(Vector2Df origin, float origin_rotation, float rotation);
 
-    void set_relative_scale(Vector2 origin, Vector2 origin_scale, Vector2 scale);
+    void set_relative_scale(Vector2Df origin, Vector2Df origin_scale, Vector2Df scale);
 
-    void translate(Vector2 translation);
+    void translate(Vector2Df translation);
 
     void rotate(float rotation);
 
-    void scale(Vector2 scale);
+    void scale(Vector2Df scale);
 
    protected:
     void register_component() override {};

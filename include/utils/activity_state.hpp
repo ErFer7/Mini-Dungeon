@@ -18,10 +18,10 @@ class ActivityState {
 
    public:
     ActivityState(bool active = true, ActivityState *parent_activity_state = nullptr)
-        : _is_active(true), _is_self_active(true), _is_parent_active(true), _parent_activity_state(parent_activity_state) {
-        if (this->_parent_activity_state != nullptr) {
+        : _is_active(true), _is_self_active(true), _is_parent_active(true) {
+        if (parent_activity_state != nullptr) {
             this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
-            this->_parent_update_listener.subscribe(this->_parent_activity_state->get_activity_update_event());
+            this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
         }
     }
 
@@ -30,7 +30,6 @@ class ActivityState {
     inline void set_active(bool is_active) {
         this->_is_self_active = is_active;
         this->_update_activity();
-        this->_on_update_event.invoke(this->_is_active);
     }
 
     inline bool is_active() { return this->_is_active; }
@@ -38,17 +37,15 @@ class ActivityState {
     inline ActivityUpdateEvent *get_activity_update_event() { return &this->_on_update_event; }
 
     void set_parent_activity_state(ActivityState *parent_activity_state) {
-        if (this->_parent_activity_state != nullptr) {
-            this->_parent_update_listener.unsubscribe(this->_parent_activity_state->get_activity_update_event());
+        if (this->_parent_update_listener.is_subscribed()) {
+            this->_parent_update_listener.unsubscribe_all();
         }
 
-        this->_parent_activity_state = parent_activity_state;
-
-        if (this->_parent_activity_state != nullptr) {
+        if (parent_activity_state != nullptr) {
             this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
-            this->_parent_update_listener.subscribe(this->_parent_activity_state->get_activity_update_event());
+            this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
 
-            this->_update_parent_activity(this->_parent_activity_state->is_active());
+            this->_update_parent_activity(parent_activity_state->is_active());
         } else {
             this->_update_parent_activity(true);
         }
@@ -60,13 +57,15 @@ class ActivityState {
         this->_update_activity();
     }
 
-    void _update_activity() { this->_is_active = this->_is_parent_active && this->_is_self_active; }
+    inline void _update_activity() {
+        this->_is_active = this->_is_parent_active && this->_is_self_active;
+        this->_on_update_event.invoke(this->_is_active);
+    }
 
    private:
     bool _is_active;         // Resulting state
     bool _is_self_active;    // Intended state for this object
     bool _is_parent_active;  // State of its parent
-    ActivityState *_parent_activity_state;
     ActivityUpdateEvent _on_update_event;
     ActivityUpdateListener _parent_update_listener;
 };

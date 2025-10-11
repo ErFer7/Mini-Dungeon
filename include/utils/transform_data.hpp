@@ -1,16 +1,17 @@
 #pragma once
 
 #include "raymath.h"
+#include "vector.hpp"
 
 namespace utils {
 
 struct TransformData {
-    TransformData() : position(Vector2Zero()), rotation(0), scale(Vector2One()) {}
-    TransformData(Vector2 position, float rotation, Vector2 scale) : position(position), rotation(rotation), scale(scale) {}
+    TransformData() : position(Vector2Df()), rotation(0), scale(Vector2Df(1.0f)) {}
+    TransformData(Vector2Df position, float rotation, Vector2Df scale) : position(position), rotation(rotation), scale(scale) {}
 
-    Vector2 position;
+    Vector2Df position;
     float rotation;
-    Vector2 scale;
+    Vector2Df scale;
 };
 
-}  // namespace game
+}  // namespace utils

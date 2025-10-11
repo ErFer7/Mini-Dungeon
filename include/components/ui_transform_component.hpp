@@ -6,15 +6,18 @@
 #include "components/transform_component.hpp"
 #include "graphics_component.hpp"
 #include "raylib.h"
+#include "utils/vector.hpp"
+
+using utils::Vector2Df;
 
 enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
 
 struct UITransformComponentArgs {
     UIOrigin ui_origin;
     UITransformComponent *parent_ui_transform = nullptr;
-    Vector2 position = Vector2Zero();
+    Vector2Df position = Vector2Df();
     float rotation = 0.0f;
-    Vector2 scale = Vector2One();
+    Vector2Df scale = Vector2Df(1.0f);
 };
 
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
@@ -25,28 +28,28 @@ class UITransformComponent : public Component {
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override { this->unregister_component(); };
 
-    Vector2 get_position() const;
+    Vector2Df get_position() const;
 
     // TODO: Handle case where the parent is null
     inline float get_rotation() const {
         return this->_transform_component->get_relative_rotation(this->_parent_transform_component->get_rotation());
     }
 
-    inline Vector2 get_scale() const {
+    inline Vector2Df get_scale() const {
         return this->_transform_component->get_relative_scale(this->_parent_transform_component->get_scale());
     }
 
-    void set_position(Vector2 position);
+    void set_position(Vector2Df position);
 
     void set_rotation(float rotation);
 
-    void set_scale(Vector2 scale);
+    void set_scale(Vector2Df scale);
 
-    void translate(Vector2 translation);
+    void translate(Vector2Df translation);
 
     void rotate(float rotation);
 
-    void scale(Vector2 scale);
+    void scale(Vector2Df scale);
 
    protected:
     void register_component() override {};
@@ -54,11 +57,11 @@ class UITransformComponent : public Component {
     void unregister_component() override {};
 
    private:
-    Vector2 _get_origin() const;
+    Vector2Df _get_origin() const;
 
-    Vector2 _get_anchor_point() const;  // The point in the UI entity that is considered to be the "center" or the origin
+    Vector2Df _get_anchor_point() const;  // The point in the UI entity that is considered to be the "center" or the origin
 
-    Vector2 _rect_point_by_ui_origin(Rectangle rectangle) const;
+    Vector2Df _rect_point_by_ui_origin(Rectangle rectangle) const;
 
    private:
     UIOrigin _ui_origin;

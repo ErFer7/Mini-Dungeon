@@ -7,7 +7,7 @@
 #include "raymath.h"
 
 Background::Background(GameCore *game_core)
-    : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Zero(), 0.0f, Vector2One(), WHITE, -1}) {
+    : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Df(), 0.0f, Vector2Df(1.0f), WHITE, -1}) {
     float virtual_scale = VIRTUAL_SCALE;
     float virtual_screen_width = static_cast<float>(GetScreenWidth()) / virtual_scale;
     float virtual_screen_height = static_cast<float>(GetScreenHeight()) / virtual_scale;
@@ -38,7 +38,7 @@ Background::Background(GameCore *game_core)
 
     UnloadImage(background);
 
-    this->get_ui_transform_component()->set_scale(Vector2{virtual_scale, virtual_scale});
+    this->get_ui_transform_component()->set_scale(Vector2Df(virtual_scale));
 }
 
 Background::~Background() { UnloadTexture(this->get_graphics_component()->get_texture()); }

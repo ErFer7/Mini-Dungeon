@@ -3,13 +3,16 @@
 #include "../components/graphics_component.hpp"
 #include "../types.hpp"
 #include "entity.hpp"
+#include "utils/vector.hpp"
+
+using utils::Vector2Df;
 
 struct Entity2DArgs {
     Texture2D texture;
     RenderingMode rendering_mode;
-    Vector2 position = Vector2Zero();
+    Vector2Df position = Vector2Df();
     float rotation = 0.0f;
-    Vector2 scale = Vector2One();
+    Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
 };
