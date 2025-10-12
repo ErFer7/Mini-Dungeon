@@ -106,11 +106,15 @@ class GraphicsComponentManager : public ComponentManager {
 
     inline SortingMode get_world2d_space_sorting_mode() const { return this->_world2D_space.get_sorting_mode(); }
 
-    inline void set_world2d_space_sorting_mode(SortingMode sorting_mode) { this->_world2D_space.set_sorting_mode(sorting_mode); }
+    inline void set_world2d_space_sorting_mode(SortingMode sorting_mode) {
+        this->_world2D_space.set_sorting_mode(sorting_mode);
+    }
 
     inline SortingMode get_screen_space_sorting_mode() const { return this->_screen_space.get_sorting_mode(); }
 
-    inline void set_screen_space_sorting_mode(SortingMode sorting_mode) { this->_screen_space.set_sorting_mode(sorting_mode); }
+    inline void set_screen_space_sorting_mode(SortingMode sorting_mode) {
+        this->_screen_space.set_sorting_mode(sorting_mode);
+    }
 
    protected:
     void register_component(Component *component) override;

@@ -59,7 +59,8 @@ class UITransformComponent : public Component {
    private:
     Vector2Df _get_origin() const;
 
-    Vector2Df _get_anchor_point() const;  // The point in the UI entity that is considered to be the "center" or the origin
+    Vector2Df _get_anchor_point()
+        const;  // The point in the UI entity that is considered to be the "center" or the origin
 
     Vector2Df _rect_point_by_ui_origin(Rectangle rectangle) const;
 

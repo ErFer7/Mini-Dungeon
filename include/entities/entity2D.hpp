@@ -15,10 +15,13 @@ struct Entity2DArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
+    float texture_scale = 1.0f;
 
     operator TransformComponentArgs() const { return TransformComponentArgs{position, rotation, scale}; }
 
-    operator GraphicsComponentArgs() const { return GraphicsComponentArgs{texture, rendering_mode, color, layer}; }
+    operator GraphicsComponentArgs() const {
+        return GraphicsComponentArgs{texture, rendering_mode, color, layer, texture_scale};
+    }
 };
 
 class Entity2D : public Entity {

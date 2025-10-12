@@ -11,22 +11,15 @@ PlayerComponent::PlayerComponent(GameCore *game_core, Entity *entity) : Behavior
 }
 
 void PlayerComponent::update() {
-    Vector2Df velocity = Vector2Df();
-    float player_speed = PLAYER_SPEED;
-
     if (IsKeyDown(KEY_UP)) {
-        velocity += Vector2Df(0.0f, player_speed);
+        this->_physics_component->set_velocity_y(PLAYER_SPEED);
     } else if (IsKeyDown(KEY_DOWN)) {
-        velocity += Vector2Df(0.0f, -player_speed);
+        this->_physics_component->set_velocity_y(-PLAYER_SPEED);
     }
 
     if (IsKeyDown(KEY_RIGHT)) {
-        velocity += Vector2Df(player_speed, 0.0f);
+        this->_physics_component->set_velocity_x(PLAYER_SPEED);
     } else if (IsKeyDown(KEY_LEFT)) {
-        velocity += Vector2Df(-player_speed, 0.0f);
-    }
-
-    if (!velocity.is_zero()) {
-        this->_physics_component->set_velocity(velocity);
+        this->_physics_component->set_velocity_x(-PLAYER_SPEED);
     }
 }

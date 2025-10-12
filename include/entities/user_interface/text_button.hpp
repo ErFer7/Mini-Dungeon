@@ -27,14 +27,35 @@ struct TextButtonArgs {
     Color text_color = WHITE;
     float spacing = 1.0f;
     ActivityState *parent_activity_state = nullptr;
+    float texture_scale = 1.0f;
 
     operator ButtonArgs() const {
-        return ButtonArgs{texture, ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+        return ButtonArgs{texture,
+                          ui_origin,
+                          position,
+                          rotation,
+                          scale,
+                          color,
+                          layer,
+                          parent_ui_transform,
+                          parent_activity_state,
+                          texture_scale};
     }
 
     operator TextArgs() const {
-        return TextArgs{
-            content, font, text_ui_origin, font_size, text_position, text_rotation, text_scale, text_color, 0, nullptr, spacing, nullptr};
+        return TextArgs{content,
+                        font,
+                        text_ui_origin,
+                        font_size,
+                        text_position,
+                        text_rotation,
+                        text_scale,
+                        text_color,
+                        0,
+                        nullptr,
+                        spacing,
+                        nullptr,
+                        texture_scale};
     }
 };
 

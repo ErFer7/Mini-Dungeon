@@ -12,13 +12,13 @@ struct GraphicsComponentArgs {
     RenderingMode rendering_mode;
     Color color = WHITE;
     int layer = 0;
+    float texture_scale = 1.0f;
 };
 
 class GraphicsComponent : public Component {
     friend class Space;
 
    public:
-    // TODO: Pass all the necessary parameters
     GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args);
 
     ~GraphicsComponent() override;
@@ -59,6 +59,7 @@ class GraphicsComponent : public Component {
     Rectangle _destination_rectangle;
     Vector2Df _origin;
     float _rotation;
+    float _texture_scale;
     Color _color;
     RenderingMode _rendering_mode;
     int _layer;

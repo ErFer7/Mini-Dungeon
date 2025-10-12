@@ -8,11 +8,11 @@
 
 Background::Background(GameCore *game_core)
     : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Df(), 0.0f, Vector2Df(1.0f), WHITE, -1}) {
-    float virtual_scale = VIRTUAL_SCALE;
-    float virtual_screen_width = static_cast<float>(GetScreenWidth()) / virtual_scale;
-    float virtual_screen_height = static_cast<float>(GetScreenHeight()) / virtual_scale;
+    float virtual_screen_width = static_cast<float>(GetScreenWidth()) / VIRTUAL_SCALE;
+    float virtual_screen_height = static_cast<float>(GetScreenHeight()) / VIRTUAL_SCALE;
 
-    Image background = GenImageColor(static_cast<int>(virtual_screen_width), static_cast<int>(virtual_screen_height), WHITE);
+    Image background =
+        GenImageColor(static_cast<int>(virtual_screen_width), static_cast<int>(virtual_screen_height), WHITE);
     Image wall = this->get_game_core()->get_asset_container()->load_image("assets/sprites/walls/Wall_0.png");
 
     float wall_width = static_cast<float>(wall.width);
@@ -38,7 +38,7 @@ Background::Background(GameCore *game_core)
 
     UnloadImage(background);
 
-    this->get_ui_transform_component()->set_scale(Vector2Df(virtual_scale));
+    this->get_ui_transform_component()->set_scale(Vector2Df(VIRTUAL_SCALE));
 }
 
 Background::~Background() { UnloadTexture(this->get_graphics_component()->get_texture()); }

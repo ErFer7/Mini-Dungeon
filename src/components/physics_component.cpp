@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "components/collider_component.hpp"
 #include "components/component.hpp"
 #include "definitions.hpp"
 #include "entities/entity.hpp"
@@ -15,6 +16,7 @@ PhysicsComponent::PhysicsComponent(GameCore *game_core, Entity *entity, const Ph
       _time(GetTime()),
       Component(game_core, entity) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
+    this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
 }
 
 PhysicsComponent::~PhysicsComponent() { this->unregister_component(); }
@@ -33,17 +35,19 @@ void PhysicsComponent::update() {
     this->_velocity += this->_acceleration * time_diff;
     this->_acceleration = -this->_velocity * this->_drag;
 
-    float epsilon = FLOAT_EPSILON;
-
-    if (this->_velocity.magnitude() < epsilon) {
+    if (this->_velocity.magnitude() < FLOAT_EPSILON) {
         this->_velocity = Vector2Df();
     }
 
-    if (this->_acceleration.magnitude() < epsilon) {
+    if (this->_acceleration.magnitude() < FLOAT_EPSILON) {
         this->_acceleration = Vector2Df();
     }
 }
 
-void PhysicsComponent::register_component() { this->get_game_core()->get_physics_component_manager()->register_component(this); }
+void PhysicsComponent::register_component() {
+    this->get_game_core()->get_physics_component_manager()->register_component(this);
+}
 
-void PhysicsComponent::unregister_component() { this->get_game_core()->get_physics_component_manager()->unregister_component(this); }
+void PhysicsComponent::unregister_component() {
+    this->get_game_core()->get_physics_component_manager()->unregister_component(this);
+}

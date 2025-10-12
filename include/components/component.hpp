@@ -2,6 +2,7 @@
 
 #include "types.hpp"
 #include "utils/activity_state.hpp"
+#include "utils/debug.hpp"
 #include "utils/event.hpp"
 #include "utils/game_core_dependency_injector.hpp"
 #include "utils/restricted_instance.hpp"
@@ -12,6 +13,7 @@ using utils::ActivityState;
 using utils::Event;
 using utils::GameCoreDependencyInjector;
 using utils::RestrictedInstance;
+using utils::log_info;
 
 class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;

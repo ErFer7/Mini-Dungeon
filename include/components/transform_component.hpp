@@ -18,7 +18,9 @@ class TransformComponent : public Component {
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
-    TransformComponent(GameCore *game_core, Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
+    TransformComponent(GameCore *game_core,
+                       Entity *entity,
+                       const TransformComponentArgs &args = TransformComponentArgs{});
 
     ~TransformComponent() override { this->unregister_component(); };
 
@@ -40,9 +42,13 @@ class TransformComponent : public Component {
         return this->_transform.get_relative_position(origin_position);
     }
 
-    inline float get_relative_rotation(float origin_rotation) const { return this->_transform.get_relative_rotation(origin_rotation); }
+    inline float get_relative_rotation(float origin_rotation) const {
+        return this->_transform.get_relative_rotation(origin_rotation);
+    }
 
-    inline Vector2Df get_relative_scale(Vector2Df origin_scale) const { return this->_transform.get_relative_scale(origin_scale); }
+    inline Vector2Df get_relative_scale(Vector2Df origin_scale) const {
+        return this->_transform.get_relative_scale(origin_scale);
+    }
 
     void set_relative_position(Vector2Df origin, Vector2Df position);
 

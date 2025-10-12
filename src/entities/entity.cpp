@@ -14,7 +14,9 @@ using std::move;
 using std::type_info;
 using std::unique_ptr;
 
-Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) { this->_components = make_unique<ComponentsVector>(); }
+Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
+    this->_components = make_unique<ComponentsVector>();
+}
 
 Entity::~Entity() { this->destroy_all_components(); }
 

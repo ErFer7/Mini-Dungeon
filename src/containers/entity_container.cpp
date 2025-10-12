@@ -7,7 +7,9 @@
 
 using std::make_unique;
 
-EntityContainer::EntityContainer(GameCore *game_core) : Container(game_core) { this->_entities = make_unique<EntityVector>(); }
+EntityContainer::EntityContainer(GameCore *game_core) : Container(game_core) {
+    this->_entities = make_unique<EntityVector>();
+}
 
 int EntityContainer::get_entity_index(Entity *entity) const {
     for (size_t i = 0; i < this->_entities->size(); i++) {

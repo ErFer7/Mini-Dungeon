@@ -48,8 +48,11 @@ void MenuScene::init() {
         .ui_origin = UIOrigin::TOP_LEFT,
         .position = Vector2Df(35.0f, 15.0f)  // TODO: Fix the position
     });
-    this->_play_button = entity_container->create_entity<TextButton>(TextButtonArgs{
-        .texture = this->_button_texture, .ui_origin = UIOrigin::CENTER, .content = "PLAY", .font = button_font, .text_color = golden});
+    this->_play_button = entity_container->create_entity<TextButton>(TextButtonArgs{.texture = this->_button_texture,
+                                                                                    .ui_origin = UIOrigin::CENTER,
+                                                                                    .content = "PLAY",
+                                                                                    .font = button_font,
+                                                                                    .text_color = golden});
     this->_exit_button = entity_container->create_entity<TextButton>(TextButtonArgs{.texture = this->_button_texture,
                                                                                     .ui_origin = UIOrigin::CENTER,
                                                                                     .content = "QUIT",
@@ -57,7 +60,8 @@ void MenuScene::init() {
                                                                                     .position = Vector2Df(0.0f, 200.0f),
                                                                                     .text_color = golden});
 
-    this->_play_listener.set_callable([this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });
+    this->_play_listener.set_callable(
+        [this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });
     this->_play_listener.subscribe(this->_play_button->get_button_component()->get_on_click_event());
 
     this->_exit_listener.set_callable([this]() { this->get_game_core()->exit(); });

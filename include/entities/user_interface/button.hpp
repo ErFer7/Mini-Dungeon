@@ -16,9 +16,19 @@ struct ButtonArgs {
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;
     ActivityState *parent_activity_state = nullptr;
+    float texture_scale = 1.0f;
 
     operator UIEntityArgs() const {
-        return UIEntityArgs{texture, ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+        return UIEntityArgs{texture,
+                            ui_origin,
+                            position,
+                            rotation,
+                            scale,
+                            color,
+                            layer,
+                            parent_ui_transform,
+                            parent_activity_state,
+                            texture_scale};
     }
 };
 

@@ -40,7 +40,8 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
 
     template <typename T, typename... Args>
     T *create_component(Args &&...args) {
-        return static_cast<T *>(this->_register_created_component(this->create_unique<T>(this, forward<Args>(args)...)));
+        return static_cast<T *>(
+            this->_register_created_component(this->create_unique<T>(this, forward<Args>(args)...)));
     }
 
     Component *get_component(unsigned int index) const;

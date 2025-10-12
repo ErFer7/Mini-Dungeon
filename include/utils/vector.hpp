@@ -32,7 +32,9 @@ struct Vector2D {
     explicit Vector2D(const Vector2D<U> &other) : x(static_cast<T>(other.x)),
                                                   y(static_cast<T>(other.y)) {}
 
-    explicit Vector2D(const Vector2 &raylib_vector) : x(static_cast<T>(raylib_vector.x)), y(static_cast<T>(raylib_vector.y)) {}
+    explicit Vector2D(const Vector2 &raylib_vector)
+        : x(static_cast<T>(raylib_vector.x)),
+          y(static_cast<T>(raylib_vector.y)) {}
 
     template <Numeric U>
     explicit operator Vector2D<U>() const {
@@ -198,15 +200,11 @@ std::ostream &operator<<(std::ostream &os, const Vector2D<T> &vector) {
 template <Numeric T>
 bool approximately_equal(const Vector2D<T> &vector_a, const Vector2D<T> &vector_b) {
     if constexpr (std::same_as<T, float>) {
-        float epsilon = FLOAT_EPSILON;
-
-        return std::abs(vector_a.x - vector_b.x) < epsilon && std::abs(vector_a.y - vector_b.y) < epsilon;
+        return std::abs(vector_a.x - vector_b.x) < FLOAT_EPSILON && std::abs(vector_a.y - vector_b.y) < FLOAT_EPSILON;
     }
 
     if constexpr (std::same_as<T, double>) {
-        double epsilon = DOUBLE_EPSILON;
-
-        return std::abs(vector_a.x - vector_b.x) < epsilon && std::abs(vector_a.y - vector_b.y) < epsilon;
+        return std::abs(vector_a.x - vector_b.x) < DOUBLE_EPSILON && std::abs(vector_a.y - vector_b.y) < DOUBLE_EPSILON;
     }
 
     return vector_a.x == vector_b.x && vector_a.y == vector_b.y;

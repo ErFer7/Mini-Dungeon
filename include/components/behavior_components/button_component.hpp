@@ -4,6 +4,10 @@
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
 #include "entities/entity.hpp"
+#include "utils/debug.hpp"
+
+using utils::log_error;
+using utils::log_info;
 
 class ButtonComponent : public BehaviorComponent {
    public:
@@ -13,11 +17,11 @@ class ButtonComponent : public BehaviorComponent {
    public:
     ButtonComponent(GameCore *game_core, Entity *entity);
 
-    ~ButtonComponent() override {}
+    ~ButtonComponent() override { log_info("ButtonComponent::~ButtonComponent()"); }
 
     inline ButtonClickEvent *get_on_click_event() { return &this->_on_click_event; }
 
-    inline void start() override {}
+    inline void start() override { log_info("ButtonComponent::start()"); }
 
     void update() override;
 

@@ -5,4 +5,6 @@
 Component::Component(GameCore *game_core, Entity *entity)
     : GameCoreDependencyInjector(game_core),
       _entity(entity),
-      _activity_state(true, this->_entity->get_activity_state()) {}
+      _activity_state(true, this->_entity->get_activity_state()) {
+    log_info("Component::Component(", game_core, ", ", entity, ')');
+}

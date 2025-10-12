@@ -18,9 +18,12 @@ class ActivityState {
 
    public:
     ActivityState(bool active = true, ActivityState *parent_activity_state = nullptr)
-        : _is_active(true), _is_self_active(true), _is_parent_active(true) {
+        : _is_active(true),
+          _is_self_active(true),
+          _is_parent_active(true) {
         if (parent_activity_state != nullptr) {
-            this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.set_callable(
+                [this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
         }
     }
@@ -42,7 +45,8 @@ class ActivityState {
         }
 
         if (parent_activity_state != nullptr) {
-            this->_parent_update_listener.set_callable([this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.set_callable(
+                [this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
 
             this->_update_parent_activity(parent_activity_state->is_active());

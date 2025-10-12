@@ -64,7 +64,8 @@ void TextComponent::_update_texture() {
         UnloadTexture(this->_text_texture);
     }
 
-    this->_text_image = ImageTextEx(this->_font, this->_content.c_str(), this->_font_size, this->_spacing, this->_color);
+    this->_text_image =
+        ImageTextEx(this->_font, this->_content.c_str(), this->_font_size, this->_spacing, this->_color);
     this->_text_texture = LoadTextureFromImage(this->_text_image);
 
     this->_graphics_component->set_texture(this->_text_texture);

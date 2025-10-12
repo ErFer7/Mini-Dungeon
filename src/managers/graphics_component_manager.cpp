@@ -7,55 +7,59 @@ using std::remove;
 void Space::add_component(GraphicsComponent *component) { this->_components->push_back(component); }
 
 void Space::remove_component(GraphicsComponent *component) {
-    this->_components->erase(remove(this->_components->begin(), this->_components->end(), component), this->_components->end());
+    this->_components->erase(remove(this->_components->begin(), this->_components->end(), component),
+                             this->_components->end());
 }
 
 void Space::sort() {
     switch (this->_sorting_mode) {
         case SortingMode::NONE:
-            std::sort(
-                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
-                    if (comp_a == nullptr) {
-                        return true;
-                    } else if (comp_b == nullptr) {
-                        return false;
-                    }
+            std::sort(this->_components->begin(),
+                      this->_components->end(),
+                      [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
+                          if (comp_a == nullptr) {
+                              return true;
+                          } else if (comp_b == nullptr) {
+                              return false;
+                          }
 
-                    return comp_a->get_layer() < comp_b->get_layer();
-                });
+                          return comp_a->get_layer() < comp_b->get_layer();
+                      });
             break;
         case SortingMode::TOP_TO_DOWN:
-            std::sort(
-                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
-                    if (comp_a == nullptr) {
-                        return true;
-                    } else if (comp_b == nullptr) {
-                        return false;
-                    }
+            std::sort(this->_components->begin(),
+                      this->_components->end(),
+                      [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
+                          if (comp_a == nullptr) {
+                              return true;
+                          } else if (comp_b == nullptr) {
+                              return false;
+                          }
 
-                    if (comp_a->get_layer() == comp_b->get_layer()) {
-                        return comp_a->_get_position().y < comp_b->_get_position().y;
-                    }
+                          if (comp_a->get_layer() == comp_b->get_layer()) {
+                              return comp_a->_get_position().y < comp_b->_get_position().y;
+                          }
 
-                    return comp_a->get_layer() < comp_b->get_layer();
-                });
+                          return comp_a->get_layer() < comp_b->get_layer();
+                      });
             break;
         case SortingMode::ISOMETRIC:
-            std::sort(
-                this->_components->begin(), this->_components->end(), [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
-                    if (comp_a == nullptr) {
-                        return true;
-                    } else if (comp_b == nullptr) {
-                        return false;
-                    }
+            std::sort(this->_components->begin(),
+                      this->_components->end(),
+                      [](GraphicsComponent *comp_a, GraphicsComponent *comp_b) -> bool {
+                          if (comp_a == nullptr) {
+                              return true;
+                          } else if (comp_b == nullptr) {
+                              return false;
+                          }
 
-                    if (comp_a->get_layer() == comp_b->get_layer()) {
-                        return (comp_a->_get_position().x + comp_a->_get_position().y) <
-                               (comp_b->_get_position().x + comp_b->_get_position().y);
-                    }
+                          if (comp_a->get_layer() == comp_b->get_layer()) {
+                              return (comp_a->_get_position().x + comp_a->_get_position().y) <
+                                     (comp_b->_get_position().x + comp_b->_get_position().y);
+                          }
 
-                    return comp_a->get_layer() < comp_b->get_layer();
-                });
+                          return comp_a->get_layer() < comp_b->get_layer();
+                      });
             break;
         default:
             break;

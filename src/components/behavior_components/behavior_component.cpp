@@ -3,8 +3,20 @@
 #include "game_core.hpp"
 #include "managers/behavior_component_manager.hpp"
 
-BehaviorComponent::~BehaviorComponent() { this->unregister_component(); }
+BehaviorComponent::~BehaviorComponent() {
+    log_info("BehaviorComponent::~BehaviorComponent()");
 
-void BehaviorComponent::register_component() { this->get_game_core()->get_behavior_component_manager()->register_component(this); }
+    this->unregister_component();
+}
 
-void BehaviorComponent::unregister_component() { this->get_game_core()->get_behavior_component_manager()->unregister_component(this); }
+void BehaviorComponent::register_component() {
+    log_info("BehaviorComponent::register_component()");
+
+    this->get_game_core()->get_behavior_component_manager()->register_component(this);
+}
+
+void BehaviorComponent::unregister_component() {
+    log_info("BehaviorComponent::unregister_component()");
+
+    this->get_game_core()->get_behavior_component_manager()->unregister_component(this);
+}

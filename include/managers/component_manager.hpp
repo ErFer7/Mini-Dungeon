@@ -28,7 +28,8 @@ class ComponentManager : public Manager {
     virtual inline void register_component(Component *component) { this->_components->push_back(component); }
 
     virtual void unregister_component(Component *component) {
-        this->_components->erase(remove(this->_components->begin(), this->_components->end(), component), this->_components->end());
+        this->_components->erase(remove(this->_components->begin(), this->_components->end(), component),
+                                 this->_components->end());
     }
 
    private:

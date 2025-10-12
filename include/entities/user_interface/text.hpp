@@ -24,9 +24,19 @@ struct TextArgs {
     UITransformComponent *parent_ui_transform = nullptr;
     float spacing = 1.0f;
     ActivityState *parent_activity_state = nullptr;
+    float texture_scale = 1.0f;
 
     operator UIEntityArgs() const {
-        return UIEntityArgs{Texture2D(), ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+        return UIEntityArgs{Texture2D(),
+                            ui_origin,
+                            position,
+                            rotation,
+                            scale,
+                            color,
+                            layer,
+                            parent_ui_transform,
+                            parent_activity_state,
+                            texture_scale};
     }
 
     operator TextComponentArgs() const { return TextComponentArgs{content, font, font_size, spacing, color}; }

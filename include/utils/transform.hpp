@@ -26,9 +26,13 @@ class Transform {
         return this->_transform_data.position - origin_position;
     }
 
-    inline float get_relative_rotation(float origin_rotation) const { return this->_transform_data.rotation - origin_rotation; }
+    inline float get_relative_rotation(float origin_rotation) const {
+        return this->_transform_data.rotation - origin_rotation;
+    }
 
-    inline const Vector2Df get_relative_scale(Vector2Df origin_scale) const { return this->_transform_data.scale / origin_scale; }
+    inline const Vector2Df get_relative_scale(Vector2Df origin_scale) const {
+        return this->_transform_data.scale / origin_scale;
+    }
 
     inline void set_transform_data(TransformData result) { this->_transform_data = result; }
 
@@ -54,7 +58,9 @@ class Transform {
         this->scale(origin, diff_scale);
     }
 
-    inline void translate(Vector2Df translation) { this->_transform_data.position = this->_transform_data.position + translation; }
+    inline void translate(Vector2Df translation) {
+        this->_transform_data.position = this->_transform_data.position + translation;
+    }
 
     void rotate(Vector2Df origin, float rotation) {
         this->_transform_data.position = this->_transform_data.position - origin;

@@ -56,7 +56,7 @@ class Button;
 struct ButtonArgs;
 
 class Text;
-struct TextArgs; 
+struct TextArgs;
 
 class TextButton;
 struct TextButtonArgs;

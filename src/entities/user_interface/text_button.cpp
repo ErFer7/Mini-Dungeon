@@ -1,10 +1,11 @@
 #include "entities/user_interface/text_button.hpp"
 
-#include "game_core.hpp"
 #include "entities/user_interface/button.hpp"
 #include "entities/user_interface/text.hpp"
+#include "game_core.hpp"
 
-TextButton::TextButton(GameCore *game_core, const TextButtonArgs &args) : Button(game_core, static_cast<ButtonArgs>(args)) {
+TextButton::TextButton(GameCore *game_core, const TextButtonArgs &args)
+    : Button(game_core, static_cast<ButtonArgs>(args)) {
     TextArgs text_args = static_cast<TextArgs>(args);
 
     text_args.parent_ui_transform = this->get_ui_transform_component();

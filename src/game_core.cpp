@@ -2,13 +2,26 @@
 
 #include <raylib.h>
 
-GameCore::GameCore(int screen_width, int screen_height, const char *title, int target_fps, bool resizable, bool fullscreen, bool show_fps)
+GameCore::GameCore(int screen_width,
+                   int screen_height,
+                   const char *title,
+                   int target_fps,
+                   bool resizable,
+                   bool fullscreen,
+                   bool show_fps)
     : _entity_container(this),
       _asset_container(this),
       _game_manager(this),
       _behavior_component_manager(this),
       _physics_component_manager(this),
-      _graphics_component_manager(this, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
+      _graphics_component_manager(this,
+                                  screen_width,
+                                  screen_height,
+                                  title,
+                                  target_fps,
+                                  resizable,
+                                  fullscreen,
+                                  show_fps),
       _is_exiting(false) {}
 
 void GameCore::init_main_loop() {
