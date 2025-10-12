@@ -1,7 +1,7 @@
-#include "../../include/managers/game_manager.hpp"
+#include "managers/game_manager.hpp"
 
-#include "../../include/scenes/menu_scene.hpp"
 #include "scenes/gameplay_scene.hpp"
+#include "scenes/menu_scene.hpp"
 
 GameManager::GameManager(GameCore *game_core) : Manager(game_core) {
     this->_menu_scene = this->create_unique<MenuScene>();
@@ -15,6 +15,7 @@ void GameManager::init() {
 
     this->_current_scene->init();
     this->_current_scene->enter();
+    this->_gameplay_scene->init();  // TODO: Find out why this is necessary and initialize this somewhere else
 }
 
 void GameManager::update() { this->_current_scene->update(); }

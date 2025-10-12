@@ -1,8 +1,8 @@
-#include "../../include/containers/asset_container.hpp"
+#include "containers/asset_container.hpp"
+
+#include <raylib.h>
 
 #include <memory>
-
-#include "raylib.h"
 
 using std::make_unique;
 

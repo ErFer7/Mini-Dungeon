@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../entities/user_interface/background.hpp"
-#include "../entities/user_interface/text.hpp"
-#include "components/button_component.hpp"
-#include "entities/user_interface/text_button.hpp"
+#include "entities/gameplay/player.hpp"
 #include "scene.hpp"
 
 class GameplayScene : public Scene {
@@ -14,13 +11,16 @@ class GameplayScene : public Scene {
 
     ~GameplayScene(){};
 
-    void init() override {};
+    void init() override;
 
-    void enter() override {};
+    void enter() override;
 
     void update() override {};
 
     void leave() override {};
 
     void exit() override {};
+
+   private:
+    Player *_player;
 };

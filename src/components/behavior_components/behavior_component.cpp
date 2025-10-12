@@ -1,9 +1,7 @@
-#include "../../include/components/behavior_component.hpp"
+#include "components/behavior_components/behavior_component.hpp"
 
-#include <cassert>
-
-#include "../../include/game_core.hpp"
-#include "../../include/managers/behavior_component_manager.hpp"
+#include "game_core.hpp"
+#include "managers/behavior_component_manager.hpp"
 
 BehaviorComponent::~BehaviorComponent() { this->unregister_component(); }
 

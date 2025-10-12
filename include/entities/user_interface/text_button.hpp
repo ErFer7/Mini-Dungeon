@@ -1,11 +1,9 @@
 #pragma once
 
-#include "../../components/ui_transform_component.hpp"
-#include "../../types.hpp"
-#include "button.hpp"
 #include "components/text_component.hpp"
-#include "text.hpp"
-#include "utils/vector.hpp"
+#include "components/ui_transform_component.hpp"
+#include "entities/user_interface/button.hpp"
+#include "entities/user_interface/text.hpp"
 
 using std::string;
 using utils::Vector2Df;
@@ -29,6 +27,15 @@ struct TextButtonArgs {
     Color text_color = WHITE;
     float spacing = 1.0f;
     ActivityState *parent_activity_state = nullptr;
+
+    operator ButtonArgs() const {
+        return ButtonArgs{texture, ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+    }
+
+    operator TextArgs() const {
+        return TextArgs{
+            content, font, text_ui_origin, font_size, text_position, text_rotation, text_scale, text_color, 0, nullptr, spacing, nullptr};
+    }
 };
 
 class TextButton : public Button {

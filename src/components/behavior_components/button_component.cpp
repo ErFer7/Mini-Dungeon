@@ -1,7 +1,8 @@
-#include "../../include/components/button_component.hpp"
+#include "components/behavior_components/button_component.hpp"
 
-#include "components/behavior_component.hpp"
-#include "raylib.h"
+#include <raylib.h>
+
+#include "components/behavior_components/behavior_component.hpp"
 
 ButtonComponent::ButtonComponent(GameCore *game_core, Entity *entity) : BehaviorComponent(game_core, entity) {
     this->_graphics_component = entity->get_component<GraphicsComponent>();

@@ -1,13 +1,16 @@
-#include "../../include/components/graphics_component.hpp"
+#include "components/graphics_component.hpp"
 
 #include <raylib.h>
 
-#include "../../include/entities/entity.hpp"
-#include "../../include/game_core.hpp"
+#include "entities/entity.hpp"
+#include "game_core.hpp"
 #include "utils/vector.hpp"
 
 GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args)
-    : Component(game_core, entity), _rendering_mode(args.rendering_mode), _color(args.color), _layer(args.layer) {
+    : Component(game_core, entity),
+      _rendering_mode(args.rendering_mode),
+      _color(args.color),
+      _layer(args.layer) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
     this->_transform_update_listener.set_callable([this](const Vector2Df &, const TransformData &) { this->_update_drawing_transform(); });

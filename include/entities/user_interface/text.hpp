@@ -1,12 +1,12 @@
 #pragma once
 
+#include <raylib.h>
+
 #include <string>
 
-#include "../../components/ui_transform_component.hpp"
-#include "../../types.hpp"
 #include "components/text_component.hpp"
-#include "ui_entity.hpp"
-#include "utils/vector.hpp"
+#include "components/ui_transform_component.hpp"
+#include "entities/user_interface/ui_entity.hpp"
 
 using std::string;
 using utils::Vector2Df;
@@ -24,6 +24,12 @@ struct TextArgs {
     UITransformComponent *parent_ui_transform = nullptr;
     float spacing = 1.0f;
     ActivityState *parent_activity_state = nullptr;
+
+    operator UIEntityArgs() const {
+        return UIEntityArgs{Texture2D(), ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+    }
+
+    operator TextComponentArgs() const { return TextComponentArgs{content, font, font_size, spacing, color}; }
 };
 
 class Text : public UIEntity {

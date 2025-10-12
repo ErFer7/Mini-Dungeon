@@ -1,6 +1,6 @@
-#include "../../include/managers/graphics_component_manager.hpp"
+#include "managers/graphics_component_manager.hpp"
 
-#include "../../include/components/graphics_component.hpp"
+#include "components/graphics_component.hpp"
 
 using std::remove;
 

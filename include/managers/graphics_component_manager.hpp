@@ -1,12 +1,12 @@
 #pragma once
 
+#include <raylib.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../types.hpp"
-#include "component_manager.hpp"
-#include "raylib.h"
+#include "managers/component_manager.hpp"
 
 using std::make_unique;
 using std::move;
@@ -16,6 +16,7 @@ using std::vector;
 
 // TODO: Quad tree
 
+enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D };
 enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
 
 // TODO: Move this to a separate file

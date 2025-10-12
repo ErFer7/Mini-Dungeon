@@ -1,10 +1,7 @@
 #pragma once
 
-#include "../types.hpp"
-#include "component.hpp"
-#include "raylib.h"
-#include "raymath.h"
-#include "transform_component.hpp"
+#include "components/component.hpp"
+#include "components/transform_component.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;
@@ -12,12 +9,10 @@ using utils::Vector2Df;
 struct PhysicsComponentArgs {
     Vector2Df initial_velocity = Vector2Df();
     Vector2Df initial_acceleration = Vector2Df();
-    float drag = 0.2;
+    float drag = 1.0f;
 };
 
 class PhysicsComponent : public Component {
-    friend class Space;
-
    public:
     PhysicsComponent(GameCore *game_core, Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 

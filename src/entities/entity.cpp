@@ -1,4 +1,4 @@
-#include "../../include/entities/entity.hpp"
+#include "entities/entity.hpp"
 
 #include <math.h>
 
@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../include/components/component.hpp"
+#include "components/component.hpp"
 
 using std::make_unique;
 using std::move;

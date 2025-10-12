@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../types.hpp"
-#include "component.hpp"
+#include "components/component.hpp"
 
 class BehaviorComponent : public Component {
    public:

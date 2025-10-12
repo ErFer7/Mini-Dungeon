@@ -1,8 +1,8 @@
-#include "../../include/components/ui_transform_component.hpp"
+#include "components/ui_transform_component.hpp"
 
-#include "../../include/entities/entity.hpp"
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+
+#include "entities/entity.hpp"
 #include "utils/vector.hpp"
 
 UITransformComponent::UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args)

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../types.hpp"
-#include "component_manager.hpp"
+#include "managers/component_manager.hpp"
 
 class AudioComponentManager : public ComponentManager {
     friend class AudioComponent;

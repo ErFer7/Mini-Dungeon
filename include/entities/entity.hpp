@@ -5,14 +5,13 @@
 #include <utility>
 #include <vector>
 
-#include "../types.hpp"
-#include "../utils/activity_state.hpp"
-#include "../utils/event.hpp"
-#include "../utils/game_core_dependency_injector.hpp"
-#include "../utils/restricted_instance.hpp"
 #include "components/component.hpp"
+#include "types.hpp"
+#include "utils/activity_state.hpp"
+#include "utils/event.hpp"
+#include "utils/game_core_dependency_injector.hpp"
+#include "utils/restricted_instance.hpp"
 
-// TODO: Implement an activity state
 // TODO: Implement name with a hash map
 // TODO: Optimize component creation
 // TODO: Event listeners

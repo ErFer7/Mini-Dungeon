@@ -3,9 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "../components/component.hpp"
-#include "../types.hpp"
-#include "manager.hpp"
+#include "components/component.hpp"
+#include "managers/manager.hpp"
 
 using std::make_unique;
 using std::remove;

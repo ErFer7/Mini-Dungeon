@@ -1,10 +1,6 @@
 #pragma once
 
-#include <raylib.h>
-
-#include "raymath.h"
 #include "transform_data.hpp"
-#include "vector.hpp"
 
 namespace utils {
 

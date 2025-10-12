@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../utils/game_core_dependency_injector.hpp"
+#include "types.hpp"
+#include "utils/game_core_dependency_injector.hpp"
 
 using utils::GameCoreDependencyInjector;
 

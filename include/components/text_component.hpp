@@ -1,12 +1,12 @@
 #pragma once
 
+#include <raylib.h>
+
 #include <string>
 
-#include "../entities/entity.hpp"
-#include "../types.hpp"
-#include "component.hpp"
-#include "graphics_component.hpp"
-#include "raylib.h"
+#include "components/component.hpp"
+#include "components/graphics_component.hpp"
+#include "entities/entity.hpp"
 
 using std::string;
 

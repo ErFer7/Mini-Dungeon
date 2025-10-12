@@ -4,8 +4,12 @@
 
 #include <cmath>
 #include <concepts>
+#include <sstream>
+#include <string>
 
-#include "../definitions.hpp"
+#include "definitions.hpp"
+
+using std::string;
 
 namespace utils {
 
@@ -25,7 +29,8 @@ struct Vector2D {
     explicit Vector2D(T value) : x(value), y(value) {}
 
     template <Numeric U>
-    explicit Vector2D(const Vector2D<U> &other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)) {}
+    explicit Vector2D(const Vector2D<U> &other) : x(static_cast<T>(other.x)),
+                                                  y(static_cast<T>(other.y)) {}
 
     explicit Vector2D(const Vector2 &raylib_vector) : x(static_cast<T>(raylib_vector.x)), y(static_cast<T>(raylib_vector.y)) {}
 
@@ -35,6 +40,13 @@ struct Vector2D {
     }
 
     operator Vector2() const { return Vector2{static_cast<float>(x), static_cast<float>(y)}; }
+
+    operator string() const {
+        std::ostringstream string;
+        string << '{' << x << ", " << y << '}';
+
+        return string.str();
+    }
 
     Vector2D &operator=(const Vector2D &other) {
         if (this != &other) {
@@ -78,7 +90,7 @@ struct Vector2D {
 
     Vector2D operator*(const Vector2D &other) const { return Vector2D(x * other.x, y * other.y); }
 
-    Vector2D &operator*=(const Vector2D &other) const {
+    Vector2D &operator*=(const Vector2D &other) {
         x *= other.x;
         y *= other.y;
         return *this;
@@ -89,6 +101,14 @@ struct Vector2D {
     Vector2D &operator/=(T scalar) {
         x /= scalar;
         y /= scalar;
+        return *this;
+    }
+
+    Vector2D operator/(const Vector2D &other) const { return Vector2D(x / other.x, y / other.y); }
+
+    Vector2D &operator/=(const Vector2D &other) {
+        x /= other.x;
+        y /= other.y;
         return *this;
     }
 
@@ -167,6 +187,12 @@ typedef Vector2D<double> Vector2Dd;
 template <Numeric T>
 Vector2D<T> operator*(T scalar, const Vector2D<T> &vector) {
     return vector * scalar;
+}
+
+template <Numeric T>
+std::ostream &operator<<(std::ostream &os, const Vector2D<T> &vector) {
+    os << '{' << vector.x << ", " << vector.y << '}';
+    return os;
 }
 
 template <Numeric T>

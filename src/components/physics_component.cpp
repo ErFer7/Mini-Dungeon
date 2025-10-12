@@ -1,10 +1,11 @@
-#include "../../include/components/physics_component.hpp"
+#include "components/physics_component.hpp"
 
-#include "../../include/definitions.hpp"
-#include "../../include/entities/entity.hpp"
-#include "../../include/game_core.hpp"
+#include <raylib.h>
+
 #include "components/component.hpp"
-#include "raylib.h"
+#include "definitions.hpp"
+#include "entities/entity.hpp"
+#include "game_core.hpp"
 #include "utils/vector.hpp"
 
 PhysicsComponent::PhysicsComponent(GameCore *game_core, Entity *entity, const PhysicsComponentArgs &args)
@@ -19,7 +20,9 @@ PhysicsComponent::PhysicsComponent(GameCore *game_core, Entity *entity, const Ph
 PhysicsComponent::~PhysicsComponent() { this->unregister_component(); }
 
 void PhysicsComponent::update() {
-    float time_diff = static_cast<float>(GetTime() - this->_time);
+    double current_time = GetTime();
+    float time_diff = static_cast<float>(current_time - this->_time);
+    this->_time = current_time;
 
     if (this->_velocity.is_zero() && this->_acceleration.is_zero()) {
         return;
@@ -28,7 +31,7 @@ void PhysicsComponent::update() {
     this->_transform_component->translate(this->_velocity * time_diff);
 
     this->_velocity += this->_acceleration * time_diff;
-    this->_acceleration *= this->_drag * time_diff;
+    this->_acceleration = -this->_velocity * this->_drag;
 
     float epsilon = FLOAT_EPSILON;
 

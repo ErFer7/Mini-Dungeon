@@ -1,12 +1,12 @@
 #pragma once
 
-#include "./containers/asset_container.hpp"
-#include "./containers/entity_container.hpp"
-#include "./managers/audio_component_manager.hpp"
-#include "./managers/behavior_component_manager.hpp"
-#include "./managers/game_manager.hpp"
-#include "./managers/graphics_component_manager.hpp"
-#include "./managers/physics_component_manager.hpp"
+#include "containers/asset_container.hpp"
+#include "containers/entity_container.hpp"
+#include "managers/audio_component_manager.hpp"
+#include "managers/behavior_component_manager.hpp"
+#include "managers/game_manager.hpp"
+#include "managers/graphics_component_manager.hpp"
+#include "managers/physics_component_manager.hpp"
 #include "types.hpp"
 
 class GameCore {

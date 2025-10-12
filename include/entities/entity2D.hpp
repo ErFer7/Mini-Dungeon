@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../components/graphics_component.hpp"
-#include "../types.hpp"
+#include "components/graphics_component.hpp"
 #include "entity.hpp"
+#include "managers/graphics_component_manager.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;
@@ -15,6 +15,10 @@ struct Entity2DArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
+
+    operator TransformComponentArgs() const { return TransformComponentArgs{position, rotation, scale}; }
+
+    operator GraphicsComponentArgs() const { return GraphicsComponentArgs{texture, rendering_mode, color, layer}; }
 };
 
 class Entity2D : public Entity {

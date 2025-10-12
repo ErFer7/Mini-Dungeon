@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../entities/user_interface/background.hpp"
-#include "../entities/user_interface/text.hpp"
-#include "components/button_component.hpp"
+#include "components/behavior_components/button_component.hpp"
+#include "entities/user_interface/background.hpp"
+#include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
 #include "scene.hpp"
 

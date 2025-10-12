@@ -1,18 +1,16 @@
-#include "../../include/scenes/menu_scene.hpp"
+#include "scenes/menu_scene.hpp"
 
-#include <iostream>
+#include <raylib.h>
 
-#include "../../include/components/button_component.hpp"
-#include "../../include/components/ui_transform_component.hpp"
-#include "../../include/game_core.hpp"
-#include "../../include/utils/event.hpp"
+#include "components/behavior_components/button_component.hpp"
+#include "components/ui_transform_component.hpp"
 #include "containers/asset_container.hpp"
 #include "containers/entity_container.hpp"
 #include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
+#include "game_core.hpp"
 #include "managers/game_manager.hpp"
-#include "raylib.h"
-#include "raymath.h"
+#include "utils/event.hpp"
 
 void MenuScene::init() {
     GameCore *game_core = this->get_game_core();
@@ -39,10 +37,16 @@ void MenuScene::init() {
 
     UnloadImage(button_image);
 
-    this->_title = entity_container->create_entity<Text>(TextArgs{
-        .content = "Mini Dungeon", .font = title_font, .ui_origin = UIOrigin::CENTER, .position = Vector2Df(0.0f, -200.0f), .color = golden});
+    this->_title = entity_container->create_entity<Text>(TextArgs{.content = "Mini Dungeon",
+                                                                  .font = title_font,
+                                                                  .ui_origin = UIOrigin::CENTER,
+                                                                  .position = Vector2Df(0.0f, -200.0f),
+                                                                  .color = golden});
     this->_version = entity_container->create_entity<Text>(TextArgs{
-        .content = "v2.0", .font = small_font, .ui_origin = UIOrigin::TOP_LEFT, .position = Vector2Df(35.0f, 15.0f)  // TODO: Fix the position
+        .content = "v2.0",
+        .font = small_font,
+        .ui_origin = UIOrigin::TOP_LEFT,
+        .position = Vector2Df(35.0f, 15.0f)  // TODO: Fix the position
     });
     this->_play_button = entity_container->create_entity<TextButton>(TextButtonArgs{
         .texture = this->_button_texture, .ui_origin = UIOrigin::CENTER, .content = "PLAY", .font = button_font, .text_color = golden});

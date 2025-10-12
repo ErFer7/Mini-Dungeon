@@ -1,7 +1,6 @@
-#include "../../include/components/transform_component.hpp"
-#include "../../include/entities/entity.hpp"
-#include "raylib.h"
-#include "raymath.h"
+#include "components/transform_component.hpp"
+
+#include "entities/entity.hpp"
 #include "utils/transform_data.hpp"
 #include "utils/vector.hpp"
 
@@ -53,7 +52,7 @@ void TransformComponent::set_relative_position(Vector2Df origin, Vector2Df posit
     if (this->_on_update_event.has_listeners()) {
         Vector2Df old_position = this->_transform.get_relative_position(origin);
         Vector2Df diff = position - old_position;
-        TransformData diff_transform = TransformData(diff, 0.0f, Vector2One());
+        TransformData diff_transform = TransformData(diff, 0.0f, Vector2Df(1.0f));
 
         this->_transform.set_relative_position(origin, position);
         this->_on_update_event.invoke(this->_transform.get_position(), diff_transform);

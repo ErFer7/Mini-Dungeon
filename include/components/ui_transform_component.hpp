@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../entities/entity.hpp"
-#include "../types.hpp"
-#include "component.hpp"
+#include <raylib.h>
+
+#include "components/component.hpp"
+#include "components/graphics_component.hpp"
 #include "components/transform_component.hpp"
-#include "graphics_component.hpp"
-#include "raylib.h"
+#include "entities/entity.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;

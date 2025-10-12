@@ -1,13 +1,7 @@
 #pragma once
 
-#include "../types.hpp"
-#include "../utils/event.hpp"
-#include "../utils/transform.hpp"
-#include "../utils/transform_data.hpp"
-#include "component.hpp"
-#include "raylib.h"
-#include "raymath.h"
-#include "utils/vector.hpp"
+#include "components/component.hpp"
+#include "utils/transform.hpp"
 
 using utils::TransformData;
 using utils::Vector2Df;

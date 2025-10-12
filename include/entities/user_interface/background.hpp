@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../../types.hpp"
-#include "ui_entity.hpp"
+#include "entities/user_interface/ui_entity.hpp"
 
 class Background : public UIEntity {
    public:

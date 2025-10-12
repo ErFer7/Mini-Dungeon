@@ -1,6 +1,5 @@
 #pragma once
 
-#include "raymath.h"
 #include "vector.hpp"
 
 namespace utils {

@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../../components/button_component.hpp"
-#include "../../components/ui_transform_component.hpp"
-#include "../../types.hpp"
-#include "ui_entity.hpp"
-#include "utils/vector.hpp"
+#include "components/behavior_components/button_component.hpp"
+#include "components/ui_transform_component.hpp"
+#include "entities/user_interface/ui_entity.hpp"
 
 using utils::Vector2Df;
 
@@ -18,6 +16,10 @@ struct ButtonArgs {
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;
     ActivityState *parent_activity_state = nullptr;
+
+    operator UIEntityArgs() const {
+        return UIEntityArgs{texture, ui_origin, position, rotation, scale, color, layer, parent_ui_transform, parent_activity_state};
+    }
 };
 
 class Button : public UIEntity {

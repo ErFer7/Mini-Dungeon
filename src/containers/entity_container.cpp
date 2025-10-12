@@ -1,9 +1,9 @@
-#include "../../include/containers/entity_container.hpp"
+#include "containers/entity_container.hpp"
 
 #include <cassert>
 #include <memory>
 
-#include "../../include/entities/entity.hpp"
+#include "entities/entity.hpp"
 
 using std::make_unique;
 

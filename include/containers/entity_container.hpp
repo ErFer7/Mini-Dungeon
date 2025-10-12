@@ -4,10 +4,10 @@
 #include <utility>
 #include <vector>
 
-#include "../entities/entity.hpp"
-#include "../types.hpp"
-#include "../utils/game_core_dependency_injector.hpp"
-#include "container.hpp"
+#include "containers/container.hpp"
+#include "entities/entity.hpp"
+#include "types.hpp"
+#include "utils/game_core_dependency_injector.hpp"
 
 using std::forward;
 using std::unique_ptr;

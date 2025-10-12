@@ -1,6 +1,6 @@
-#include "../../include/components/text_component.hpp"
+#include "components/text_component.hpp"
 
-#include "raylib.h"
+#include <raylib.h>
 
 TextComponent::TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args)
     : Component(game_core, entity),

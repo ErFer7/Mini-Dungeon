@@ -1,10 +1,10 @@
-#include "../../../include/entities/user_interface/background.hpp"
+#include "entities/user_interface/background.hpp"
 
-#include "../../../include/definitions.hpp"
-#include "../../../include/game_core.hpp"
+#include <raylib.h>
+
+#include "definitions.hpp"
 #include "entities/user_interface/ui_entity.hpp"
-#include "raylib.h"
-#include "raymath.h"
+#include "game_core.hpp"
 
 Background::Background(GameCore *game_core)
     : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Df(), 0.0f, Vector2Df(1.0f), WHITE, -1}) {

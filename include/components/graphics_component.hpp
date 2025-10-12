@@ -1,14 +1,12 @@
 #pragma once
 
-#include "../types.hpp"
-#include "component.hpp"
+#include "components/component.hpp"
+#include "components/transform_component.hpp"
 #include "raylib.h"
-#include "transform_component.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;
 
-enum class RenderingMode { SCREEN_SPACE, WORLD_SPACE_2D };
 struct GraphicsComponentArgs {
     Texture2D texture;
     RenderingMode rendering_mode;

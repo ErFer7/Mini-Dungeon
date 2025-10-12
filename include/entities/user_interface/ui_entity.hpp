@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../components/ui_transform_component.hpp"
-#include "../../types.hpp"
-#include "../entity2D.hpp"
+#include "components/graphics_component.hpp"
+#include "components/ui_transform_component.hpp"
+#include "entities/entity2D.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/vector.hpp"
 
@@ -19,6 +19,12 @@ struct UIEntityArgs {
     int layer = 0;
     UITransformComponent *parent_ui_transform = nullptr;
     ActivityState *parent_activity_state = nullptr;
+
+    operator Entity2DArgs() const { return Entity2DArgs{texture, RenderingMode::SCREEN_SPACE, position, rotation, scale, color, layer}; }
+
+    operator UITransformComponentArgs() const {
+        return UITransformComponentArgs{ui_origin, parent_ui_transform, position, rotation, scale};
+    }
 };
 
 class UIEntity : public Entity2D {

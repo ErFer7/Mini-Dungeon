@@ -1,11 +1,12 @@
 #pragma once
 
+#include <raylib.h>
+
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-#include "container.hpp"
-#include "raylib.h"
+#include "containers/container.hpp"
 
 using std::string;
 using std::unique_ptr;

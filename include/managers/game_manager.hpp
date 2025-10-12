@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "../types.hpp"
-#include "manager.hpp"
+#include "managers/manager.hpp"
 #include "scenes/gameplay_scene.hpp"
 #include "scenes/menu_scene.hpp"
 

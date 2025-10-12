@@ -1,11 +1,9 @@
 #pragma once
 
-#include "../entities/entity.hpp"
-#include "../types.hpp"
-#include "behavior_component.hpp"
-#include "component.hpp"
-#include "graphics_component.hpp"
-#include "utils/event.hpp"
+#include "components/behavior_components/behavior_component.hpp"
+#include "components/component.hpp"
+#include "components/graphics_component.hpp"
+#include "entities/entity.hpp"
 
 class ButtonComponent : public BehaviorComponent {
    public:
