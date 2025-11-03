@@ -5,6 +5,8 @@ class GameCore;
 // Components
 class Component;
 
+class AudioComponent;
+
 class BehaviorComponent;
 
 class ButtonComponent;
@@ -30,6 +32,7 @@ struct UITransformComponentArgs;
 enum class UIOrigin;
 
 // Containers
+template <typename DataStructure, typename Identifier, typename Object>
 class Container;
 
 class AssetContainer;
@@ -64,6 +67,7 @@ struct TextButtonArgs;
 // Managers
 class Manager;
 
+template <typename ComponentType>
 class ComponentManager;
 class ComponentVector;
 

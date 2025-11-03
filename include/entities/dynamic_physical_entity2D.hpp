@@ -4,12 +4,14 @@
 #include "components/physics_component.hpp"
 #include "definitions.hpp"
 #include "entities/entity2D.hpp"
+#include "entities/static_physical_entity2D.hpp"
 #include "managers/graphics_component_manager.hpp"
+#include "raylib.h"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;
 
-struct PhysicalEntity2DArgs {
+struct DynamicPhysicalEntity2DArgs {
     Texture2D texture;
     RenderingMode rendering_mode;
     Vector2Df position = Vector2Df();
@@ -20,20 +22,22 @@ struct PhysicalEntity2DArgs {
     Vector2Df initial_velocity = Vector2Df();
     Vector2Df initial_acceleration = Vector2Df();
     float drag = 5.0f;
+    Rectangle collider_rectangle = Rectangle();
     float texture_scale = VIRTUAL_SCALE;
 
-    operator Entity2DArgs() const {
-        return Entity2DArgs{texture, rendering_mode, position, rotation, scale, color, layer, texture_scale};
+    operator StaticPhysicalEntity2DArgs() const {
+        return StaticPhysicalEntity2DArgs{
+            texture, rendering_mode, position, rotation, scale, color, layer, texture_scale, collider_rectangle};
     }
 
     operator PhysicsComponentArgs() const { return PhysicsComponentArgs{initial_velocity, initial_acceleration, drag}; }
 };
 
-class PhysicalEntity2D : public Entity2D {
+class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
    public:
-    PhysicalEntity2D(GameCore *game_core, const PhysicalEntity2DArgs &args);
+    DynamicPhysicalEntity2D(GameCore *game_core, const DynamicPhysicalEntity2DArgs &args);
 
-    ~PhysicalEntity2D() override = default;
+    ~DynamicPhysicalEntity2D() override = default;
 
     inline PhysicsComponent *get_physics_component() { return this->_physics_component; }
 

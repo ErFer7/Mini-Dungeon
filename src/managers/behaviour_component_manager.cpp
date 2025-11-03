@@ -1,13 +1,16 @@
+#include <memory>
+
 #include "components/behavior_components/behavior_component.hpp"
+#include "game_core.hpp"
 #include "managers/behavior_component_manager.hpp"
 
-void BehaviorComponentManager::init() {}
+void BehaviorComponentManager::init() {
+    this->_behavior_component_container = this->get_game_core()->get_behavior_component_container();
+}
 
 void BehaviorComponentManager::update() {
-    ComponentVector *components = this->get_components();
-
-    for (auto component : *components) {
-        BehaviorComponent *behavior_component = static_cast<BehaviorComponent *>(component);
+    for (auto &component : *this->_behavior_component_container->get_data_structure()) {
+        BehaviorComponent *behavior_component = static_cast<BehaviorComponent *>(component.get());
 
         if (behavior_component->is_active()) {
             behavior_component->update();

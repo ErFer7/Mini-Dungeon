@@ -14,20 +14,23 @@ PhysicsComponent::PhysicsComponent(GameCore *game_core, Entity *entity, const Ph
       _acceleration(args.initial_acceleration),
       _drag(args.drag),
       _time(GetTime()),
+      _is_statically_stable(!args.initial_velocity.is_zero() || !args.initial_acceleration.is_zero()),
       Component(game_core, entity) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
 }
-
-PhysicsComponent::~PhysicsComponent() { this->unregister_component(); }
 
 void PhysicsComponent::update() {
     double current_time = GetTime();
     float time_diff = static_cast<float>(current_time - this->_time);
     this->_time = current_time;
 
-    if (this->_velocity.is_zero() && this->_acceleration.is_zero()) {
+    if (this->_is_statically_stable) {
         return;
+    }
+
+    if (this->_velocity.is_zero() && this->_acceleration.is_zero() && !this->_is_colliding) {
+        this->_is_statically_stable = true;
     }
 
     this->_transform_component->translate(this->_velocity * time_diff);
@@ -42,12 +45,4 @@ void PhysicsComponent::update() {
     if (this->_acceleration.magnitude() < FLOAT_EPSILON) {
         this->_acceleration = Vector2Df();
     }
-}
-
-void PhysicsComponent::register_component() {
-    this->get_game_core()->get_physics_component_manager()->register_component(this);
-}
-
-void PhysicsComponent::unregister_component() {
-    this->get_game_core()->get_physics_component_manager()->unregister_component(this);
 }

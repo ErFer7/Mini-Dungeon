@@ -21,12 +21,12 @@ struct UITransformComponentArgs {
 };
 
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
-class UITransformComponent : public Component {
+class UITransformComponent final : public Component {
    public:
     UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args);
 
     // TODO: Handle the destruction of the parent
-    ~UITransformComponent() override { this->unregister_component(); };
+    ~UITransformComponent() override { this->destroy(); };
 
     Vector2Df get_position() const;
 
@@ -52,9 +52,7 @@ class UITransformComponent : public Component {
     void scale(Vector2Df scale);
 
    protected:
-    void register_component() override {};
-
-    void unregister_component() override {};
+    void destroy() override {};
 
    private:
     Vector2Df _get_origin() const;

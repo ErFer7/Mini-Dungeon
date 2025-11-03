@@ -16,6 +16,7 @@ ButtonComponent::ButtonComponent(GameCore *game_core, Entity *entity) : Behavior
 }
 
 void ButtonComponent::update() {
+    // TODO: Create a log_loop_info for this
     if constexpr (DEBUGGED_ON_LOOP) {
         log_info("ButtonComponent::update()");
     }

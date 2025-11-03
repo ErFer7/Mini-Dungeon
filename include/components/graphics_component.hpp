@@ -2,6 +2,7 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/graphics_component_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -15,8 +16,9 @@ struct GraphicsComponentArgs {
     float texture_scale = 1.0f;
 };
 
-class GraphicsComponent : public Component {
+class GraphicsComponent final : public Component {
     friend class Space;
+    friend class GraphicsComponentManager;
 
    public:
     GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args);
@@ -42,9 +44,7 @@ class GraphicsComponent : public Component {
     void draw();
 
    protected:
-    void register_component() override;
-
-    void unregister_component() override;
+    void destroy() override;
 
    private:
     inline Vector2Df _get_position() { return this->_transform_component->get_position(); }

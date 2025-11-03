@@ -1,14 +1,14 @@
 #pragma once
 
-#include "managers/component_manager.hpp"
+#include "managers/manager.hpp"
 
-class AudioComponentManager : public ComponentManager {
+class AudioComponentManager : public Manager {
     friend class AudioComponent;
 
    public:
     AudioComponentManager() = default;
 
-    AudioComponentManager(GameCore *game_core) : ComponentManager(game_core){};
+    AudioComponentManager(GameCore *game_core) : Manager(game_core){};
 
     ~AudioComponentManager() override = default;
 

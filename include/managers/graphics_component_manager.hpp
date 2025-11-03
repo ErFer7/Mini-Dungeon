@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "managers/component_manager.hpp"
+#include "components/graphics_component.hpp"
+#include "managers/manager.hpp"
 
 using std::make_unique;
 using std::move;
@@ -65,7 +66,7 @@ class Space {
     unique_ptr<vector<GraphicsComponent *>> _components;
 };
 
-class GraphicsComponentManager : public ComponentManager {
+class GraphicsComponentManager : public Manager {
     friend class GraphicsComponent;
 
    public:
@@ -115,11 +116,6 @@ class GraphicsComponentManager : public ComponentManager {
     inline void set_screen_space_sorting_mode(SortingMode sorting_mode) {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
-
-   protected:
-    void register_component(Component *component) override;
-
-    void unregister_component(Component *component) override;
 
    private:
     // TODO: Implement set methods for all of these

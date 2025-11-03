@@ -29,7 +29,7 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     friend class EntityContainer;
 
    public:
-    typedef vector<unique_ptr<Component>> ComponentsVector;
+    typedef vector<Component *> ComponentsVector;
 
    public:
     Entity(GameCore *game_core);
@@ -38,15 +38,8 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
 
     inline Event<Entity *> &get_on_destroy_event() { return this->_on_destroy_event; }
 
-    template <typename T, typename... Args>
-    T *create_component(Args &&...args) {
-        return static_cast<T *>(
-            this->_register_created_component(this->create_unique<T>(this, forward<Args>(args)...)));
-    }
-
-    Component *get_component(unsigned int index) const;
-
-    int get_component_index(Component *component) const;
+    template <typename ComponentType, typename... Args>
+    ComponentType *create_component(Args &&...args);
 
     inline unsigned int get_component_count() const { return this->_components->size(); }
 
@@ -54,25 +47,16 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
 
     void destroy_all_components();
 
-    template <typename T>
-    inline bool has_component() const {
-        return this->_has_component(typeid(T));
+    template <typename ComponentType>
+    bool has_component() const;
+
+    template <typename ComponentType>
+    inline ComponentType *get_component() const {
+        return static_cast<ComponentType *>(this->_get_component(typeid(ComponentType)));
     }
 
-    template <typename T>
-    inline T *get_component() const {
-        return static_cast<T *>(this->_get_component(typeid(T)));
-    }
-
-    template <typename T>
-    inline int get_component_index() const {
-        return this->_get_component_index(typeid(T));
-    }
-
-    template <typename T>
-    inline void destroy_component() {
-        this->_destroy_component(typeid(T));
-    }
+    template <typename ComponentType>
+    void destroy_component();
 
     inline ActivityState *get_activity_state() { return &this->_activity_state; }
 
@@ -86,15 +70,10 @@ class Entity : public GameCoreDependencyInjector, RestrictedInstance {
     }
 
    private:
-    Component *_register_created_component(unique_ptr<Component> component);
-
-    bool _has_component(const type_info &type_info) const;
-
     Component *_get_component(const type_info &type_info) const;
 
-    int _get_component_index(const type_info &type_info) const;
-
-    void _destroy_component(const type_info &type_info);
+    template <typename ComponentType>
+    int _get_component_index() const;
 
    private:
     unique_ptr<ComponentsVector> _components;

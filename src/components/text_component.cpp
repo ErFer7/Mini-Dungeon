@@ -19,8 +19,6 @@ TextComponent::TextComponent(GameCore *game_core, Entity *entity, const TextComp
 }
 
 TextComponent::~TextComponent() {
-    this->unregister_component();
-
     if (IsImageValid(this->_text_image)) {
         UnloadImage(this->_text_image);
     }

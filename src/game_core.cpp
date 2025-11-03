@@ -2,6 +2,8 @@
 
 #include <raylib.h>
 
+#include <type_traits>
+
 GameCore::GameCore(int screen_width,
                    int screen_height,
                    const char *title,
@@ -10,7 +12,16 @@ GameCore::GameCore(int screen_width,
                    bool fullscreen,
                    bool show_fps)
     : _entity_container(this),
-      _asset_container(this),
+      _texture_container(this),
+      _image_container(this),
+      _font_container(this),
+      _behavior_component_container(this),
+      _collider_component_container(this),
+      _graphics_component_container(this),
+      _physics_component_container(this),
+      _text_component_container(this),
+      _transform_component_container(this),
+      _ui_transform_component_container(this),
       _game_manager(this),
       _behavior_component_manager(this),
       _physics_component_manager(this),
@@ -37,10 +48,46 @@ void GameCore::init_main_loop() {
         this->_graphics_component_manager.update();
     }
 
-    this->_entity_container.free();
-    this->_asset_container.free();
+    this->_entity_container.destroy_all_entities();
+    this->_texture_container.unload_all_textures();
+    this->_image_container.unload_all_images();
+    this->_font_container.unload_all_fonts();
+
+    // By this point, all components should be already destroyed
+
     this->_graphics_component_manager.exit();
     this->_behavior_component_manager.exit();
     this->_physics_component_manager.exit();
     this->_game_manager.exit();
+}
+
+template <typename ComponentType>
+auto *GameCore::get_component_container() const {
+    if constexpr (std::is_base_of_v<BehaviorComponent, ComponentType>) {  // Only BehaviorComponents can be polymorphic
+        return &this->_behavior_component_container;
+    }
+
+    if constexpr (std::is_same_v<ColliderComponent, ComponentType>) {
+        return &this->_collider_component_container;
+    }
+
+    if constexpr (std::is_same_v<GraphicsComponent, ComponentType>) {
+        return &this->_graphics_component_container;
+    }
+
+    if constexpr (std::is_same_v<PhysicsComponent, ComponentType>) {
+        return &this->_physics_component_container;
+    }
+
+    if constexpr (std::is_same_v<TextComponent, ComponentType>) {
+        return &this->_text_component_container;
+    }
+
+    if constexpr (std::is_same_v<TransformComponent, ComponentType>) {
+        return &this->_transform_component_container;
+    }
+
+    if constexpr (std::is_same_v<UITransformComponent, ComponentType>) {
+        return &this->_ui_transform_component_container;
+    }
 }

@@ -161,3 +161,16 @@ void GraphicsComponentManager::unregister_component(Component *component) {
         this->_screen_space.remove_component(graphics2D_component);
     }
 }
+
+template <typename ComponentType, typename... Args>
+ComponentType *GraphicsComponentManager::create_component(Entity *entity, Args &&...args) {
+    this->_behavior_components->push_back(this->create_unique<ComponentType>(std::forward<Args>(args)...));
+
+    return this->_behavior_components->back().get();  // TODO: Avoid end()
+};
+
+void GraphicsComponentManager::destroy_component(BehaviorComponent *component) {
+    this->_behavior_components->erase(std::find(this->_behavior_components->begin(),
+                                                this->_behavior_components->end(),
+                                                std::unique_ptr<BehaviorComponent>(component)));
+};

@@ -1,24 +1,23 @@
 #pragma once
 
 #include "components/component.hpp"
+#include "managers/behavior_component_manager.hpp"
 #include "utils/debug.hpp"
 
-using utils::log_info;
-
 class BehaviorComponent : public Component {
+    friend class BehaviorComponentManager;
+
    public:
     BehaviorComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity) {
-        log_info("BehaviorComponent::BehaviorComponent(", game_core, ", ", entity, ')');
+        utils::log_info("BehaviorComponent::BehaviorComponent(", game_core, ", ", entity, ')');
     }
 
-    ~BehaviorComponent() override;
+    ~BehaviorComponent() override { utils::log_info("BehaviorComponent::~BehaviorComponent()"); };
 
-    virtual void start() = 0;
+    virtual void start() {};
 
-    virtual void update() = 0;
+    virtual void update() {};
 
    protected:
-    void register_component() override;
-
-    void unregister_component() override;
+    void destroy() override;
 };

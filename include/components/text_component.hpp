@@ -8,25 +8,23 @@
 #include "components/graphics_component.hpp"
 #include "entities/entity.hpp"
 
-using std::string;
-
 struct TextComponentArgs {
-    string content;
+    std::string content;
     Font font;
     int font_size = 0;
     float spacing = 1.0f;
     Color color = WHITE;
 };
 
-class TextComponent : public Component {
+class TextComponent final : public Component {
    public:
     TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args);
 
     ~TextComponent() override;
 
-    inline string get_content() const { return this->_content; }
+    inline std::string get_content() const { return this->_content; }
 
-    void set_content(string content);
+    void set_content(std::string content);
 
     inline Font get_font() const { return this->_font; }
 
@@ -45,15 +43,13 @@ class TextComponent : public Component {
     void set_color(Color color);
 
    protected:
-    void register_component() override {};
-
-    void unregister_component() override {};
+    void destroy() override {};
 
    private:
     void _update_texture();
 
    private:
-    string _content;
+    std::string _content;
     Font _font;
     int _font_size;
     float _spacing;

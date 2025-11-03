@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entities/gameplay/player.hpp"
+#include "entities/gameplay/wall.hpp"
 #include "scene.hpp"
 
 class GameplayScene : public Scene {
@@ -23,4 +24,5 @@ class GameplayScene : public Scene {
 
    private:
     Player *_player;
+    Wall *_wall;
 };

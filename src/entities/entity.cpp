@@ -3,12 +3,14 @@
 #include <math.h>
 
 #include <cassert>
-#include <cstddef>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "components/component.hpp"
+#include "game_core.hpp"
 
+using std::forward;
 using std::make_unique;
 using std::move;
 using std::type_info;
@@ -20,51 +22,43 @@ Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
 
 Entity::~Entity() { this->destroy_all_components(); }
 
-Component *Entity::get_component(unsigned int index) const { return this->_components->at(index).get(); }
+template <typename ComponentType, typename... Args>
+ComponentType *Entity::create_component(Args &&...args) {
+    auto *component_container = this->get_game_core()->get_component_container<ComponentType>();
 
-int Entity::get_component_index(Component *component) const {
-    for (size_t i = 0; i < this->_components->size(); i++) {
-        if (this->_components->at(i).get() == component) {
-            return i;
-        }
-    }
+    this->_components->push_back(
+        component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
 
-    return -1;
+    // TODO: Refactor to avoid getting the back
+    return this->_components->back();
 }
 
-void Entity::destroy_component(unsigned int index) {
-    Component *component = this->_components->at(index).get();
+template <typename ComponentType>
+void Entity::destroy_component() {
+    int index = this->_get_component_index<ComponentType>();
+    Component *component = this->_components->at(index);
+
     component->get_on_destroy_event()->invoke(component);
-    component->unregister_component();
+
+    auto *component_container = this->get_game_core()->get_component_container<ComponentType>();
+
+    component_container->template destroy_component<ComponentType>(component);
     this->_components->erase(this->_components->begin() + index);
 }
 
 void Entity::destroy_all_components() {
     for (auto &component : *this->_components) {
-        component->get_on_destroy_event()->invoke(component.get());
-        component->unregister_component();
+        component->get_on_destroy_event()->invoke(component);
+        component->destroy();
     }
 
     this->_components->clear();
 }
 
-Component *Entity::_register_created_component(unique_ptr<Component> component) {
-    if (!this->_has_component(typeid(*component))) {
-        this->_components->push_back(move(component));
-
-        Component *component_raw_ref = this->_components->back().get();
-
-        component_raw_ref->register_component();
-
-        return component_raw_ref;
-    }
-
-    return nullptr;  // TODO: Throw an exception here
-}
-
-bool Entity::_has_component(const type_info &type_info) const {
+template <typename ComponentType>
+inline bool Entity::has_component() const {
     for (auto &component : *this->_components) {
-        if (typeid(*component) == type_info) {
+        if (typeid(*component) == typeid(ComponentType)) {
             return true;
         }
     }
@@ -75,18 +69,19 @@ bool Entity::_has_component(const type_info &type_info) const {
 Component *Entity::_get_component(const type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
-            return component.get();
+            return component;
         }
     }
 
     return nullptr;
 }
 
-int Entity::_get_component_index(const type_info &type_info) const {
+template <typename ComponentType>
+int Entity::_get_component_index() const {
     unsigned int index = 0;
 
     for (auto &component : *this->_components) {
-        if (typeid(*component) == type_info) {
+        if (typeid(*component) == typeid(ComponentType)) {
             return index;
         }
 
@@ -94,9 +89,4 @@ int Entity::_get_component_index(const type_info &type_info) const {
     }
 
     return -1;
-}
-
-void Entity::_destroy_component(const type_info &type_info) {
-    unsigned int index = this->_get_component_index(type_info);
-    this->destroy_component(index);
 }

@@ -1,6 +1,12 @@
 #pragma once
 
-#include "containers/asset_container.hpp"
+#include <type_traits>
+
+#include "containers/asset_containers/font_container.hpp"
+#include "containers/asset_containers/image_container.hpp"
+#include "containers/asset_containers/texture_container.hpp"
+#include "containers/component_containers/heap_allocated_component_container.hpp"
+#include "containers/component_containers/stack_allocated_component_container.hpp"
 #include "containers/entity_container.hpp"
 #include "managers/audio_component_manager.hpp"
 #include "managers/behavior_component_manager.hpp"
@@ -25,7 +31,15 @@ class GameCore {
 
     inline EntityContainer *get_entity_container() { return &this->_entity_container; };
 
-    inline AssetContainer *get_asset_container() { return &this->_asset_container; };
+    inline ImageContainer *get_image_container() { return &this->_image_container; };
+
+    inline TextureContainer *get_texture_container() { return &this->_texture_container; };
+
+    inline FontContainer *get_font_container() { return &this->_font_container; };
+
+    inline BehaviorComponentContainer *get_behavior_component_container() {
+        return &this->_behavior_component_container;
+    }
 
     inline GameManager *get_game_manager() { return &this->_game_manager; };
 
@@ -37,13 +51,25 @@ class GameCore {
 
     inline AudioComponentManager *get_audio_component_manager() { return &this->_audio_component_manager; };
 
+    template <typename ComponentType>
+    auto *get_component_container() const;
+
     inline void exit() { this->_is_exiting = true; }
 
     void init_main_loop();
 
    private:
     EntityContainer _entity_container;
-    AssetContainer _asset_container;
+    ImageContainer _image_container;
+    TextureContainer _texture_container;
+    FontContainer _font_container;
+    BehaviorComponentContainer _behavior_component_container;
+    ColliderComponentContainer _collider_component_container;
+    GraphicsComponentContainer _graphics_component_container;
+    PhysicsComponentContainer _physics_component_container;
+    TextComponentContainer _text_component_container;
+    TransformComponentContainer _transform_component_container;
+    UITransformComponentContainer _ui_transform_component_container;
     GameManager _game_manager;
     BehaviorComponentManager _behavior_component_manager;
     PhysicsComponentManager _physics_component_manager;

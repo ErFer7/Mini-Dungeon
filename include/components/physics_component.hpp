@@ -3,6 +3,7 @@
 #include "components/collider_component.hpp"
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/physics_component_manager.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;
@@ -13,44 +14,77 @@ struct PhysicsComponentArgs {
     float drag = 1.0f;
 };
 
-class PhysicsComponent : public Component {
+class PhysicsComponent final : public Component {
     friend class ColliderComponent;
+    friend class PhysicsComponentManager;
 
    public:
     PhysicsComponent(GameCore *game_core, Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
-    ~PhysicsComponent() override;
+    ~PhysicsComponent() override = default;
 
     inline Vector2Df get_velocity() const { return this->_velocity; }
 
-    inline void set_velocity(Vector2Df velocity) { this->_velocity = velocity; }
+    inline void set_velocity(Vector2Df velocity) {
+        this->_velocity = velocity;
+        this->_is_statically_stable = false;
+    }
 
-    inline void set_velocity_x(float velocity_x) { this->_velocity.x = velocity_x; }
+    inline void set_velocity_x(float velocity_x) {
+        this->_velocity.x = velocity_x;
+        this->_is_statically_stable = false;
+    }
 
-    inline void set_velocity_y(float velocity_y) { this->_velocity.y = velocity_y; }
+    inline void set_velocity_y(float velocity_y) {
+        this->_velocity.y = velocity_y;
+        this->_is_statically_stable = false;
+    }
 
     inline Vector2Df get_acceleration() const { return this->_acceleration; }
 
-    inline void set_acceleration(Vector2Df acceleration) { this->_acceleration = acceleration; }
+    inline void set_acceleration(Vector2Df acceleration) {
+        this->_acceleration = acceleration;
+        this->_is_statically_stable = false;
+    }
 
-    inline void set_acceleration_x(float acceleration_x) { this->_acceleration.x = acceleration_x; }
+    inline void set_acceleration_x(float acceleration_x) {
+        this->_acceleration.x = acceleration_x;
+        this->_is_statically_stable = false;
+    }
 
-    inline void set_acceleration_y(float acceleration_y) { this->_acceleration.y = acceleration_y; }
+    inline void set_acceleration_y(float acceleration_y) {
+        this->_acceleration.y = acceleration_y;
+        this->_is_statically_stable = false;
+    }
 
     inline float get_drag() { return this->_drag; }
 
     inline void set_drag(float drag) { this->_drag = drag; }
 
+    // Returns true when the component is stopped for two consecutive frames.
+    inline bool is_statically_stable() const { return this->_is_statically_stable; }
+
+    inline bool is_colliding() const { return this->_is_colliding; }
+
     void update();
 
    protected:
-    void register_component() override;
-
-    void unregister_component() override;
+    void destroy() override;
 
     inline void set_collider_component(ColliderComponent *collider_component) {
         this->_collider_component = collider_component;
     }
+
+    inline void set_is_colliding(bool is_colliding) {
+        this->_is_colliding = is_colliding;
+        this->_is_statically_stable = !is_colliding;
+    }
+
+    // Bypass for the PhysicsComponentManager
+    inline TransformComponent *get_transform_component() const { return this->_transform_component; }
+
+    // Bypass for the PhysicsComponentManager
+    inline ColliderComponent *get_collider_component() const { return this->_collider_component; }
 
    private:
     // TODO: Model force and mass
@@ -58,6 +92,9 @@ class PhysicsComponent : public Component {
     Vector2Df _acceleration;
     float _drag;  // This is more of a "logical" drag that is applied in order to force objects to slow down
     double _time;
+    // This is used for checking the movement state without checking if the velocity and acceleration are 0
+    bool _is_statically_stable;
+    bool _is_colliding;
     TransformComponent *_transform_component;
     ColliderComponent *_collider_component;
 };

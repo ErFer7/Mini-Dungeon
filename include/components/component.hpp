@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "types.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/debug.hpp"
@@ -9,11 +11,12 @@
 
 // TODO: Implement an activity state
 
+using std::forward;
 using utils::ActivityState;
 using utils::Event;
 using utils::GameCoreDependencyInjector;
-using utils::RestrictedInstance;
 using utils::log_info;
+using utils::RestrictedInstance;
 
 class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;
@@ -32,9 +35,7 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     inline bool is_active() { return this->_activity_state.is_active(); }
 
    protected:
-    virtual void register_component() = 0;
-
-    virtual void unregister_component() = 0;
+    virtual void destroy() = 0;
 
    private:
     Entity *_entity;

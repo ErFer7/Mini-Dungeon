@@ -2,24 +2,17 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <utility>
 
 #include "definitions.hpp"
-
-using std::cout;
-using std::endl;
-using std::forward;
-using std::ostringstream;
-using std::string;
 
 namespace utils {
 
 template <typename... Args>
 void log(Args... args) {
-    ostringstream stream;
+    std::ostringstream stream;
     (stream << ... << args);
-    cout << stream.str() << endl;
+    std::cout << stream.str() << std::endl;
 }
 
 template <typename... Args>
@@ -28,7 +21,7 @@ void log_info(Args... args) {
         return;
     }
 
-    log("[INFO]: ", forward<Args>(args)...);
+    log("[INFO]: ", std::forward<Args>(args)...);
 }
 
 template <typename... Args>
@@ -37,7 +30,7 @@ void log_warn(Args... args) {
         return;
     }
 
-    log("[WARN]: ", forward<Args>(args)...);
+    log("[WARN]: ", std::forward<Args>(args)...);
 }
 
 template <typename... Args>
@@ -46,6 +39,6 @@ void log_error(Args... args) {
         return;
     }
 
-    log("[ERROR]: ", forward<Args>(args)...);
+    log("[ERROR]: ", std::forward<Args>(args)...);
 }
 }  // namespace utils

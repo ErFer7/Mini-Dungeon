@@ -12,7 +12,7 @@ struct TransformComponentArgs {
     Vector2Df scale = Vector2Df(1.0f);
 };
 
-class TransformComponent : public Component {
+class TransformComponent final : public Component {
    public:
     typedef Event<Vector2Df, TransformData> TransformUpdateEvent;
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
@@ -22,7 +22,7 @@ class TransformComponent : public Component {
                        Entity *entity,
                        const TransformComponentArgs &args = TransformComponentArgs{});
 
-    ~TransformComponent() override { this->unregister_component(); };
+    ~TransformComponent() override { this->destroy(); };
 
     inline Vector2Df get_position() const { return this->_transform.get_position(); }
 
@@ -63,9 +63,7 @@ class TransformComponent : public Component {
     void scale(Vector2Df scale);
 
    protected:
-    void register_component() override {};
-
-    void unregister_component() override {};
+    void destroy() override {};
 
    private:
     utils::Transform _transform;
