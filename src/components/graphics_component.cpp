@@ -23,8 +23,6 @@ GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const 
     this->set_texture(args.texture);
 }
 
-GraphicsComponent::~GraphicsComponent() { this->unregister_component(); }
-
 void GraphicsComponent::set_texture(const Texture2D texture) {
     this->_texture = texture;
     this->_source_rectangle.x = 0;
@@ -49,14 +47,6 @@ void GraphicsComponent::draw() {
                    this->_origin,
                    this->_rotation,
                    this->_color);
-}
-
-void GraphicsComponent::register_component() {
-    this->get_game_core()->get_graphics_component_manager()->register_component(this);
-}
-
-void GraphicsComponent::unregister_component() {
-    this->get_game_core()->get_graphics_component_manager()->unregister_component(this);
 }
 
 void GraphicsComponent::_update_drawing_transform() {

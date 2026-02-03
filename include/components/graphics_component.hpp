@@ -23,7 +23,7 @@ class GraphicsComponent final : public Component {
    public:
     GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args);
 
-    ~GraphicsComponent() override;
+    ~GraphicsComponent() override = default;
 
     inline Texture2D get_texture() const { return this->_texture; }
 

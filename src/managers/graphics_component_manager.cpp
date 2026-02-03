@@ -2,6 +2,8 @@
 
 #include "components/graphics_component.hpp"
 
+// FIX: This is really outdated
+// NOTE: STOPPED HERE LAST TIME (2026-02-02)
 using std::remove;
 
 void Space::add_component(GraphicsComponent *component) { this->_components->push_back(component); }

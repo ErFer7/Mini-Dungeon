@@ -5,8 +5,6 @@
 
 #include "entities/entity.hpp"
 
-using std::make_unique;
-
 void EntityContainer::destroy_entity(unsigned int index) {
     Entity *entity = this->get_ref(index)->get();
 
