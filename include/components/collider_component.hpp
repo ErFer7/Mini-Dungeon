@@ -15,9 +15,6 @@ class ColliderComponent final : public Component {
 
     ~ColliderComponent() override = default;
 
-   protected:
-    void destroy() override;
-
    private:
     void _update_rectangle();
 

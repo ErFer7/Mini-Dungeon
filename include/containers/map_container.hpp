@@ -37,13 +37,15 @@ class MapContainer : public Container<std::unordered_map<Identifier, Object>, Id
 
     void remove(Identifier identifier) override { (*this->_map).erase(identifier); }
 
+    // FIX: The comparison is broken
+    // NOTE: Stopped here in 2026-02-04
     void remove(const Object &object) override {
-        (*this->_map).erase(std::find(this->_map->begin(), this->_map->end(), object));
+        this->_map->erase(std::find(this->_map->begin(), this->_map->end(), object));
     }
 
     inline void free() override { this->_map->clear(); }
 
-    inline size_t size() const override { this->_map->size(); }
+    inline size_t size() const override { return this->_map->size(); }
 
     inline Map *get_data_structure() override { return this->_map.get(); }
 

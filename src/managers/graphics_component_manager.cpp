@@ -2,14 +2,10 @@
 
 #include "components/graphics_component.hpp"
 
-// FIX: This is really outdated
-// NOTE: STOPPED HERE LAST TIME (2026-02-02)
-using std::remove;
-
 void Space::add_component(GraphicsComponent *component) { this->_components->push_back(component); }
 
 void Space::remove_component(GraphicsComponent *component) {
-    this->_components->erase(remove(this->_components->begin(), this->_components->end(), component),
+    this->_components->erase(std::remove(this->_components->begin(), this->_components->end(), component),
                              this->_components->end());
 }
 
@@ -84,7 +80,7 @@ GraphicsComponentManager::GraphicsComponentManager(GameCore *game_core,
                                                    bool resizable,
                                                    bool fullscreen,
                                                    bool show_fps)
-    : ComponentManager(game_core) {
+    : Manager(game_core) {
     this->_screen_width = screen_width;
     this->_screen_height = screen_height;
     this->_title = title;
@@ -139,40 +135,20 @@ void GraphicsComponentManager::update() {
 
 void GraphicsComponentManager::exit() { CloseWindow(); }
 
-void GraphicsComponentManager::register_component(Component *component) {
-    ComponentManager::register_component(component);
-
-    GraphicsComponent *graphics2D_component = static_cast<GraphicsComponent *>(component);
-    RenderingMode rendering_mode = graphics2D_component->get_rendering_mode();
-
-    if (rendering_mode == RenderingMode::WORLD_SPACE_2D) {
-        this->_world2D_space.add_component(graphics2D_component);
-    } else if (rendering_mode == RenderingMode::SCREEN_SPACE) {
-        this->_screen_space.add_component(graphics2D_component);
+void GraphicsComponentManager::register_component_on_space(GraphicsComponent *graphics_component) {
+    // NOTE: This should be refactored if more rendering modes are added
+    if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
+        this->_screen_space.add_component(graphics_component);
+    } else {
+        this->_world2D_space.add_component(graphics_component);
     }
 }
 
-void GraphicsComponentManager::unregister_component(Component *component) {
-    GraphicsComponent *graphics2D_component = static_cast<GraphicsComponent *>(component);
-
-    RenderingMode rendering_mode = graphics2D_component->get_rendering_mode();
-
-    if (rendering_mode == RenderingMode::WORLD_SPACE_2D) {
-        this->_world2D_space.remove_component(graphics2D_component);
-    } else if (rendering_mode == RenderingMode::SCREEN_SPACE) {
-        this->_screen_space.remove_component(graphics2D_component);
+void GraphicsComponentManager::unregister_component_on_space(GraphicsComponent *graphics_component) {
+    // NOTE: This should be refactored if more rendering modes are added
+    if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
+        this->_screen_space.remove_component(graphics_component);
+    } else {
+        this->_world2D_space.remove_component(graphics_component);
     }
 }
-
-template <typename ComponentType, typename... Args>
-ComponentType *GraphicsComponentManager::create_component(Entity *entity, Args &&...args) {
-    this->_behavior_components->push_back(this->create_unique<ComponentType>(std::forward<Args>(args)...));
-
-    return this->_behavior_components->back().get();  // TODO: Avoid end()
-};
-
-void GraphicsComponentManager::destroy_component(BehaviorComponent *component) {
-    this->_behavior_components->erase(std::find(this->_behavior_components->begin(),
-                                                this->_behavior_components->end(),
-                                                std::unique_ptr<BehaviorComponent>(component)));
-};

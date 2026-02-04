@@ -68,9 +68,6 @@ class PhysicsComponent final : public Component {
 
     void update();
 
-   protected:
-    void destroy() override;
-
     inline void set_collider_component(ColliderComponent *collider_component) {
         this->_collider_component = collider_component;
     }

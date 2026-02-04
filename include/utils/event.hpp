@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -52,7 +53,8 @@ class Event {
 
         inline void unsubscribe(Event<Args...> *event) {
             event->_remove_listener(this);
-            this->_events->erase(remove(this->_events->begin(), this->_events->end(), event), this->_events->end());
+            this->_events->erase(std::remove(this->_events->begin(), this->_events->end(), event),
+                                 this->_events->end());
         }
 
         void unsubscribe_all() {

@@ -42,9 +42,6 @@ class TextComponent final : public Component {
 
     void set_color(Color color);
 
-   protected:
-    void destroy() override {};
-
    private:
     void _update_texture();
 

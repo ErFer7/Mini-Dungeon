@@ -40,12 +40,12 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
     void remove(unsigned int identifier) override { this->_vector->erase(this->_vector->begin() + identifier); }
 
     void remove(const Object &object) override {
-        (*this->_vector).erase(std::find(this->_vector->begin(), this->_vector->end(), object));
+        this->_vector->erase(std::find(this->_vector->begin(), this->_vector->end(), object));
     }
 
     inline void free() override { this->_vector->clear(); }
 
-    inline size_t size() const override { this->_vector->size(); }
+    inline size_t size() const override { return this->_vector->size(); }
 
     inline Vector *get_data_structure() override { return this->_vector.get(); }
 

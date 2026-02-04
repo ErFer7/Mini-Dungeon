@@ -17,7 +17,4 @@ class BehaviorComponent : public Component {
     virtual void start() {};
 
     virtual void update() {};
-
-   protected:
-    void destroy() override;
 };

@@ -35,6 +35,7 @@ enum class UIOrigin;
 template <typename DataStructure, typename Identifier, typename Object>
 class Container;
 
+class PhysicsComponentContainer;
 class AssetContainer;
 class ImageMap;
 class TextureMap;

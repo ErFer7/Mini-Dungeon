@@ -22,7 +22,7 @@ class TransformComponent final : public Component {
                        Entity *entity,
                        const TransformComponentArgs &args = TransformComponentArgs{});
 
-    ~TransformComponent() override { this->destroy(); };
+    ~TransformComponent() override = default;
 
     inline Vector2Df get_position() const { return this->_transform.get_position(); }
 
@@ -61,9 +61,6 @@ class TransformComponent final : public Component {
     void rotate(float rotation);
 
     void scale(Vector2Df scale);
-
-   protected:
-    void destroy() override {};
 
    private:
     utils::Transform _transform;

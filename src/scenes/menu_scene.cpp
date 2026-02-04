@@ -4,7 +4,7 @@
 
 #include "components/behavior_components/button_component.hpp"
 #include "components/ui_transform_component.hpp"
-#include "containers/asset_container.hpp"
+#include "containers/asset_containers/font_container.hpp"
 #include "containers/entity_container.hpp"
 #include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
@@ -15,13 +15,13 @@
 void MenuScene::init() {
     GameCore *game_core = this->get_game_core();
     EntityContainer *entity_container = game_core->get_entity_container();
-    AssetContainer *asset_container = game_core->get_asset_container();
+    FontContainer *font_container = game_core->get_font_container();
 
     this->_background = entity_container->create_entity<Background>();
 
-    Font title_font = asset_container->load_font("title", "assets/fonts/joystix monospace.ttf", 80);
-    Font button_font = asset_container->load_font("button", "assets/fonts/joystix monospace.ttf", 40);
-    Font small_font = asset_container->load_font("small", "assets/fonts/joystix monospace.ttf", 20);
+    Font title_font = font_container->load_font("title", "assets/fonts/joystix monospace.ttf", 80);
+    Font button_font = font_container->load_font("button", "assets/fonts/joystix monospace.ttf", 40);
+    Font small_font = font_container->load_font("small", "assets/fonts/joystix monospace.ttf", 20);
 
     GenTextureMipmaps(&title_font.texture);
     SetTextureFilter(title_font.texture, TEXTURE_FILTER_POINT);

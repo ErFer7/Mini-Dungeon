@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "components/physics_component.hpp"
-#include "containers/component_containers/stack_allocated_component_container.hpp"
 #include "managers/manager.hpp"
 
 using std::vector;
@@ -14,7 +13,7 @@ class PhysicsComponentManager : public Manager {
    public:
     PhysicsComponentManager() = default;
 
-    PhysicsComponentManager(GameCore *game_core) : Manager(game_core){};
+    PhysicsComponentManager(GameCore *game_core) : Manager(game_core) {};
 
     ~PhysicsComponentManager() override = default;
 

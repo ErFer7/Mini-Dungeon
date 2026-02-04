@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/collider_component.hpp"
+#include "components/physics_component.hpp"
 #include "containers/vector_container.hpp"
 #include "types.hpp"
 
@@ -32,6 +33,9 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 
 class PhysicsComponentContainer final : public StackAllocatedComponentContainer<PhysicsComponent> {
     friend class PhysicsComponentManager;
+
+   public:
+    PhysicsComponentContainer(GameCore *game_core) : StackAllocatedComponentContainer<PhysicsComponent>(game_core) {}
 };
 
 typedef StackAllocatedComponentContainer<ColliderComponent> ColliderComponentContainer;

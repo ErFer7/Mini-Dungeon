@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,12 +26,15 @@ class Space {
    public:
     Space() : _sorting_mode(SortingMode::NONE) { this->_components = make_unique<vector<GraphicsComponent *>>(); }
 
+    // TODO: Check if this is necessary
     Space(const Space &other) { this->_copy(other); }
 
+    // TODO: Check if this is necessary
     Space(Space &&other) { this->_move(move(other)); }
 
     ~Space() = default;
 
+    // TODO: Check if this is necessary
     Space &operator=(const Space &other) noexcept {
         this->_copy(other);
 
@@ -50,11 +54,13 @@ class Space {
     void draw();
 
    private:
+    // TODO: Check if this is necessary
     inline void _move(Space &&other) {
         this->_components.reset();
         this->_components = move(other._components);
     }
 
+    // TODO: Check if this is necessary
     inline void _copy(const Space &other) {
         this->_components.reset();
         this->_components = make_unique<vector<GraphicsComponent *>>(*other._components);
@@ -62,7 +68,6 @@ class Space {
 
    private:
     SortingMode _sorting_mode;
-
     unique_ptr<vector<GraphicsComponent *>> _components;
 };
 
@@ -116,6 +121,10 @@ class GraphicsComponentManager : public Manager {
     inline void set_screen_space_sorting_mode(SortingMode sorting_mode) {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
+
+    void register_component_on_space(GraphicsComponent *graphics_component);
+
+    void unregister_component_on_space(GraphicsComponent *graphics_component);
 
    private:
     // TODO: Implement set methods for all of these

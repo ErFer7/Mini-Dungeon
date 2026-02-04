@@ -22,6 +22,10 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     friend class Entity;
 
    public:
+    typedef Event<Component *> OnDestroyEvent;
+    typedef OnDestroyEvent::Listener OnDestroyListener;
+
+   public:
     Component(GameCore *game_core, Entity *entity);
 
     inline Entity *get_entity() const { return this->_entity; }
@@ -34,11 +38,8 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
 
     inline bool is_active() { return this->_activity_state.is_active(); }
 
-   protected:
-    virtual void destroy() = 0;
-
    private:
     Entity *_entity;
-    Event<Component *> _on_destroy_event;
+    OnDestroyEvent _on_destroy_event;
     ActivityState _activity_state;
 };

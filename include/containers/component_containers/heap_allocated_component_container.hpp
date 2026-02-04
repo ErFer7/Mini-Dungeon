@@ -27,4 +27,7 @@ class BehaviorComponentContainer final : public HeapAllocatedComponentContainer 
     friend class Entity;
     friend class BehaviorComponentManager;
     friend class BehaviorComponent;
+
+   public:
+    BehaviorComponentContainer(GameCore *game_core) : HeapAllocatedComponentContainer(game_core) {}
 };

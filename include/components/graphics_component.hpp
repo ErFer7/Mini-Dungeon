@@ -16,6 +16,7 @@ struct GraphicsComponentArgs {
     float texture_scale = 1.0f;
 };
 
+// TODO: Add a dirty and clean state system
 class GraphicsComponent final : public Component {
     friend class Space;
     friend class GraphicsComponentManager;
@@ -43,14 +44,13 @@ class GraphicsComponent final : public Component {
 
     void draw();
 
-   protected:
-    void destroy() override;
-
    private:
     inline Vector2Df _get_position() { return this->_transform_component->get_position(); }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();
+
+    void _unregister_on_space();
 
    private:
     Texture2D _texture;
@@ -64,4 +64,5 @@ class GraphicsComponent final : public Component {
     RenderingMode _rendering_mode;
     int _layer;
     TransformComponent::TransformUpdateListener _transform_update_listener;
+    OnDestroyListener _on_destroy_listener;
 };

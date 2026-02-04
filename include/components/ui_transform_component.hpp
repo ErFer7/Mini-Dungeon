@@ -26,7 +26,7 @@ class UITransformComponent final : public Component {
     UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args);
 
     // TODO: Handle the destruction of the parent
-    ~UITransformComponent() override { this->destroy(); };
+    ~UITransformComponent() override = default;
 
     Vector2Df get_position() const;
 
@@ -50,9 +50,6 @@ class UITransformComponent final : public Component {
     void rotate(float rotation);
 
     void scale(Vector2Df scale);
-
-   protected:
-    void destroy() override {};
 
    private:
     Vector2Df _get_origin() const;

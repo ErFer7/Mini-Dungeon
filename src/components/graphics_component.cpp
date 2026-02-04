@@ -21,6 +21,11 @@ GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const 
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     this->set_texture(args.texture);
+
+    this->get_game_core()->get_graphics_component_manager()->register_component_on_space(this);
+
+    this->_on_destroy_listener.set_callable([this](Component *) { this->_unregister_on_space(); });
+    this->_on_destroy_listener.subscribe(this->get_on_destroy_event());
 }
 
 void GraphicsComponent::set_texture(const Texture2D texture) {
@@ -66,4 +71,8 @@ void GraphicsComponent::_update_drawing_transform() {
     this->_destination_rectangle.y = position.y * y_axis_orientation;
     this->_destination_rectangle.width = width * scale.x * this->_texture_scale;
     this->_destination_rectangle.height = height * scale.y * this->_texture_scale;
+}
+
+void GraphicsComponent::_unregister_on_space() {
+    this->get_game_core()->get_graphics_component_manager()->unregister_component_on_space(this);
 }
