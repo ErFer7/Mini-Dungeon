@@ -14,6 +14,8 @@ using std::vector;
 
 namespace utils {
 
+// TODO: Rewrite this entire class considering that addresses could change, move semantics, etc.
+// It should be capable of handling everything
 template <typename... Args>
 class Event {
     friend class Listener;
@@ -30,11 +32,12 @@ class Event {
         // Listeners can't be copied because this lead to dangling references in callables
         Listener(const Listener &other) noexcept = delete;
 
-        Listener(Listener &&other) noexcept { this->_move(other); }
+        Listener(Listener &&other) noexcept { this->_move(std::move(other)); }
 
         ~Listener() { this->unsubscribe_all(); };
 
         inline Listener &operator=(Listener &&other) {
+            this->unsubscribe_all();
             this->_move(other);
 
             return *this;
@@ -68,9 +71,27 @@ class Event {
        private:
         inline void _move(Listener &&other) {
             if (this != &other) {
-                this->_callable = other._callable;
-                this->_events.reset();
-                this->_events = move(other._events);
+                this->_callable = std::move(other._callable);
+                this->_events = std::move(other._events);
+
+                if (this->_events != nullptr) {
+                    for (auto *event : *this->_events) {
+                        event->_update_listener_pointer(&other, this);
+                    }
+                }
+            }
+        }
+
+        // TODO: Naming and types
+        void _update_event_pointer(Event<Args...> *old_ptr, Event<Args...> *new_ptr) {
+            if (!this->_events) {
+                return;
+            }
+
+            auto it = std::find(this->_events->begin(), this->_events->end(), old_ptr);
+
+            if (it != this->_events->end()) {
+                *it = new_ptr;
             }
         }
 
@@ -89,7 +110,7 @@ class Event {
     // Events can't be copied because of listeners (see above)
     Event(const Event &other) noexcept = delete;
 
-    Event(Event &&other) noexcept { this->_move(other); }
+    Event(Event &&other) noexcept { this->_move(std::move(other)); }
 
     ~Event() {
         for (const auto &listener : *this->_listeners) {
@@ -100,7 +121,7 @@ class Event {
     inline Event &operator=(const Event &other) noexcept = delete;
 
     inline Event &operator=(Event &&other) {
-        this->_move(other);
+        this->_move(std::move(other));
 
         return *this;
     }

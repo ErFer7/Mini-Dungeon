@@ -49,7 +49,6 @@ void Entity::destroy_component() {
 void Entity::destroy_all_components() {
     for (auto &component : *this->_components) {
         component->get_on_destroy_event()->invoke(component);
-        component->destroy();
     }
 
     this->_components->clear();

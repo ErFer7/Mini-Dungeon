@@ -25,11 +25,11 @@ class MapContainer : public Container<std::unordered_map<Identifier, Object>, Id
 
    protected:
     // TODO: Fix the cast here
-    inline void insert(Identifier identifier, const Object &object) override { (*this->_map)[identifier] = object; }
+    inline void insert(Identifier identifier, const Object object) override {
+        this->_map->insert_or_assign(identifier, std::move(object));
+    }
 
-    inline void insert(Identifier identifier, const Object &&object) override { (*this->_map)[identifier] = object; }
-
-    inline Object get(Identifier identifier) const override { return (*this->_map)[identifier]; };
+    inline Object &get(Identifier identifier) const override { return (*this->_map)[identifier]; };
 
     inline Object *get_ref(Identifier identifier) const override { return &(*this->_map)[identifier]; };
 
@@ -37,10 +37,14 @@ class MapContainer : public Container<std::unordered_map<Identifier, Object>, Id
 
     void remove(Identifier identifier) override { (*this->_map).erase(identifier); }
 
-    // FIX: The comparison is broken
-    // NOTE: Stopped here in 2026-02-04
+    // TODO: This is probabily slow...
     void remove(const Object &object) override {
-        this->_map->erase(std::find(this->_map->begin(), this->_map->end(), object));
+        auto it = std::find_if(
+            this->_map->begin(), this->_map->end(), [&object](const auto &pair) { return &pair.second == &object; });
+
+        if (it != this->_map->end()) {
+            this->_map->erase(it);
+        }
     }
 
     inline void free() override { this->_map->clear(); }

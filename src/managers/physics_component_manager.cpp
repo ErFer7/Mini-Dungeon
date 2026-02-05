@@ -4,6 +4,7 @@
 
 #include "components/collider_component.hpp"
 #include "components/physics_component.hpp"
+#include "containers/component_containers/stack_allocated_component_container.hpp"
 
 void PhysicsComponentManager::update() {
     std::vector<PhysicsComponent> *physics_components = this->_physics_component_container->get_data_structure();

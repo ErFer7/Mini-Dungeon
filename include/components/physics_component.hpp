@@ -23,6 +23,9 @@ class PhysicsComponent final : public Component {
 
     ~PhysicsComponent() override = default;
 
+    PhysicsComponent(PhysicsComponent &&) = default;
+    PhysicsComponent &operator=(PhysicsComponent &&) = default;
+
     inline Vector2Df get_velocity() const { return this->_velocity; }
 
     inline void set_velocity(Vector2Df velocity) {

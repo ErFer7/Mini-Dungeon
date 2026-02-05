@@ -13,11 +13,9 @@ class Container : public GameCoreDependencyInjector {
 
     virtual ~Container() = default;
 
-    virtual void insert(Identifier identifier, const Object &object) = 0;
+    virtual void insert(Identifier identifier, const Object object) = 0;
 
-    virtual void insert(Identifier identifier, const Object &&object) = 0;
-
-    virtual Object get(Identifier identifier) const = 0;
+    virtual Object &get(Identifier identifier) const = 0;
 
     virtual Object *get_ref(Identifier identifier) const = 0;
 

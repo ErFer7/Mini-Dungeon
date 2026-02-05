@@ -21,19 +21,13 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
     virtual ~VectorContainer() override = default;
 
    protected:
-    inline void insert(unsigned int identifier, const Object &object) override {
-        this->_vector->insert(identifier, object);
+    inline void insert(unsigned int identifier, Object object) override {
+        this->_vector->insert(this->_vector->begin() + identifier, std::move(object));
     }
 
-    inline void insert(unsigned int identifier, const Object &&object) override {
-        this->_vector->insert(identifier, object);
-    }
+    void push_back(Object object) { this->_vector->push_back(std::move(object)); }
 
-    void push_back(const Object &object) { this->_vector->push_back(object); }
-
-    void push_back(const Object &&object) { this->_vector->push_back(object); }
-
-    inline Object get(unsigned int identifier) const override { return this->_vector->at(identifier); };
+    inline Object &get(unsigned int identifier) const override { return this->_vector->at(identifier); };
 
     inline Object *get_ref(unsigned int identifier) const override { return &this->_vector->at(identifier); };
 

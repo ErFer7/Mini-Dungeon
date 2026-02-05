@@ -28,6 +28,10 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
    public:
     Component(GameCore *game_core, Entity *entity);
 
+    Component(Component &&) = default;
+
+    Component &operator=(Component &&) = default;
+
     inline Entity *get_entity() const { return this->_entity; }
 
     inline Event<Component *> *get_on_destroy_event() { return &this->_on_destroy_event; }
