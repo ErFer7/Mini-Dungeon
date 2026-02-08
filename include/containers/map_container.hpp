@@ -5,14 +5,15 @@
 #include <unordered_map>
 
 #include "containers/container.hpp"
+#include "utils/id.hpp"
 
-template <typename Identifier, typename Object>
-class MapContainer : public Container<std::unordered_map<Identifier, Object>, Identifier, Object> {
+template <typename LocalIdentifier, typename Object>
+class MapContainer : public Container<std::unordered_map<LocalIdentifier, Object>, LocalIdentifier, Object> {
    public:
-    typedef std::unordered_map<Identifier, Object> Map;
+    typedef std::unordered_map<LocalIdentifier, Object> Map;
 
    public:
-    MapContainer() : Container<std::unordered_map<Identifier, Object>, Identifier, Object>() {
+    MapContainer() : Container<std::unordered_map<LocalIdentifier, Object>, LocalIdentifier, Object>() {
         this->_map = std::make_unique<Map>();
     }
 
@@ -20,22 +21,26 @@ class MapContainer : public Container<std::unordered_map<Identifier, Object>, Id
 
    protected:
     // TODO: Fix the cast here
-    inline void insert(Identifier identifier, Object &&object) override {
-        this->_map->insert_or_assign(identifier, std::move(object));
+    inline void insert(LocalIdentifier local_identifier, Object &&object) override {
+        this->_map->insert_or_assign(local_identifier, std::move(object));
     }
 
-    inline Object &get(Identifier identifier) const override { return (*this->_map)[identifier]; };
+    inline Object &get(LocalIdentifier local_identifier) const override { return (*this->_map)[local_identifier]; };
 
-    inline Object *get_ref(Identifier identifier) const override { return &(*this->_map)[identifier]; };
+    inline Object *get_ref(LocalIdentifier local_identifier) const override {
+        return &(*this->_map)[local_identifier];
+    };
 
-    inline bool contains(Identifier identifier) const { return this->_map->contains(identifier); }
+    inline bool contains(LocalIdentifier local_identifier) const { return this->_map->contains(local_identifier); }
 
-    void remove(Identifier identifier) override { (*this->_map).erase(identifier); }
+    void remove(LocalIdentifier local_identifier) override { (*this->_map).erase(local_identifier); }
 
     // TODO: This is probabily slow...
     void remove(const Object &object) override {
-        auto it = std::find_if(
-            this->_map->begin(), this->_map->end(), [&object](const auto &pair) { return &pair.second == &object; });
+        auto it = std::find_if(this->_map->begin(), this->_map->end(), [&object](const auto &pair) {
+            return static_cast<utils::Identified>(&pair.second).get_id() ==
+                   static_cast<utils::Identified>(&object).get_id();
+        });
 
         if (it != this->_map->end()) {
             this->_map->erase(it);

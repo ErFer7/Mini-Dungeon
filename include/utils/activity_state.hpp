@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.hpp"
+#include "utils/uncopiable.hpp"
 
 using std::function;
 using std::make_unique;
@@ -11,7 +12,7 @@ using std::vector;
 
 namespace utils {
 
-class ActivityState {
+class ActivityState : public Uncopiable {
    public:
     typedef Event<bool> ActivityUpdateEvent;
     typedef ActivityUpdateEvent::Listener ActivityUpdateListener;
@@ -28,7 +29,12 @@ class ActivityState {
         }
     }
 
-    ~ActivityState() = default;
+    // TODO: Implement move semantics
+    ActivityState(ActivityState &&other) = default;
+
+    ~ActivityState() override = default;
+
+    ActivityState &operator=(ActivityState &&other) noexcept = default;
 
     inline void set_active(bool is_active) {
         this->_is_self_active = is_active;

@@ -25,8 +25,12 @@ class UITransformComponent final : public Component {
    public:
     UITransformComponent(Entity *entity, const UITransformComponentArgs &args);
 
+    UITransformComponent(UITransformComponent &&other) = default;
+
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override = default;
+
+    UITransformComponent &operator=(UITransformComponent &&other) noexcept = default;
 
     Vector2Df get_position() const;
 

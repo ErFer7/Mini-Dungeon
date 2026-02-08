@@ -26,7 +26,7 @@ GameCore::GameCore(int screen_width,
       _behavior_component_manager(),
       _physics_component_manager(),
       _graphics_component_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
-      // _id_references(),
+      _id_references(),
       _is_exiting(false) {}
 
 void GameCore::init_main_loop() {

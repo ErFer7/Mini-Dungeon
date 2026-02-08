@@ -6,16 +6,14 @@
 #include "utils/activity_state.hpp"
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
-#include "utils/restricted_instance.hpp"
-#include "utils/uncopiable.hpp"
+#include "utils/id.hpp"
 
 using std::forward;
 using utils::ActivityState;
 using utils::Event;
 using utils::log_info;
-using utils::RestrictedInstance;
 
-class Component : public utils::Uncopiable {
+class Component : public utils::Identified {
     friend class Entity;
 
    public:
@@ -24,6 +22,12 @@ class Component : public utils::Uncopiable {
 
    public:
     Component(Entity *entity);
+
+    Component(Component &&other) noexcept = default;
+
+    ~Component() override = default;
+
+    Component &operator=(Component &&other) noexcept = default;
 
     inline Entity *get_entity() const { return this->_entity; }
 

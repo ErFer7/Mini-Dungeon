@@ -5,12 +5,13 @@ namespace utils {
 class Uncopiable {
    public:
     Uncopiable() = default;
-
-    Uncopiable(const Uncopiable &other) noexcept = delete;
-
     virtual ~Uncopiable() = default;
 
-    Uncopiable &operator=(const Uncopiable &other) noexcept = delete;
+    Uncopiable(const Uncopiable &other) = delete;
+    Uncopiable &operator=(const Uncopiable &other) = delete;
+
+    Uncopiable(Uncopiable &&other) noexcept = default;
+    Uncopiable &operator=(Uncopiable &&other) noexcept = default;
 };
 
 }  // namespace utils

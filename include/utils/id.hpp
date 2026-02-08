@@ -3,7 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "game_core.hpp"
+#include "types.hpp"
 #include "utils/uncopiable.hpp"
 
 namespace utils {
@@ -31,17 +31,17 @@ class IdReferences : public Uncopiable {
 
 class Identified : public Uncopiable {
    public:
-    Identified(void *pointer) : _id(_next_id++) {
-        GameCore::get_instance()->get_id_references()->_set_pointer(this->_id, pointer);
-    }
+    Identified(void *pointer);
 
-    ~Identified() { GameCore::get_instance()->get_id_references()->_set_pointer(this->_id, nullptr); }
+    Identified(Identified &&other) noexcept = default;
+
+    ~Identified();
+
+    Identified &operator=(Identified &&other) noexcept = default;
 
     Id get_id() { return _id; }
 
-    void update_reference(void *pointer) {
-        GameCore::get_instance()->get_id_references()->_set_pointer(this->_id, pointer);
-    }
+    void update_reference(void *pointer);
 
    private:
     static inline Id _next_id = 0ULL;

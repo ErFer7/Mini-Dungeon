@@ -9,6 +9,7 @@
 #include "types.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/event.hpp"
+#include "utils/id.hpp"
 #include "utils/restricted_instance.hpp"
 
 // TODO: Implement name with a hash map
@@ -23,7 +24,7 @@ using utils::ActivityState;
 using utils::Event;
 using utils::RestrictedInstance;
 
-class Entity : public RestrictedInstance {
+class Entity : public utils::Identified {
     friend class EntityContainer;
 
    public:

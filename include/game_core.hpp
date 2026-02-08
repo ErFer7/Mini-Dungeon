@@ -14,7 +14,7 @@
 #include "managers/graphics_component_manager.hpp"
 #include "managers/physics_component_manager.hpp"
 #include "types.hpp"
-// #include "utils/id.hpp"
+#include "utils/id.hpp"
 
 static GameCore *game_core = nullptr;
 
@@ -66,7 +66,7 @@ class GameCore {
 
     inline AudioComponentManager *get_audio_component_manager() { return &this->_audio_component_manager; };
 
-    // inline utils::IdReferences *get_id_references() { return &this->_id_references; }
+    inline utils::IdReferences *get_id_references() { return &this->_id_references; }
 
     template <typename ComponentType>
     auto *get_component_container() const;
@@ -92,6 +92,6 @@ class GameCore {
     PhysicsComponentManager _physics_component_manager;
     GraphicsComponentManager _graphics_component_manager;
     AudioComponentManager _audio_component_manager;
-    // utils::IdReferences _id_references;
+    utils::IdReferences _id_references;
     bool _is_exiting;
 };

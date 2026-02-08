@@ -1,6 +1,16 @@
 #pragma once
 
+#include <concepts>
+
 class GameCore;
+
+namespace utils {
+
+class ActivityState;
+class IdReferences;
+class Identified;
+
+}  // namespace utils
 
 // Components
 class Component;
@@ -32,7 +42,8 @@ struct UITransformComponentArgs;
 enum class UIOrigin;
 
 // Containers
-template <typename DataStructure, typename Identifier, typename Object>
+template <typename DataStructure, typename LocalIdentifier, typename Object>
+    requires std::derived_from<Object, utils::Identified>
 class Container;
 
 class PhysicsComponentContainer;
@@ -91,12 +102,5 @@ enum class SortingMode;
 // structs
 struct Layer;
 struct Space;
-
-namespace utils {
-
-class ActivityState;
-class IdReferences;
-
-}  // namespace utils
 
 // Utilities are not included here
