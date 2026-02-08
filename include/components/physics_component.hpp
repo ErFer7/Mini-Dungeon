@@ -19,12 +19,9 @@ class PhysicsComponent final : public Component {
     friend class PhysicsComponentManager;
 
    public:
-    PhysicsComponent(GameCore *game_core, Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
+    PhysicsComponent(Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
     ~PhysicsComponent() override = default;
-
-    PhysicsComponent(PhysicsComponent &&) = default;
-    PhysicsComponent &operator=(PhysicsComponent &&) = default;
 
     inline Vector2Df get_velocity() const { return this->_velocity; }
 

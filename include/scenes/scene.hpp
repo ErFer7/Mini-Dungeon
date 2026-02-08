@@ -1,15 +1,10 @@
 #pragma once
 
 #include "types.hpp"
-#include "utils/game_core_dependency_injector.hpp"
 
-using utils::GameCoreDependencyInjector;
-
-class Scene : public GameCoreDependencyInjector {
+class Scene {
    public:
-    Scene() = default;
-
-    Scene(GameCore *game_core) : _was_initialized(false), GameCoreDependencyInjector(game_core){};
+    Scene() : _was_initialized(false) {};
 
     virtual ~Scene() = default;
 

@@ -13,8 +13,6 @@ class PhysicsComponentManager : public Manager {
    public:
     PhysicsComponentManager() = default;
 
-    PhysicsComponentManager(GameCore *game_core) : Manager(game_core) {};
-
     ~PhysicsComponentManager() override = default;
 
     void init() override {};

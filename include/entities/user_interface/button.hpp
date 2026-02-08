@@ -34,7 +34,7 @@ struct ButtonArgs {
 
 class Button : public UIEntity {
    public:
-    Button(GameCore *game_core, const ButtonArgs &args);
+    Button(const ButtonArgs &args);
 
     ~Button() override = default;
 

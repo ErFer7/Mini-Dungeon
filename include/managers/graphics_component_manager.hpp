@@ -77,8 +77,7 @@ class GraphicsComponentManager : public Manager {
    public:
     GraphicsComponentManager() = default;
 
-    GraphicsComponentManager(GameCore *game_core,
-                             int screen_width,
+    GraphicsComponentManager(int screen_width,
                              int screen_height,
                              const char *title,
                              int target_fps = 60,

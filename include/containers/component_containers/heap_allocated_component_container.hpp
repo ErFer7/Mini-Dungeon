@@ -7,9 +7,7 @@
 
 class HeapAllocatedComponentContainer : public VectorContainer<std::unique_ptr<Component>> {
    public:
-    HeapAllocatedComponentContainer() = default;
-
-    HeapAllocatedComponentContainer(GameCore *game_core) : VectorContainer<std::unique_ptr<Component>>(game_core) {}
+    HeapAllocatedComponentContainer() : VectorContainer<std::unique_ptr<Component>>() {}
 
     ~HeapAllocatedComponentContainer() override = default;
 
@@ -29,5 +27,5 @@ class BehaviorComponentContainer final : public HeapAllocatedComponentContainer 
     friend class BehaviorComponent;
 
    public:
-    BehaviorComponentContainer(GameCore *game_core) : HeapAllocatedComponentContainer(game_core) {}
+    BehaviorComponentContainer() : HeapAllocatedComponentContainer() {}
 };

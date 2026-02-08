@@ -8,8 +8,6 @@ class AudioComponentManager : public Manager {
    public:
     AudioComponentManager() = default;
 
-    AudioComponentManager(GameCore *game_core) : Manager(game_core){};
-
     ~AudioComponentManager() override = default;
 
     void init() override {};

@@ -12,7 +12,7 @@ class ButtonComponent : public BehaviorComponent {
     typedef ButtonClickEvent::Listener ButtonClickListener;
 
    public:
-    ButtonComponent(GameCore *game_core, Entity *entity);
+    ButtonComponent(Entity *entity);
 
     ~ButtonComponent() override { utils::log_info("ButtonComponent::~ButtonComponent()"); }
 

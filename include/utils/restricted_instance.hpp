@@ -10,7 +10,7 @@ class RestrictedInstance {
 
     // RestrictedInstance(RestrictedInstance &&other) noexcept = delete;
 
-    // virtual ~RestrictedInstance() = default;
+    virtual ~RestrictedInstance() = default;
 
     RestrictedInstance &operator=(const RestrictedInstance &other) noexcept = delete;
 

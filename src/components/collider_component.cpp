@@ -6,9 +6,9 @@
 #include "game_core.hpp"
 #include "raylib.h"
 
-ColliderComponent::ColliderComponent(GameCore *game_core, Entity *entity, const ColliderComponentArgs &args)
+ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs &args)
     : _rectangle(args.rectangle),
-      Component(game_core, entity) {
+      Component(entity) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
     this->_transform_update_listener.set_callable(

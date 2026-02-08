@@ -10,9 +10,7 @@ class MenuScene : public Scene {
    public:
     MenuScene() = default;
 
-    MenuScene(GameCore *game_core) : Scene(game_core){};
-
-    ~MenuScene(){};
+    ~MenuScene() {};
 
     void init() override;
 

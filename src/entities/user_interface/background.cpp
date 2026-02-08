@@ -6,14 +6,14 @@
 #include "entities/user_interface/ui_entity.hpp"
 #include "game_core.hpp"
 
-Background::Background(GameCore *game_core)
-    : UIEntity(game_core, UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Df(), 0.0f, Vector2Df(1.0f), WHITE, -1}) {
+Background::Background()
+    : UIEntity(UIEntityArgs{Texture2D(), UIOrigin::CENTER, Vector2Df(), 0.0f, Vector2Df(1.0f), WHITE, -1}) {
     float virtual_screen_width = static_cast<float>(GetScreenWidth()) / VIRTUAL_SCALE;
     float virtual_screen_height = static_cast<float>(GetScreenHeight()) / VIRTUAL_SCALE;
 
     Image background =
         GenImageColor(static_cast<int>(virtual_screen_width), static_cast<int>(virtual_screen_height), WHITE);
-    Image wall = this->get_game_core()->get_image_container()->load_image("assets/sprites/walls/Wall_0.png");
+    Image wall = GameCore::get_instance()->get_image_container()->load_image("assets/sprites/walls/Wall_0.png");
 
     float wall_width = static_cast<float>(wall.width);
     float wall_height = static_cast<float>(wall.height);

@@ -35,7 +35,7 @@ struct DynamicPhysicalEntity2DArgs {
 
 class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
    public:
-    DynamicPhysicalEntity2D(GameCore *game_core, const DynamicPhysicalEntity2DArgs &args);
+    DynamicPhysicalEntity2D(const DynamicPhysicalEntity2DArgs &args);
 
     ~DynamicPhysicalEntity2D() override = default;
 

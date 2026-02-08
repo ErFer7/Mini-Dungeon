@@ -4,8 +4,7 @@
 #include "utils/transform_data.hpp"
 #include "utils/vector.hpp"
 
-TransformComponent::TransformComponent(GameCore *game_core, Entity *entity, const TransformComponentArgs &args)
-    : Component(game_core, entity) {
+TransformComponent::TransformComponent(Entity *entity, const TransformComponentArgs &args) : Component(entity) {
     this->_transform = utils::Transform(args.position, args.rotation, args.scale);
 }
 

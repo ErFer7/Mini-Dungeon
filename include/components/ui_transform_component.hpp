@@ -23,7 +23,7 @@ struct UITransformComponentArgs {
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent final : public Component {
    public:
-    UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args);
+    UITransformComponent(Entity *entity, const UITransformComponentArgs &args);
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override = default;

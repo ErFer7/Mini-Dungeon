@@ -18,9 +18,7 @@ class TransformComponent final : public Component {
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
-    TransformComponent(GameCore *game_core,
-                       Entity *entity,
-                       const TransformComponentArgs &args = TransformComponentArgs{});
+    TransformComponent(Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
     ~TransformComponent() override = default;
 

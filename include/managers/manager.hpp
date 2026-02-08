@@ -1,15 +1,10 @@
 #pragma once
 
 #include "types.hpp"
-#include "utils/game_core_dependency_injector.hpp"
 
-using utils::GameCoreDependencyInjector;
-
-class Manager : public GameCoreDependencyInjector {
+class Manager {
    public:
     Manager() = default;
-
-    Manager(GameCore *game_core) : GameCoreDependencyInjector(game_core) {};
 
     virtual ~Manager() = default;
 

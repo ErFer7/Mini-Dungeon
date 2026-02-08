@@ -33,7 +33,7 @@ struct UIEntityArgs {
 
 class UIEntity : public Entity2D {
    public:
-    UIEntity(GameCore *game_core, const UIEntityArgs &args);
+    UIEntity(const UIEntityArgs &args);
 
     // TODO: Destroy the entity subtree
     ~UIEntity() override = default;

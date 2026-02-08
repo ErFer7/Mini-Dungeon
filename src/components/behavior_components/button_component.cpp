@@ -5,8 +5,8 @@
 #include "components/behavior_components/behavior_component.hpp"
 #include "definitions.hpp"
 
-ButtonComponent::ButtonComponent(GameCore *game_core, Entity *entity) : BehaviorComponent(game_core, entity) {
-    log_info("ButtonComponent::ButtonComponent(", game_core, ", ", entity, ')');
+ButtonComponent::ButtonComponent(Entity *entity) : BehaviorComponent(entity) {
+    log_info("ButtonComponent::ButtonComponent(", entity, ')');
 
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 

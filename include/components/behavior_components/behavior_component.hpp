@@ -8,8 +8,8 @@ class BehaviorComponent : public Component {
     friend class BehaviorComponentManager;
 
    public:
-    BehaviorComponent(GameCore *game_core, Entity *entity) : Component(game_core, entity) {
-        utils::log_info("BehaviorComponent::BehaviorComponent(", game_core, ", ", entity, ')');
+    BehaviorComponent(Entity *entity) : Component(entity) {
+        utils::log_info("BehaviorComponent::BehaviorComponent(", entity, ')');
     }
 
     ~BehaviorComponent() override { utils::log_info("BehaviorComponent::~BehaviorComponent()"); };

@@ -8,7 +8,7 @@ using utils::Vector2Df;
 
 class Player : public DynamicPhysicalEntity2D {
    public:
-    Player(GameCore *game_core, const DynamicPhysicalEntity2DArgs &args);
+    Player(const DynamicPhysicalEntity2DArgs &args);
 
     ~Player() override = default;
 

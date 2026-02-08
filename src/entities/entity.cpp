@@ -16,15 +16,13 @@ using std::move;
 using std::type_info;
 using std::unique_ptr;
 
-Entity::Entity(GameCore *game_core) : GameCoreDependencyInjector(game_core) {
-    this->_components = make_unique<ComponentsVector>();
-}
+Entity::Entity() { this->_components = make_unique<ComponentsVector>(); }
 
 Entity::~Entity() { this->destroy_all_components(); }
 
 template <typename ComponentType, typename... Args>
 ComponentType *Entity::create_component(Args &&...args) {
-    auto *component_container = this->get_game_core()->get_component_container<ComponentType>();
+    auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
 
     this->_components->push_back(
         component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
@@ -40,7 +38,7 @@ void Entity::destroy_component() {
 
     component->get_on_destroy_event()->invoke(component);
 
-    auto *component_container = this->get_game_core()->get_component_container<ComponentType>();
+    auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
 
     component_container->template destroy_component<ComponentType>(component);
     this->_components->erase(this->_components->begin() + index);

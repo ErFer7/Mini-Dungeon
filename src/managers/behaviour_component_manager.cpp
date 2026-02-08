@@ -5,7 +5,7 @@
 #include "managers/behavior_component_manager.hpp"
 
 void BehaviorComponentManager::init() {
-    this->_behavior_component_container = this->get_game_core()->get_behavior_component_container();
+    this->_behavior_component_container = GameCore::get_instance()->get_behavior_component_container();
 }
 
 void BehaviorComponentManager::update() {

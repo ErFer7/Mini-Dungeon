@@ -9,7 +9,6 @@
 #include "types.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/event.hpp"
-#include "utils/game_core_dependency_injector.hpp"
 #include "utils/restricted_instance.hpp"
 
 // TODO: Implement name with a hash map
@@ -22,17 +21,16 @@ using std::unique_ptr;
 using std::vector;
 using utils::ActivityState;
 using utils::Event;
-using utils::GameCoreDependencyInjector;
 using utils::RestrictedInstance;
 
-class Entity : public GameCoreDependencyInjector, RestrictedInstance {
+class Entity : public RestrictedInstance {
     friend class EntityContainer;
 
    public:
     typedef vector<Component *> ComponentsVector;
 
    public:
-    Entity(GameCore *game_core);
+    Entity();
 
     virtual ~Entity() override;
 

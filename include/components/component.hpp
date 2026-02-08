@@ -6,19 +6,16 @@
 #include "utils/activity_state.hpp"
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
-#include "utils/game_core_dependency_injector.hpp"
 #include "utils/restricted_instance.hpp"
-
-// TODO: Implement an activity state
+#include "utils/uncopiable.hpp"
 
 using std::forward;
 using utils::ActivityState;
 using utils::Event;
-using utils::GameCoreDependencyInjector;
 using utils::log_info;
 using utils::RestrictedInstance;
 
-class Component : public GameCoreDependencyInjector, RestrictedInstance {
+class Component : public utils::Uncopiable {
     friend class Entity;
 
    public:
@@ -26,11 +23,7 @@ class Component : public GameCoreDependencyInjector, RestrictedInstance {
     typedef OnDestroyEvent::Listener OnDestroyListener;
 
    public:
-    Component(GameCore *game_core, Entity *entity);
-
-    Component(Component &&) = default;
-
-    Component &operator=(Component &&) = default;
+    Component(Entity *entity);
 
     inline Entity *get_entity() const { return this->_entity; }
 

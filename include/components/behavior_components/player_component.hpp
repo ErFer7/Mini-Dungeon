@@ -6,7 +6,7 @@
 
 class PlayerComponent : public BehaviorComponent {
    public:
-    PlayerComponent(GameCore *game_core, Entity *entity);
+    PlayerComponent(Entity *entity);
 
     ~PlayerComponent() override {}
 

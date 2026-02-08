@@ -61,7 +61,7 @@ struct TextButtonArgs {
 
 class TextButton : public Button {
    public:
-    TextButton(GameCore *game_core, const TextButtonArgs &args);
+    TextButton(const TextButtonArgs &args);
 
     ~TextButton() override;
 

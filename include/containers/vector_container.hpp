@@ -12,16 +12,14 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
     typedef std::vector<Object> Vector;
 
    public:
-    VectorContainer() = default;
-
-    VectorContainer(GameCore *game_core) : Container<std::vector<Object>, unsigned int, Object>(game_core) {
+    VectorContainer() : Container<std::vector<Object>, unsigned int, Object>() {
         this->_vector = std::make_unique<Vector>();
     }
 
     virtual ~VectorContainer() override = default;
 
    protected:
-    inline void insert(unsigned int identifier, Object object) override {
+    inline void insert(unsigned int identifier, Object &&object) override {
         this->_vector->insert(this->_vector->begin() + identifier, std::move(object));
     }
 

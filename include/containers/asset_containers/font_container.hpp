@@ -4,16 +4,12 @@
 
 #include "containers/map_container.hpp"
 
-using utils::GameCoreDependencyInjector;
-
 class FontContainer final : public MapContainer<std::string, Font> {
    public:
-    FontContainer() = default;
-
-    FontContainer(GameCore *game_core) : MapContainer<std::string, Font>(game_core) {}
+    FontContainer() : MapContainer<std::string, Font>() {}
 
     // TODO: Add an error message saying that at this point there shouldn't be any font
-    virtual ~FontContainer() override = default;
+    ~FontContainer() override = default;
 
    public:
     Font load_font(std::string name,

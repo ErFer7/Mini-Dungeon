@@ -1,19 +1,15 @@
 #pragma once
 
-#include "utils/game_core_dependency_injector.hpp"
-
-using utils::GameCoreDependencyInjector;
+#include <cstddef>
 
 template <typename DataStructure, typename Identifier, typename Object>
-class Container : public GameCoreDependencyInjector {
+class Container {
    public:
     Container() = default;
 
-    Container(GameCore *game_core) : GameCoreDependencyInjector(game_core) {}
-
     virtual ~Container() = default;
 
-    virtual void insert(Identifier identifier, const Object object) = 0;
+    virtual void insert(Identifier identifier, Object &&object) = 0;
 
     virtual Object &get(Identifier identifier) const = 0;
 

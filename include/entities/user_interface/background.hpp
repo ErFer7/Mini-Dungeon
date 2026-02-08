@@ -4,7 +4,7 @@
 
 class Background : public UIEntity {
    public:
-    Background(GameCore *game_core);
+    Background();
 
     ~Background() override;
 };

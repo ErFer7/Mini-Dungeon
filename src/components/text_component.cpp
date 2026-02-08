@@ -2,8 +2,8 @@
 
 #include <raylib.h>
 
-TextComponent::TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args)
-    : Component(game_core, entity),
+TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
+    : Component(entity),
       _content(args.content),
       _font(args.font),
       _spacing(args.spacing),

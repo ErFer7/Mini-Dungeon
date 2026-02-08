@@ -95,7 +95,8 @@ struct Space;
 namespace utils {
 
 class ActivityState;
+class IdReferences;
 
-}
+}  // namespace utils
 
 // Utilities are not included here

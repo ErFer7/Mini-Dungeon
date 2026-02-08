@@ -6,16 +6,15 @@
 #include "components/component.hpp"
 #include "definitions.hpp"
 #include "entities/entity.hpp"
-#include "game_core.hpp"
 #include "utils/vector.hpp"
 
-PhysicsComponent::PhysicsComponent(GameCore *game_core, Entity *entity, const PhysicsComponentArgs &args)
+PhysicsComponent::PhysicsComponent(Entity *entity, const PhysicsComponentArgs &args)
     : _velocity(args.initial_velocity),
       _acceleration(args.initial_acceleration),
       _drag(args.drag),
       _time(GetTime()),
       _is_statically_stable(!args.initial_velocity.is_zero() || !args.initial_acceleration.is_zero()),
-      Component(game_core, entity) {
+      Component(entity) {
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
 }

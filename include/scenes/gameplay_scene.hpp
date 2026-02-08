@@ -8,9 +8,7 @@ class GameplayScene : public Scene {
    public:
     GameplayScene() = default;
 
-    GameplayScene(GameCore *game_core) : Scene(game_core){};
-
-    ~GameplayScene(){};
+    ~GameplayScene() {};
 
     void init() override;
 

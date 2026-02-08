@@ -6,7 +6,7 @@
 #include "components/physics_component.hpp"
 #include "definitions.hpp"
 
-PlayerComponent::PlayerComponent(GameCore *game_core, Entity *entity) : BehaviorComponent(game_core, entity) {
+PlayerComponent::PlayerComponent(Entity *entity) : BehaviorComponent(entity) {
     this->_physics_component = entity->get_component<PhysicsComponent>();
 }
 

@@ -8,8 +8,8 @@
 #include "utils/vector.hpp"
 
 // TODO: Register this component in the right space
-GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args)
-    : Component(game_core, entity),
+GraphicsComponent::GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args)
+    : Component(entity),
       _rendering_mode(args.rendering_mode),
       _texture_scale(args.texture_scale),
       _color(args.color),
@@ -22,7 +22,7 @@ GraphicsComponent::GraphicsComponent(GameCore *game_core, Entity *entity, const 
 
     this->set_texture(args.texture);
 
-    this->get_game_core()->get_graphics_component_manager()->register_component_on_space(this);
+    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(this);
 
     this->_on_destroy_listener.set_callable([this](Component *) { this->_unregister_on_space(); });
     this->_on_destroy_listener.subscribe(this->get_on_destroy_event());
@@ -74,5 +74,5 @@ void GraphicsComponent::_update_drawing_transform() {
 }
 
 void GraphicsComponent::_unregister_on_space() {
-    this->get_game_core()->get_graphics_component_manager()->unregister_component_on_space(this);
+    GameCore::get_instance()->get_graphics_component_manager()->unregister_component_on_space(this);
 }

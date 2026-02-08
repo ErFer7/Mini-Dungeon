@@ -31,7 +31,7 @@ struct StaticPhysicalEntity2DArgs {
 
 class StaticPhysicalEntity2D : public Entity2D {
    public:
-    StaticPhysicalEntity2D(GameCore *game_core, const StaticPhysicalEntity2DArgs &args);
+    StaticPhysicalEntity2D(const StaticPhysicalEntity2DArgs &args);
 
     ~StaticPhysicalEntity2D() override = default;
 

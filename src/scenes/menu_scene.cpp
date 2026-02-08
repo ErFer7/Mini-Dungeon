@@ -10,10 +10,9 @@
 #include "entities/user_interface/text_button.hpp"
 #include "game_core.hpp"
 #include "managers/game_manager.hpp"
-#include "utils/event.hpp"
 
 void MenuScene::init() {
-    GameCore *game_core = this->get_game_core();
+    GameCore *game_core = GameCore::get_instance();
     EntityContainer *entity_container = game_core->get_entity_container();
     FontContainer *font_container = game_core->get_font_container();
 
@@ -61,10 +60,10 @@ void MenuScene::init() {
                                                                                     .text_color = golden});
 
     this->_play_listener.set_callable(
-        [this]() { this->get_game_core()->get_game_manager()->transition_to_gameplay(); });
+        [this]() { GameCore::get_instance()->get_game_manager()->transition_to_gameplay(); });
     this->_play_listener.subscribe(this->_play_button->get_button_component()->get_on_click_event());
 
-    this->_exit_listener.set_callable([this]() { this->get_game_core()->exit(); });
+    this->_exit_listener.set_callable([this]() { GameCore::get_instance()->exit(); });
     this->_exit_listener.subscribe(this->_exit_button->get_button_component()->get_on_click_event());
 
     this->_was_initialized = true;

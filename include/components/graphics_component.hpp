@@ -22,7 +22,7 @@ class GraphicsComponent final : public Component {
     friend class GraphicsComponentManager;
 
    public:
-    GraphicsComponent(GameCore *game_core, Entity *entity, const GraphicsComponentArgs &args);
+    GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args);
 
     ~GraphicsComponent() override = default;
 

@@ -6,18 +6,13 @@
 
 #include "containers/container.hpp"
 
-using utils::GameCoreDependencyInjector;
-
 template <typename Identifier, typename Object>
 class MapContainer : public Container<std::unordered_map<Identifier, Object>, Identifier, Object> {
    public:
     typedef std::unordered_map<Identifier, Object> Map;
 
    public:
-    MapContainer() = default;
-
-    MapContainer(GameCore *game_core)
-        : Container<std::unordered_map<Identifier, Object>, Identifier, Object>(game_core) {
+    MapContainer() : Container<std::unordered_map<Identifier, Object>, Identifier, Object>() {
         this->_map = std::make_unique<Map>();
     }
 
@@ -25,7 +20,7 @@ class MapContainer : public Container<std::unordered_map<Identifier, Object>, Id
 
    protected:
     // TODO: Fix the cast here
-    inline void insert(Identifier identifier, const Object object) override {
+    inline void insert(Identifier identifier, Object &&object) override {
         this->_map->insert_or_assign(identifier, std::move(object));
     }
 

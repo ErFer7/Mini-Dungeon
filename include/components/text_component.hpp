@@ -18,7 +18,7 @@ struct TextComponentArgs {
 
 class TextComponent final : public Component {
    public:
-    TextComponent(GameCore *game_core, Entity *entity, const TextComponentArgs &args);
+    TextComponent(Entity *entity, const TextComponentArgs &args);
 
     ~TextComponent() override;
 

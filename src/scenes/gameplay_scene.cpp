@@ -14,7 +14,7 @@ void GameplayScene::init() {
     Texture2D player_texture = LoadTexture("assets/sprites/characters/Char_0.png");
     Texture2D wall_texture = LoadTexture("assets/sprites/walls/Wall_0.png");
 
-    EntityContainer *entity_container = this->get_game_core()->get_entity_container();
+    EntityContainer *entity_container = GameCore::get_instance()->get_entity_container();
 
     this->_player = entity_container->create_entity<Player>(
         DynamicPhysicalEntity2DArgs{.texture = player_texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D});

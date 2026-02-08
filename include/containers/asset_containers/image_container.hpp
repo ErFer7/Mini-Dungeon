@@ -4,15 +4,11 @@
 
 #include "containers/map_container.hpp"
 
-using utils::GameCoreDependencyInjector;
-
 class ImageContainer final : public MapContainer<std::string, Image> {
    public:
-    ImageContainer() = default;
+    ImageContainer() : MapContainer<std::string, Image>() {}
 
-    ImageContainer(GameCore *game_core) : MapContainer<std::string, Image>(game_core) {}
-
-    virtual ~ImageContainer() override = default;
+    ~ImageContainer() override = default;
 
    public:
     Image load_image(std::string path);

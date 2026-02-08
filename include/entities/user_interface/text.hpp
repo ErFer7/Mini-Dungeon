@@ -44,7 +44,7 @@ struct TextArgs {
 
 class Text : public UIEntity {
    public:
-    Text(GameCore *game_core, const TextArgs &args);
+    Text(const TextArgs &args);
 
     ~Text() override = default;
 

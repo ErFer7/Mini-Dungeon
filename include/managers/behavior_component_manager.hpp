@@ -20,8 +20,6 @@ class BehaviorComponentManager : public Manager {
    public:
     BehaviorComponentManager() = default;
 
-    BehaviorComponentManager(GameCore *game_core) : Manager(game_core) {}
-
     ~BehaviorComponentManager() override = default;
 
     void init() override;

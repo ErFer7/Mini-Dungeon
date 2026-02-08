@@ -3,9 +3,9 @@
 #include "scenes/gameplay_scene.hpp"
 #include "scenes/menu_scene.hpp"
 
-GameManager::GameManager(GameCore *game_core) : Manager(game_core) {
-    this->_menu_scene = this->create_unique<MenuScene>();
-    this->_gameplay_scene = this->create_unique<GameplayScene>();
+GameManager::GameManager() {
+    this->_menu_scene = std::make_unique<MenuScene>();
+    this->_gameplay_scene = std::make_unique<GameplayScene>();
 }
 
 GameManager::~GameManager() { this->_menu_scene.reset(); }

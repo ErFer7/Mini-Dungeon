@@ -26,7 +26,7 @@ struct Entity2DArgs {
 
 class Entity2D : public Entity {
    public:
-    Entity2D(GameCore *game_core, const Entity2DArgs &args);
+    Entity2D(const Entity2DArgs &args);
 
     ~Entity2D() override = default;
 

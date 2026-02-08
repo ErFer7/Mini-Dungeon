@@ -5,8 +5,8 @@
 #include "entities/entity.hpp"
 #include "utils/vector.hpp"
 
-UITransformComponent::UITransformComponent(GameCore *game_core, Entity *entity, const UITransformComponentArgs &args)
-    : Component(game_core, entity),
+UITransformComponent::UITransformComponent(Entity *entity, const UITransformComponentArgs &args)
+    : Component(entity),
       _ui_origin(args.ui_origin),
       _parent_ui_transform(args.parent_ui_transform),
       _parent_transform_component(nullptr),

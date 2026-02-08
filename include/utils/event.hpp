@@ -5,47 +5,38 @@
 #include <memory>
 #include <vector>
 
-using std::function;
-using std::make_unique;
-using std::move;
-using std::remove;
-using std::unique_ptr;
-using std::vector;
+#include "utils/uncopiable.hpp"
 
 namespace utils {
 
 // TODO: Rewrite this entire class considering that addresses could change, move semantics, etc.
 // It should be capable of handling everything
 template <typename... Args>
-class Event {
+class Event : public Uncopiable {
     friend class Listener;
 
    public:
-    class Listener {
+    class Listener : public Uncopiable {
         friend class Event;
 
        public:
-        typedef vector<Event<Args...> *> EventVector;
+        typedef std::vector<Event<Args...> *> EventVector;
 
-        Listener() { this->_events = make_unique<EventVector>(); };
-
-        // Listeners can't be copied because this lead to dangling references in callables
-        Listener(const Listener &other) noexcept = delete;
+        Listener() { this->_events = std::make_unique<EventVector>(); };
 
         Listener(Listener &&other) noexcept { this->_move(std::move(other)); }
 
         ~Listener() { this->unsubscribe_all(); };
 
         inline Listener &operator=(Listener &&other) {
-            this->unsubscribe_all();
             this->_move(other);
 
             return *this;
         }
 
-        inline void set_callable(function<void(Args...)> callable) { this->_callable = callable; }
+        inline void set_callable(std::function<void(Args...)> callable) { this->_callable = callable; }
 
-        inline function<void(Args...)> get_callable() const { return this->_callable; }
+        inline std::function<void(Args...)> get_callable() const { return this->_callable; }
 
         inline bool is_subscribed() const { return !this->_events->empty(); }
 
@@ -71,6 +62,8 @@ class Event {
        private:
         inline void _move(Listener &&other) {
             if (this != &other) {
+                this->unsubscribe_all();
+
                 this->_callable = std::move(other._callable);
                 this->_events = std::move(other._events);
 
@@ -98,14 +91,14 @@ class Event {
         inline void _call(Args... args) { this->_callable(args...); }
 
        private:
-        function<void(Args...)> _callable;
-        unique_ptr<EventVector> _events;
+        std::function<void(Args...)> _callable;
+        std::unique_ptr<EventVector> _events;
     };
 
-    typedef vector<Listener *> ListenerVector;
+    typedef std::vector<Listener *> ListenerVector;
 
    public:
-    Event() { this->_listeners = make_unique<ListenerVector>(); }
+    Event() { this->_listeners = std::make_unique<ListenerVector>(); }
 
     // Events can't be copied because of listeners (see above)
     Event(const Event &other) noexcept = delete;
@@ -138,18 +131,18 @@ class Event {
     inline void _add_listener(Listener *listener) { this->_listeners->push_back(listener); }
 
     inline void _remove_listener(Listener *listener) {
-        _listeners->erase(remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
+        _listeners->erase(std::remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
     }
 
     inline void _move(Event &&other) {
         if (this != &other) {
             this->_listeners.reset();
-            this->_listeners = move(other._listeners);
+            this->_listeners = std::move(other._listeners);
         }
     }
 
    private:
-    unique_ptr<ListenerVector> _listeners;
+    std::unique_ptr<ListenerVector> _listeners;
 };
 
 }  // namespace utils

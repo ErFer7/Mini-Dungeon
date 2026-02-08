@@ -8,9 +8,7 @@
 template <typename ComponentType>
 class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
    public:
-    StackAllocatedComponentContainer() = default;
-
-    StackAllocatedComponentContainer(GameCore *game_core) : VectorContainer<ComponentType>(game_core) {}
+    StackAllocatedComponentContainer() : VectorContainer<ComponentType>() {}
 
     ~StackAllocatedComponentContainer() override = default;
 
@@ -34,8 +32,8 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 class PhysicsComponentContainer final : public StackAllocatedComponentContainer<PhysicsComponent> {
     friend class PhysicsComponentManager;
 
-   public:
-    PhysicsComponentContainer(GameCore *game_core) : StackAllocatedComponentContainer<PhysicsComponent>(game_core) {}
+    // public:
+    // PhysicsComponentContainer() : StackAllocatedComponentContainer<PhysicsComponent>() {}
 };
 
 typedef StackAllocatedComponentContainer<ColliderComponent> ColliderComponentContainer;

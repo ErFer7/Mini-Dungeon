@@ -72,15 +72,13 @@ void Space::draw() {
     }
 }
 
-GraphicsComponentManager::GraphicsComponentManager(GameCore *game_core,
-                                                   int screen_width,
+GraphicsComponentManager::GraphicsComponentManager(int screen_width,
                                                    int screen_height,
                                                    const char *title,
                                                    int target_fps,
                                                    bool resizable,
                                                    bool fullscreen,
-                                                   bool show_fps)
-    : Manager(game_core) {
+                                                   bool show_fps) {
     this->_screen_width = screen_width;
     this->_screen_height = screen_height;
     this->_title = title;
