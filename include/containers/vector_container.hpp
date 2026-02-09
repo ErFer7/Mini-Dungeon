@@ -8,6 +8,7 @@
 #include "utils/id.hpp"
 
 template <typename Object>
+    requires IdentifiedCompatible<Object>
 class VectorContainer : public Container<std::vector<Object>, unsigned int, Object> {
    public:
     typedef std::vector<Object> Vector;
@@ -37,14 +38,24 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
     }
 
     void remove(const Object &object) override {
-        utils::Id object_id = static_cast<utils::Identified>(object).get_id();
+        utils::Id target_id;
 
-        for (auto it = this->_vector->begin(); it != this->_vector->end(); ++it) {
-            utils::Id it_id = static_cast<utils::Identified>(it).get_id();
+        if constexpr (IsUniquePtr<Object>::value) {
+            target_id = object->get_id();
+        } else {
+            target_id = object.get_id();
+        }
 
-            if (object_id == it_id) {
-                this->_vector->erase(it);
+        auto it = std::find_if(this->_vector->begin(), this->_vector->end(), [target_id](const Object &element) {
+            if constexpr (IsUniquePtr<Object>::value) {
+                return element->get_id() == target_id;
+            } else {
+                return element.get_id() == target_id;
             }
+        });
+
+        if (it != this->_vector->end()) {
+            this->_vector->erase(it);
         }
     }
 

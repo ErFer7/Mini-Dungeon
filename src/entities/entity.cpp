@@ -9,14 +9,13 @@
 
 #include "components/component.hpp"
 #include "game_core.hpp"
+#include "utils/id.hpp"
 
 using std::forward;
 using std::make_unique;
-using std::move;
 using std::type_info;
-using std::unique_ptr;
 
-Entity::Entity() { this->_components = make_unique<ComponentsVector>(); }
+Entity::Entity() : utils::Identified(static_cast<void *>(this)) { this->_components = make_unique<ComponentsVector>(); }
 
 Entity::~Entity() { this->destroy_all_components(); }
 

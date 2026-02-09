@@ -39,7 +39,7 @@ class Identified : public Uncopiable {
 
     Identified &operator=(Identified &&other) noexcept = default;
 
-    Id get_id() { return _id; }
+    Id get_id() const { return _id; }
 
     void update_reference(void *pointer);
 

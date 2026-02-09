@@ -25,7 +25,7 @@ class UITransformComponent final : public Component {
    public:
     UITransformComponent(Entity *entity, const UITransformComponentArgs &args);
 
-    UITransformComponent(UITransformComponent &&other) = default;
+    UITransformComponent(UITransformComponent &&other) noexcept = default;
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override = default;

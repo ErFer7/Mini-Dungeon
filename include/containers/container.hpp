@@ -1,12 +1,10 @@
 #pragma once
 
-#include <concepts>
 #include <cstddef>
 
-#include "utils/id.hpp"
+#include "types.hpp"
 
 template <typename DataStructure, typename LocalIdentifier, typename Object>
-    requires std::derived_from<Object, utils::Identified>
 class Container {
    public:
     Container() = default;

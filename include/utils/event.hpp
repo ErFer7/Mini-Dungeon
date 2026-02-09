@@ -29,7 +29,7 @@ class Event : public Uncopiable {
         ~Listener() { this->unsubscribe_all(); };
 
         inline Listener &operator=(Listener &&other) {
-            this->_move(other);
+            this->_move(std::move(other));
 
             return *this;
         }
@@ -62,29 +62,14 @@ class Event : public Uncopiable {
        private:
         inline void _move(Listener &&other) {
             if (this != &other) {
-                this->unsubscribe_all();
+                // other->unsubscribe_all();
 
                 this->_callable = std::move(other._callable);
                 this->_events = std::move(other._events);
 
-                if (this->_events != nullptr) {
-                    for (auto *event : *this->_events) {
-                        event->_update_listener_pointer(&other, this);
-                    }
-                }
-            }
-        }
-
-        // TODO: Naming and types
-        void _update_event_pointer(Event<Args...> *old_ptr, Event<Args...> *new_ptr) {
-            if (!this->_events) {
-                return;
-            }
-
-            auto it = std::find(this->_events->begin(), this->_events->end(), old_ptr);
-
-            if (it != this->_events->end()) {
-                *it = new_ptr;
+                // for (auto &event : *this->_events) {
+                //     event->_add_listener(this);
+                // }
             }
         }
 

@@ -1,7 +1,11 @@
 #include "components/component.hpp"
 
 #include "entities/entity.hpp"
+#include "utils/id.hpp"
 
-Component::Component(Entity *entity) : _entity(entity), _activity_state(true, entity->get_activity_state()) {
+Component::Component(Entity *entity)
+    : _entity(entity),
+      _activity_state(true, entity->get_activity_state()),
+      utils::Identified(static_cast<void *>(this)) {
     log_info("Component::Component(", entity, ')');
 }

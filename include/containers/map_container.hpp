@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "containers/container.hpp"
-#include "utils/id.hpp"
 
 template <typename LocalIdentifier, typename Object>
 class MapContainer : public Container<std::unordered_map<LocalIdentifier, Object>, LocalIdentifier, Object> {
@@ -37,10 +36,8 @@ class MapContainer : public Container<std::unordered_map<LocalIdentifier, Object
 
     // TODO: This is probabily slow...
     void remove(const Object &object) override {
-        auto it = std::find_if(this->_map->begin(), this->_map->end(), [&object](const auto &pair) {
-            return static_cast<utils::Identified>(&pair.second).get_id() ==
-                   static_cast<utils::Identified>(&object).get_id();
-        });
+        auto it = std::find_if(
+            this->_map->begin(), this->_map->end(), [&object](const auto &pair) { return &pair.second == &object; });
 
         if (it != this->_map->end()) {
             this->_map->erase(it);

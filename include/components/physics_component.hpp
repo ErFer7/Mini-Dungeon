@@ -21,7 +21,11 @@ class PhysicsComponent final : public Component {
    public:
     PhysicsComponent(Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
+    PhysicsComponent(PhysicsComponent &&other) noexcept = default;
+
     ~PhysicsComponent() override = default;
+
+    PhysicsComponent &operator=(PhysicsComponent &&other) noexcept = default;
 
     inline Vector2Df get_velocity() const { return this->_velocity; }
 

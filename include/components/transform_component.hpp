@@ -20,7 +20,11 @@ class TransformComponent final : public Component {
    public:
     TransformComponent(Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
+    TransformComponent(TransformComponent &&other) noexcept = default;
+
     ~TransformComponent() override = default;
+
+    TransformComponent &operator=(TransformComponent &&other) noexcept = default;
 
     inline Vector2Df get_position() const { return this->_transform.get_position(); }
 

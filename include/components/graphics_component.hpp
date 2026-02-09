@@ -24,7 +24,11 @@ class GraphicsComponent final : public Component {
    public:
     GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args);
 
+    GraphicsComponent(GraphicsComponent &&other) noexcept = default;
+
     ~GraphicsComponent() override = default;
+
+    GraphicsComponent &operator=(GraphicsComponent &&other) noexcept = default;
 
     inline Texture2D get_texture() const { return this->_texture; }
 

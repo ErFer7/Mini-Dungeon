@@ -13,7 +13,11 @@ class ColliderComponent final : public Component {
    public:
     ColliderComponent(Entity *entity, const ColliderComponentArgs &args = ColliderComponentArgs());
 
+    ColliderComponent(ColliderComponent &&other) noexcept = default;
+
     ~ColliderComponent() override = default;
+
+    ColliderComponent &operator=(ColliderComponent &&other) noexcept = default;
 
    private:
     void _update_rectangle();

@@ -20,7 +20,11 @@ class TextComponent final : public Component {
    public:
     TextComponent(Entity *entity, const TextComponentArgs &args);
 
+    TextComponent(TextComponent &&other) noexcept = default;
+
     ~TextComponent() override;
+
+    TextComponent &operator=(TextComponent &&other) noexcept = default;
 
     inline std::string get_content() const { return this->_content; }
 

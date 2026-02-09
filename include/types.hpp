@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <memory>
 
 class GameCore;
 
@@ -11,6 +12,16 @@ class IdReferences;
 class Identified;
 
 }  // namespace utils
+
+template <typename T>
+struct IsUniquePtr : std::false_type {};
+template <typename T, typename D>
+struct IsUniquePtr<std::unique_ptr<T, D>> : std::true_type {};
+
+template <typename T>
+concept IdentifiedCompatible =
+    std::derived_from<T, utils::Identified> ||
+    (IsUniquePtr<T>::value && std::derived_from<typename T::element_type, utils::Identified>);
 
 // Components
 class Component;
@@ -43,8 +54,11 @@ enum class UIOrigin;
 
 // Containers
 template <typename DataStructure, typename LocalIdentifier, typename Object>
-    requires std::derived_from<Object, utils::Identified>
 class Container;
+
+template <typename Object>
+    requires IdentifiedCompatible<Object>
+class VectorContainer;
 
 class PhysicsComponentContainer;
 class AssetContainer;
