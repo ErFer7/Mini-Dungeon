@@ -6,7 +6,6 @@
 
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
-#include "entities/entity.hpp"
 
 struct TextComponentArgs {
     std::string content;

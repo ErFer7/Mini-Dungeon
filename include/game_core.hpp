@@ -7,7 +7,6 @@
 #include "containers/asset_containers/texture_container.hpp"
 #include "containers/component_containers/heap_allocated_component_container.hpp"
 #include "containers/component_containers/stack_allocated_component_container.hpp"
-#include "containers/entity_container.hpp"
 #include "managers/audio_component_manager.hpp"
 #include "managers/behavior_component_manager.hpp"
 #include "managers/game_manager.hpp"
@@ -44,7 +43,7 @@ class GameCore {
 
     static GameCore *get_instance() { return game_core; }
 
-    inline EntityContainer *get_entity_container() { return &this->_entity_container; };
+    inline EntityContainer *get_entity_container() { return this->_entity_container.get(); };
 
     inline ImageContainer *get_image_container() { return &this->_image_container; };
 
@@ -76,7 +75,7 @@ class GameCore {
     void init_main_loop();
 
    private:
-    EntityContainer _entity_container;
+    std::unique_ptr<EntityContainer> _entity_container;
     ImageContainer _image_container;
     TextureContainer _texture_container;
     FontContainer _font_container;

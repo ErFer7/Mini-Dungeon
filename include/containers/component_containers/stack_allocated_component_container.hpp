@@ -2,6 +2,8 @@
 
 #include "components/collider_component.hpp"
 #include "components/physics_component.hpp"
+#include "components/text_component.hpp"
+#include "components/ui_transform_component.hpp"
 #include "containers/vector_container.hpp"
 #include "types.hpp"
 

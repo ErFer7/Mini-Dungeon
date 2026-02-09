@@ -3,7 +3,7 @@
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
 #include "components/physics_component.hpp"
-#include "game_core.hpp"
+#include "entities/entity.hpp"
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs &args)

@@ -5,7 +5,6 @@
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
 #include "components/transform_component.hpp"
-#include "entities/entity.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;

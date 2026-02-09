@@ -4,6 +4,7 @@
 
 #include "components/behavior_components/behavior_component.hpp"
 #include "definitions.hpp"
+#include "entities/entity.hpp"
 
 ButtonComponent::ButtonComponent(Entity *entity) : BehaviorComponent(entity) {
     log_info("ButtonComponent::ButtonComponent(", entity, ')');

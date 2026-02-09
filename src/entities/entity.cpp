@@ -19,17 +19,6 @@ Entity::Entity() : utils::Identified(static_cast<void *>(this)) { this->_compone
 
 Entity::~Entity() { this->destroy_all_components(); }
 
-template <typename ComponentType, typename... Args>
-ComponentType *Entity::create_component(Args &&...args) {
-    auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
-
-    this->_components->push_back(
-        component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
-
-    // TODO: Refactor to avoid getting the back
-    return this->_components->back();
-}
-
 template <typename ComponentType>
 void Entity::destroy_component() {
     int index = this->_get_component_index<ComponentType>();

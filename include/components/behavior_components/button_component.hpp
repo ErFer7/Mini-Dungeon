@@ -2,7 +2,6 @@
 
 #include "components/behavior_components/behavior_component.hpp"
 #include "components/graphics_component.hpp"
-#include "entities/entity.hpp"
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
 

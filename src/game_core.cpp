@@ -4,6 +4,8 @@
 
 #include <type_traits>
 
+#include "containers/entity_container.hpp"
+
 GameCore::GameCore(int screen_width,
                    int screen_height,
                    const char *title,
@@ -42,7 +44,7 @@ void GameCore::init_main_loop() {
         this->_graphics_component_manager.update();
     }
 
-    this->_entity_container.destroy_all_entities();
+    this->_entity_container->destroy_all_entities();
     this->_texture_container.unload_all_textures();
     this->_image_container.unload_all_images();
     this->_font_container.unload_all_fonts();

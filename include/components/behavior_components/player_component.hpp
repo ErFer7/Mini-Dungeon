@@ -2,7 +2,7 @@
 
 #include "components/behavior_components/behavior_component.hpp"
 #include "components/physics_component.hpp"
-#include "entities/entity.hpp"
+#include "types.hpp"
 
 class PlayerComponent : public BehaviorComponent {
    public:

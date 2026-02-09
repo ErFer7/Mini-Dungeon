@@ -1,7 +1,7 @@
 #pragma once
 
-#include "components/behavior_components/player_component.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
+#include "types.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;

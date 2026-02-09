@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "components/component.hpp"
+#include "game_core.hpp"
 #include "types.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/event.hpp"
@@ -38,7 +39,15 @@ class Entity : public utils::Identified {
     inline Event<Entity *> &get_on_destroy_event() { return this->_on_destroy_event; }
 
     template <typename ComponentType, typename... Args>
-    ComponentType *create_component(Args &&...args);
+    ComponentType *create_component(Args &&...args) {
+        auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
+
+        this->_components->push_back(
+            component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
+
+        // TODO: Refactor to avoid getting the back
+        return this->_components->back();
+    }
 
     inline unsigned int get_component_count() const { return this->_components->size(); }
 

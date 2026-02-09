@@ -34,6 +34,8 @@ class ButtonComponent;
 class ButtonClickEvent;
 class ButtonClickListener;
 
+class PlayerComponent;
+
 class GraphicsComponent;
 struct GraphicsComponentArgs;
 
@@ -75,6 +77,12 @@ class ComponentsVector;
 
 class Entity2D;
 struct Entity2DArgs;
+
+class Player;
+class Wall;
+class Background;
+class Text;
+class TextButton;
 
 class UIEntity;
 struct UIEntityArgs;

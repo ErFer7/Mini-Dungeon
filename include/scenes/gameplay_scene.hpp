@@ -1,8 +1,7 @@
 #pragma once
 
-#include "entities/gameplay/player.hpp"
-#include "entities/gameplay/wall.hpp"
 #include "scene.hpp"
+#include "types.hpp"
 
 class GameplayScene : public Scene {
    public:

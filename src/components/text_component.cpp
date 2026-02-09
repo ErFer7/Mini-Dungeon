@@ -2,6 +2,8 @@
 
 #include <raylib.h>
 
+#include "entities/entity.hpp"
+
 TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
     : Component(entity),
       _content(args.content),
