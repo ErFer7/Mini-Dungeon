@@ -17,7 +17,7 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
     // The first type parameter is declared to satisfy the calls. See the HeapAllocatedComponentContainer
     template <typename, typename... Args>
     ComponentType *create_component(Entity *entity, Args &&...args) {
-        ComponentType component = this->template create<ComponentType>(entity, std::forward<Args>(args)...);
+        ComponentType component = ComponentType(entity, std::forward<Args>(args)...);
         ComponentType *component_ptr = &component;
 
         this->push_back(std::move(component));

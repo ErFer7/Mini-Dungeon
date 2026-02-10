@@ -78,8 +78,10 @@ class ComponentsVector;
 class Entity2D;
 struct Entity2DArgs;
 
+class StaticPhysicalEntity2D;
+
 class Player;
-class Wall;
+typedef StaticPhysicalEntity2D Wall;
 class Background;
 class Text;
 class TextButton;

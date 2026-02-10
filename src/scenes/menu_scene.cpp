@@ -6,6 +6,7 @@
 #include "components/ui_transform_component.hpp"
 #include "containers/asset_containers/font_container.hpp"
 #include "containers/entity_container.hpp"
+#include "entities/user_interface/background.hpp"
 #include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
 #include "game_core.hpp"

@@ -26,7 +26,13 @@ class Event : public Uncopiable {
 
         Listener(Listener &&other) noexcept { this->_move(std::move(other)); }
 
-        ~Listener() { this->unsubscribe_all(); };
+        ~Listener() {
+            if (this->_events == nullptr) {
+                return;
+            }
+
+            this->unsubscribe_all();
+        };
 
         inline Listener &operator=(Listener &&other) {
             this->_move(std::move(other));
@@ -91,6 +97,10 @@ class Event : public Uncopiable {
     Event(Event &&other) noexcept { this->_move(std::move(other)); }
 
     ~Event() {
+        if (this->_listeners == nullptr) {
+            return;
+        }
+
         for (const auto &listener : *this->_listeners) {
             listener->unsubscribe(this);
         }

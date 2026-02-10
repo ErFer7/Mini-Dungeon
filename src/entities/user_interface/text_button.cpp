@@ -1,5 +1,6 @@
 #include "entities/user_interface/text_button.hpp"
 
+#include "containers/entity_container.hpp"
 #include "entities/user_interface/button.hpp"
 #include "entities/user_interface/text.hpp"
 #include "game_core.hpp"

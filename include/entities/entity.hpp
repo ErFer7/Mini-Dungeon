@@ -11,7 +11,6 @@
 #include "utils/activity_state.hpp"
 #include "utils/event.hpp"
 #include "utils/id.hpp"
-#include "utils/restricted_instance.hpp"
 
 // TODO: Implement name with a hash map
 // TODO: Optimize component creation
@@ -23,7 +22,6 @@ using std::unique_ptr;
 using std::vector;
 using utils::ActivityState;
 using utils::Event;
-using utils::RestrictedInstance;
 
 class Entity : public utils::Identified {
     friend class EntityContainer;
@@ -46,7 +44,7 @@ class Entity : public utils::Identified {
             component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
 
         // TODO: Refactor to avoid getting the back
-        return this->_components->back();
+        return static_cast<ComponentType *>(this->_components->back());
     }
 
     inline unsigned int get_component_count() const { return this->_components->size(); }

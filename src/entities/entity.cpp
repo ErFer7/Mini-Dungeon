@@ -51,6 +51,7 @@ inline bool Entity::has_component() const {
     return false;
 }
 
+// FIX: Use id and stop storing pointers for components
 Component *Entity::_get_component(const type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {

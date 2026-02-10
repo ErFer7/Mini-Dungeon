@@ -15,8 +15,6 @@
 #include "types.hpp"
 #include "utils/id.hpp"
 
-static GameCore *game_core = nullptr;
-
 class GameCore {
    public:
     GameCore() = default;
@@ -38,10 +36,10 @@ class GameCore {
                                bool resizable = false,
                                bool fullscreen = false,
                                bool show_fps = false) {
-        game_core = new GameCore(screen_height, screen_height, title, target_fps, resizable, fullscreen, show_fps);
+        _instance = new GameCore(screen_height, screen_height, title, target_fps, resizable, fullscreen, show_fps);
     }
 
-    static GameCore *get_instance() { return game_core; }
+    static GameCore *get_instance() { return _instance; }
 
     inline EntityContainer *get_entity_container() { return this->_entity_container.get(); };
 
@@ -67,14 +65,44 @@ class GameCore {
 
     inline utils::IdReferences *get_id_references() { return &this->_id_references; }
 
+
     template <typename ComponentType>
-    auto *get_component_container() const;
+    auto *get_component_container() {
+        if constexpr (std::is_base_of_v<BehaviorComponent, ComponentType>) {  // Only BehaviorComponents can be polymorphic
+            return &this->_behavior_component_container;
+        }
+
+        if constexpr (std::is_same_v<ColliderComponent, ComponentType>) {
+            return &this->_collider_component_container;
+        }
+
+        if constexpr (std::is_same_v<GraphicsComponent, ComponentType>) {
+            return &this->_graphics_component_container;
+        }
+
+        if constexpr (std::is_same_v<PhysicsComponent, ComponentType>) {
+            return &this->_physics_component_container;
+        }
+
+        if constexpr (std::is_same_v<TextComponent, ComponentType>) {
+            return &this->_text_component_container;
+        }
+
+        if constexpr (std::is_same_v<TransformComponent, ComponentType>) {
+            return &this->_transform_component_container;
+        }
+
+        if constexpr (std::is_same_v<UITransformComponent, ComponentType>) {
+            return &this->_ui_transform_component_container;
+        }
+    }
 
     inline void exit() { this->_is_exiting = true; }
 
     void init_main_loop();
 
    private:
+    static inline GameCore *_instance;
     std::unique_ptr<EntityContainer> _entity_container;
     ImageContainer _image_container;
     TextureContainer _texture_container;

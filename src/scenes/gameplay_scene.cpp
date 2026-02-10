@@ -2,10 +2,12 @@
 
 #include "containers/entity_container.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
+#include "entities/gameplay/player.hpp"
 #include "entities/static_physical_entity2D.hpp"
 #include "game_core.hpp"
 #include "managers/graphics_component_manager.hpp"
 #include "raylib.h"
+#include "types.hpp"
 #include "utils/vector.hpp"
 
 using utils::Vector2Df;

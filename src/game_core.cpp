@@ -13,7 +13,7 @@ GameCore::GameCore(int screen_width,
                    bool resizable,
                    bool fullscreen,
                    bool show_fps)
-    : _entity_container(),
+    : _entity_container(std::make_unique<EntityContainer>()),
       _texture_container(),
       _image_container(),
       _font_container(),
@@ -57,33 +57,3 @@ void GameCore::init_main_loop() {
     this->_game_manager.exit();
 }
 
-template <typename ComponentType>
-auto *GameCore::get_component_container() const {
-    if constexpr (std::is_base_of_v<BehaviorComponent, ComponentType>) {  // Only BehaviorComponents can be polymorphic
-        return &this->_behavior_component_container;
-    }
-
-    if constexpr (std::is_same_v<ColliderComponent, ComponentType>) {
-        return &this->_collider_component_container;
-    }
-
-    if constexpr (std::is_same_v<GraphicsComponent, ComponentType>) {
-        return &this->_graphics_component_container;
-    }
-
-    if constexpr (std::is_same_v<PhysicsComponent, ComponentType>) {
-        return &this->_physics_component_container;
-    }
-
-    if constexpr (std::is_same_v<TextComponent, ComponentType>) {
-        return &this->_text_component_container;
-    }
-
-    if constexpr (std::is_same_v<TransformComponent, ComponentType>) {
-        return &this->_transform_component_container;
-    }
-
-    if constexpr (std::is_same_v<UITransformComponent, ComponentType>) {
-        return &this->_ui_transform_component_container;
-    }
-}
