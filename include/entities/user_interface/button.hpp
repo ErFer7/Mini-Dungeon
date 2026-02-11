@@ -38,8 +38,8 @@ class Button : public UIEntity {
 
     ~Button() override = default;
 
-    inline ButtonComponent *get_button_component() { return this->_button_component; }
+    inline utils::Handle<ButtonComponent> get_button_component() { return this->_button_component; }
 
    private:
-    ButtonComponent *_button_component;
+    utils::Handle<ButtonComponent> _button_component;
 };

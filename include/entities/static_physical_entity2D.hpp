@@ -35,8 +35,8 @@ class StaticPhysicalEntity2D : public Entity2D {
 
     ~StaticPhysicalEntity2D() override = default;
 
-    inline ColliderComponent *get_collider_component() { return this->_collider_component; }
+    inline utils::Handle<ColliderComponent> get_collider_component() { return this->_collider_component; }
 
    private:
-    ColliderComponent *_collider_component;
+    utils::Handle<ColliderComponent> _collider_component;
 };

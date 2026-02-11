@@ -13,13 +13,14 @@ class HeapAllocatedComponentContainer : public VectorContainer<std::unique_ptr<C
 
    protected:
     template <typename ComponentType, typename... Args>
-    ComponentType *create_component(Entity *entity, Args &&...args) {
+    utils::Handle<ComponentType> *create_component(Entity *entity, Args &&...args) {
         std::unique_ptr<ComponentType> component = std::make_unique<ComponentType>(entity, std::forward<Args>(args)...);
-        ComponentType *component_ptr = component.get();
+        utils::Id component_id = static_cast<utils::Identified *>(component)->get_id();
+        utils::Handle<ComponentType> handle = utils::Handle<ComponentType>(component_id);
 
         this->push_back(std::move(component));
 
-        return component_ptr;
+        return handle;
     }
 
     template <typename ComponentType>
@@ -32,7 +33,4 @@ class BehaviorComponentContainer final : public HeapAllocatedComponentContainer 
     friend class Entity;
     friend class BehaviorComponentManager;
     friend class BehaviorComponent;
-
-   public:
-    BehaviorComponentContainer() : HeapAllocatedComponentContainer() {}
 };

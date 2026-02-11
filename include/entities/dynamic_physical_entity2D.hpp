@@ -39,8 +39,8 @@ class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
 
     ~DynamicPhysicalEntity2D() override = default;
 
-    inline PhysicsComponent *get_physics_component() { return this->_physics_component; }
+    inline utils::Handle<PhysicsComponent> get_physics_component() { return this->_physics_component; }
 
    private:
-    PhysicsComponent *_physics_component;
+    utils::Handle<PhysicsComponent> _physics_component;
 };

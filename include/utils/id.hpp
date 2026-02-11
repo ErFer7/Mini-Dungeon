@@ -8,7 +8,7 @@
 
 namespace utils {
 
-typedef unsigned long long Id;
+typedef long long Id;
 
 class IdReferences : public Uncopiable {
     friend class Identified;
@@ -44,7 +44,29 @@ class Identified : public Uncopiable {
     void update_reference(void *pointer);
 
    private:
-    static inline Id _next_id = 0ULL;
+    static inline Id _next_id = 0LL;
+    Id _id;
+};
+
+template <typename Type>
+class Handle {
+   public:
+    Handle() : _id(-1LL) {}
+
+    Handle(Id id) : _id(id) {}
+
+    inline Type *operator->() { return this->get_pointer(); }
+
+    inline Type operator*() { return *this->get_pointer(); }
+
+    inline bool is_null() { return this->_id < 0 || this->_get_pointer() == nullptr; }
+
+    inline Type *get_pointer() { return static_cast<Type *>(this->_get_pointer()); }
+
+   private:
+    void *_get_pointer();
+
+   private:
     Id _id;
 };
 

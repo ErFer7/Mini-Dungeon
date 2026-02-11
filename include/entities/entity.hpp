@@ -27,7 +27,7 @@ class Entity : public utils::Identified {
     friend class EntityContainer;
 
    public:
-    typedef vector<Component *> ComponentsVector;
+    typedef vector<utils::Handle<Component>> ComponentsVector;
 
    public:
     Entity();
@@ -37,14 +37,14 @@ class Entity : public utils::Identified {
     inline Event<Entity *> &get_on_destroy_event() { return this->_on_destroy_event; }
 
     template <typename ComponentType, typename... Args>
-    ComponentType *create_component(Args &&...args) {
+    utils::Handle<ComponentType> create_component(Args &&...args) {
         auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
 
         this->_components->push_back(
             component_container->template create_component<ComponentType>(this, forward<Args>(args)...));
 
         // TODO: Refactor to avoid getting the back
-        return static_cast<ComponentType *>(this->_components->back());
+        return static_cast<utils::Handle<ComponentType>>(this->_components->back());
     }
 
     inline unsigned int get_component_count() const { return this->_components->size(); }
@@ -57,8 +57,8 @@ class Entity : public utils::Identified {
     bool has_component() const;
 
     template <typename ComponentType>
-    inline ComponentType *get_component() const {
-        return static_cast<ComponentType *>(this->_get_component(typeid(ComponentType)));
+    inline utils::Handle<ComponentType> get_component() const {
+        return static_cast<utils::Handle<ComponentType>>(this->_get_component(typeid(ComponentType)));
     }
 
     template <typename ComponentType>
@@ -76,7 +76,7 @@ class Entity : public utils::Identified {
     }
 
    private:
-    Component *_get_component(const type_info &type_info) const;
+    utils::Handle<Component> _get_component(const type_info &type_info) const;
 
     template <typename ComponentType>
     int _get_component_index() const;

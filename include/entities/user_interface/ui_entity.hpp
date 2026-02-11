@@ -38,8 +38,8 @@ class UIEntity : public Entity2D {
     // TODO: Destroy the entity subtree
     ~UIEntity() override = default;
 
-    inline UITransformComponent *get_ui_transform_component() { return this->_ui_transform_component; }
+    inline utils::Handle<UITransformComponent> get_ui_transform_component() { return this->_ui_transform_component; }
 
    private:
-    UITransformComponent *_ui_transform_component;
+    utils::Handle<UITransformComponent> _ui_transform_component;
 };

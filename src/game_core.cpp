@@ -56,4 +56,3 @@ void GameCore::init_main_loop() {
     this->_physics_component_manager.exit();
     this->_game_manager.exit();
 }
-

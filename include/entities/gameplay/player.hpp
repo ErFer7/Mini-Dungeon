@@ -12,8 +12,8 @@ class Player : public DynamicPhysicalEntity2D {
 
     ~Player() override = default;
 
-    inline PlayerComponent *get_player_component() { return this->_player_component; }
+    inline utils::Handle<PlayerComponent> get_player_component() { return this->_player_component; }
 
    private:
-    PlayerComponent *_player_component;
+    utils::Handle<PlayerComponent> _player_component;
 };

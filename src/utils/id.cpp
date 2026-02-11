@@ -11,3 +11,8 @@ utils::Identified::~Identified() { GameCore::get_instance()->get_id_references()
 void utils::Identified::update_reference(void *pointer) {
     GameCore::get_instance()->get_id_references()->_set_pointer(this->_id, pointer);
 }
+
+template <typename Type>
+void *utils::Handle<Type>::_get_pointer() {
+    return GameCore::get_instance()->get_id_references()->get_pointer(this->_id);
+}

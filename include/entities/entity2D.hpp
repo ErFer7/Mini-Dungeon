@@ -30,11 +30,11 @@ class Entity2D : public Entity {
 
     ~Entity2D() override = default;
 
-    inline TransformComponent *get_transform_component() { return this->_transform_component; }
+    inline utils::Handle<TransformComponent> get_transform_component() { return this->_transform_component; }
 
-    inline GraphicsComponent *get_graphics_component() { return this->_graphics_component; }
+    inline utils::Handle<GraphicsComponent> get_graphics_component() { return this->_graphics_component; }
 
    private:
-    TransformComponent *_transform_component;
-    GraphicsComponent *_graphics_component;
+    utils::Handle<TransformComponent> _transform_component;
+    utils::Handle<GraphicsComponent> _graphics_component;
 };

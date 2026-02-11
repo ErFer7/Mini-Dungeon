@@ -48,8 +48,8 @@ class Text : public UIEntity {
 
     ~Text() override = default;
 
-    inline TextComponent *get_text_component() { return this->_text_component; }
+    inline utils::Handle<TextComponent> get_text_component() { return this->_text_component; }
 
    private:
-    TextComponent *_text_component;
+    utils::Handle<TextComponent> _text_component;
 };

@@ -65,10 +65,10 @@ class GameCore {
 
     inline utils::IdReferences *get_id_references() { return &this->_id_references; }
 
-
     template <typename ComponentType>
     auto *get_component_container() {
-        if constexpr (std::is_base_of_v<BehaviorComponent, ComponentType>) {  // Only BehaviorComponents can be polymorphic
+        if constexpr (std::is_base_of_v<BehaviorComponent,
+                                        ComponentType>) {  // Only BehaviorComponents can be polymorphic
             return &this->_behavior_component_container;
         }
 

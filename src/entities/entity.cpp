@@ -4,14 +4,12 @@
 
 #include <cassert>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "components/component.hpp"
 #include "game_core.hpp"
 #include "utils/id.hpp"
 
-using std::forward;
 using std::make_unique;
 using std::type_info;
 
@@ -22,7 +20,7 @@ Entity::~Entity() { this->destroy_all_components(); }
 template <typename ComponentType>
 void Entity::destroy_component() {
     int index = this->_get_component_index<ComponentType>();
-    Component *component = this->_components->at(index);
+    utils::Handle<Component> component = this->_components->at(index);
 
     component->get_on_destroy_event()->invoke(component);
 
@@ -51,15 +49,14 @@ inline bool Entity::has_component() const {
     return false;
 }
 
-// FIX: Use id and stop storing pointers for components
-Component *Entity::_get_component(const type_info &type_info) const {
+utils::Handle<Component> Entity::_get_component(const type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
             return component;
         }
     }
 
-    return nullptr;
+    return utils::Handle<Component>();
 }
 
 template <typename ComponentType>

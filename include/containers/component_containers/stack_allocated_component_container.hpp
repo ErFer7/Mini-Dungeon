@@ -16,13 +16,14 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 
     // The first type parameter is declared to satisfy the calls. See the HeapAllocatedComponentContainer
     template <typename, typename... Args>
-    ComponentType *create_component(Entity *entity, Args &&...args) {
+    utils::Handle<ComponentType> *create_component(Entity *entity, Args &&...args) {
         ComponentType component = ComponentType(entity, std::forward<Args>(args)...);
-        ComponentType *component_ptr = &component;
+        utils::Id component_id = static_cast<utils::Identified>(component).get_id();
+        utils::Handle<ComponentType> handle = utils::Handle<ComponentType>(component_id);
 
         this->push_back(std::move(component));
 
-        return component_ptr;
+        return handle;
     }
 
     template <typename>
@@ -33,9 +34,6 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 
 class PhysicsComponentContainer final : public StackAllocatedComponentContainer<PhysicsComponent> {
     friend class PhysicsComponentManager;
-
-    // public:
-    // PhysicsComponentContainer() : StackAllocatedComponentContainer<PhysicsComponent>() {}
 };
 
 typedef StackAllocatedComponentContainer<ColliderComponent> ColliderComponentContainer;

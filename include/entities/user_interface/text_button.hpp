@@ -65,8 +65,8 @@ class TextButton : public Button {
 
     ~TextButton() override;
 
-    inline Text *get_text() { return this->_text; }
+    inline utils::Handle<Text> get_text() { return this->_text; }
 
    private:
-    Text *_text;
+    utils::Handle<Text> _text;
 };
