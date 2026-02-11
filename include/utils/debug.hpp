@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <sstream>
 #include <utility>
 
 #include "definitions.hpp"
@@ -9,10 +8,8 @@
 namespace utils {
 
 template <typename... Args>
-void log(Args... args) {
-    std::ostringstream stream;
-    (stream << ... << args);
-    std::cout << stream.str() << std::endl;
+void log(Args &&...args) {
+    (std::cout << ... << std::forward<Args>(args)) << std::endl;
 }
 
 template <typename... Args>
@@ -21,7 +18,17 @@ void log_info(Args... args) {
         return;
     }
 
-    log("[INFO]: ", std::forward<Args>(args)...);
+    log("[INFO ]: ", std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void log_trace(std::string function, Args... args) {
+    if constexpr (!(DEBUGGED && DEBUG_TRACE)) return;
+
+    std::cout << "[TRACE]: " << function << "(";
+    int n = 0;
+    ((std::cout << (n++ == 0 ? "" : ", ") << args), ...);
+    std::cout << ")" << std::endl;
 }
 
 template <typename... Args>
@@ -30,7 +37,7 @@ void log_warn(Args... args) {
         return;
     }
 
-    log("[WARN]: ", std::forward<Args>(args)...);
+    log("[WARN ]: ", std::forward<Args>(args)...);
 }
 
 template <typename... Args>

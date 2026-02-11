@@ -15,6 +15,8 @@ PhysicsComponent::PhysicsComponent(Entity *entity, const PhysicsComponentArgs &a
       _time(GetTime()),
       _is_statically_stable(!args.initial_velocity.is_zero() || !args.initial_acceleration.is_zero()),
       Component(entity) {
+    utils::log_trace(__FUNCTION__, entity);
+
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
 }

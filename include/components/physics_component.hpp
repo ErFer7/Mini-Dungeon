@@ -72,7 +72,7 @@ class PhysicsComponent final : public Component {
 
     void update();
 
-    inline void set_collider_component(ColliderComponent *collider_component) {
+    inline void set_collider_component(utils::Handle<ColliderComponent> collider_component) {
         this->_collider_component = collider_component;
     }
 
@@ -82,10 +82,10 @@ class PhysicsComponent final : public Component {
     }
 
     // Bypass for the PhysicsComponentManager
-    inline TransformComponent *get_transform_component() const { return this->_transform_component; }
+    inline utils::Handle<TransformComponent> get_transform_component() const { return this->_transform_component; }
 
     // Bypass for the PhysicsComponentManager
-    inline ColliderComponent *get_collider_component() const { return this->_collider_component; }
+    inline utils::Handle<ColliderComponent> get_collider_component() const { return this->_collider_component; }
 
    private:
     // TODO: Model force and mass
@@ -96,6 +96,6 @@ class PhysicsComponent final : public Component {
     // This is used for checking the movement state without checking if the velocity and acceleration are 0
     bool _is_statically_stable;
     bool _is_colliding;
-    TransformComponent *_transform_component;
-    ColliderComponent *_collider_component;
+    utils::Handle<TransformComponent> _transform_component;
+    utils::Handle<ColliderComponent> _collider_component;
 };

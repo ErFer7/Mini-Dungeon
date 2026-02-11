@@ -2,6 +2,7 @@
 
 #include "components/behavior_components/button_component.hpp"
 #include "scene.hpp"
+#include "utils/id.hpp"
 
 class MenuScene : public Scene {
    public:
@@ -20,11 +21,11 @@ class MenuScene : public Scene {
     void exit() override;
 
    private:
-    Background *_background;
-    Text *_title;
-    Text *_version;
-    TextButton *_play_button;
-    TextButton *_exit_button;
+    utils::Handle<Background> _background;
+    utils::Handle<Text> _title;
+    utils::Handle<Text> _version;
+    utils::Handle<TextButton> _play_button;
+    utils::Handle<TextButton> _exit_button;
     Texture2D _button_texture;
     ButtonComponent::ButtonClickListener _play_listener;
     ButtonComponent::ButtonClickListener _exit_listener;

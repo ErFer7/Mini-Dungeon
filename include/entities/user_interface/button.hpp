@@ -14,7 +14,7 @@ struct ButtonArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    UITransformComponent *parent_ui_transform = nullptr;
+    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
     ActivityState *parent_activity_state = nullptr;
     float texture_scale = 1.0f;
 

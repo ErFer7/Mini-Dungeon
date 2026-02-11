@@ -9,9 +9,11 @@ UITransformComponent::UITransformComponent(Entity *entity, const UITransformComp
     : Component(entity),
       _ui_origin(args.ui_origin),
       _parent_ui_transform(args.parent_ui_transform),
-      _parent_transform_component(nullptr),
-      _parent_graphics_component(nullptr) {
-    if (this->_parent_ui_transform != nullptr) {
+      _parent_transform_component(),
+      _parent_graphics_component() {
+    utils::log_trace(__FUNCTION__, entity);
+
+    if (!this->_parent_ui_transform.is_null()) {
         Entity *parent = this->_parent_ui_transform->get_entity();
         this->_parent_transform_component = parent->get_component<TransformComponent>();
         this->_parent_graphics_component = parent->get_component<GraphicsComponent>();
@@ -20,7 +22,7 @@ UITransformComponent::UITransformComponent(Entity *entity, const UITransformComp
     this->_transform_component = entity->get_component<TransformComponent>();
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
-    if (this->_parent_graphics_component != nullptr) {
+    if (!this->_parent_graphics_component.is_null()) {
         this->_graphics_component->set_layer(this->_parent_graphics_component->get_layer() + 1);
     }
 
@@ -76,7 +78,7 @@ void UITransformComponent::set_rotation(float rotation) {
     Vector2Df origin;
     float origin_rotation;
 
-    if (this->_parent_graphics_component != nullptr) {
+    if (!this->_parent_graphics_component.is_null()) {
         origin = this->_parent_transform_component->get_position();
         origin_rotation = this->_parent_transform_component->get_rotation();
     } else {
@@ -91,7 +93,7 @@ void UITransformComponent::set_scale(Vector2Df scale) {
     Vector2Df origin;
     Vector2Df origin_scale;
 
-    if (this->_parent_graphics_component != nullptr) {
+    if (!this->_parent_graphics_component.is_null()) {
         origin = this->_parent_transform_component->get_position();
         origin_scale = this->_parent_transform_component->get_scale();
     } else {
@@ -111,7 +113,7 @@ void UITransformComponent::scale(Vector2Df scale) { this->_transform_component->
 Vector2Df UITransformComponent::_get_origin() const {
     Rectangle base_rect;
 
-    if (this->_parent_graphics_component != nullptr) {
+    if (!this->_parent_graphics_component.is_null()) {
         base_rect = this->_parent_graphics_component->get_rectangle();
     } else {
         base_rect = Rectangle{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};

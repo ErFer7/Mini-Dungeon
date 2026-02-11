@@ -14,17 +14,19 @@ GraphicsComponent::GraphicsComponent(Entity *entity, const GraphicsComponentArgs
       _texture_scale(args.texture_scale),
       _color(args.color),
       _layer(args.layer) {
+    utils::log_trace(__FUNCTION__, entity);
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
     this->_transform_update_listener.set_callable(
         [this](const Vector2Df &, const TransformData &) { this->_update_drawing_transform(); });
+
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     this->set_texture(args.texture);
 
     GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(this);
 
-    this->_on_destroy_listener.set_callable([this](Component *) { this->_unregister_on_space(); });
+    this->_on_destroy_listener.set_callable([this](utils::Handle<Component>) { this->_unregister_on_space(); });
     this->_on_destroy_listener.subscribe(this->get_on_destroy_event());
 }
 

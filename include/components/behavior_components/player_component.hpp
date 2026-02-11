@@ -15,5 +15,5 @@ class PlayerComponent : public BehaviorComponent {
     void update() override;
 
    private:
-    PhysicsComponent *_physics_component;
+    utils::Handle<PhysicsComponent> _physics_component;
 };

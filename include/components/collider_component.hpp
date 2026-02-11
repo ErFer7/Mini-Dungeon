@@ -24,6 +24,6 @@ class ColliderComponent final : public Component {
 
    private:
     Rectangle _rectangle;
-    TransformComponent *_transform_component;
+    utils::Handle<TransformComponent> _transform_component;
     TransformComponent::TransformUpdateListener _transform_update_listener;
 };

@@ -2,6 +2,7 @@
 
 #include "scene.hpp"
 #include "types.hpp"
+#include "utils/id.hpp"
 
 class GameplayScene : public Scene {
    public:
@@ -20,6 +21,6 @@ class GameplayScene : public Scene {
     void exit() override {};
 
    private:
-    Player *_player;
-    Wall *_wall;
+    utils::Handle<Player> _player;
+    utils::Handle<Wall> _wall;
 };

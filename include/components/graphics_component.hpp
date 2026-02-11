@@ -58,7 +58,7 @@ class GraphicsComponent final : public Component {
 
    private:
     Texture2D _texture;
-    TransformComponent *_transform_component;
+    utils::Handle<TransformComponent> _transform_component;
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
     Vector2Df _origin;

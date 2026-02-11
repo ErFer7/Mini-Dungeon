@@ -21,17 +21,17 @@ class Component : public utils::Identified {
     typedef OnDestroyEvent::Listener OnDestroyListener;
 
    public:
-    Component(Entity *entity) : utils::Identified(this) {};
+    Component(Entity *entity);
 
-    Component(Component &&other) : utils::Identified(this) { this->_move(std::move(other)); };
-
-    ~Component() override = default;
+    Component(Component &&other) : utils::Identified(std::move(other)) { this->_move(std::move(other)); };
 
     Component &operator=(Component &&other) noexcept {
+        utils::Identified::operator=(std::move(other));
         this->_move(std::move(other));
-
         return *this;
     };
+
+    ~Component() override = default;
 
     inline Entity *get_entity() const { return this->_entity; }
 

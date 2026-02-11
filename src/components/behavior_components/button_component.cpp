@@ -7,11 +7,11 @@
 #include "entities/entity.hpp"
 
 ButtonComponent::ButtonComponent(Entity *entity) : BehaviorComponent(entity) {
-    log_info("ButtonComponent::ButtonComponent(", entity, ')');
+    utils::log_info(__FUNCTION__, '(', entity, ')');
 
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
-    if (DEBUG_ERROR && this->_graphics_component == nullptr) {
+    if (DEBUG_ERROR && this->_graphics_component.is_null()) {
         log_error("ButtonComponent [", this, "] -> _graphics_component is null");
     }
 }

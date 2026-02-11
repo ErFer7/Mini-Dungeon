@@ -8,6 +8,8 @@
 #include "entities/entity.hpp"
 
 PlayerComponent::PlayerComponent(Entity *entity) : BehaviorComponent(entity) {
+    utils::log_trace(__PRETTY_FUNCTION__, entity);
+
     this->_physics_component = entity->get_component<PhysicsComponent>();
 }
 

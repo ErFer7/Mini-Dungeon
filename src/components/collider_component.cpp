@@ -5,10 +5,14 @@
 #include "components/physics_component.hpp"
 #include "entities/entity.hpp"
 #include "raylib.h"
+#include "utils/debug.hpp"
 
 ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs &args)
     : _rectangle(args.rectangle),
       Component(entity) {
+    // FIX: Args
+    utils::log_trace(__FUNCTION__);
+
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
     this->_transform_update_listener.set_callable(
@@ -16,17 +20,17 @@ ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     if (this->_rectangle.width == 0.0f && this->_rectangle.height == 0.0f) {
-        GraphicsComponent *graphics_component = this->get_entity()->get_component<GraphicsComponent>();
+        utils::Handle<GraphicsComponent> graphics_component = this->get_entity()->get_component<GraphicsComponent>();
 
         this->_rectangle = graphics_component->get_rectangle();
     }
 
     this->_update_rectangle();
 
-    PhysicsComponent *physics_component = this->get_entity()->get_component<PhysicsComponent>();
+    utils::Handle<PhysicsComponent> physics_component = this->get_entity()->get_component<PhysicsComponent>();
 
-    if (physics_component != nullptr) {
-        physics_component->set_collider_component(this);
+    if (!physics_component.is_null()) {
+        physics_component->set_collider_component(utils::Handle<ColliderComponent>(this->get_id()));
     }
 }
 

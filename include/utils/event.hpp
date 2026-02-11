@@ -66,6 +66,7 @@ class Event : public Uncopiable {
         }
 
        private:
+        // FIX: This is breaking
         inline void _move(Listener &&other) {
             if (this != &other) {
                 // other->unsubscribe_all();
@@ -129,6 +130,7 @@ class Event : public Uncopiable {
         _listeners->erase(std::remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
     }
 
+    // FIX: This is breaking
     inline void _move(Event &&other) {
         if (this != &other) {
             this->_listeners.reset();

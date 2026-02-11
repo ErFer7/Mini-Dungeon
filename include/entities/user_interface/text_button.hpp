@@ -18,7 +18,7 @@ struct TextButtonArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    UITransformComponent *parent_ui_transform = nullptr;
+    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
     UIOrigin text_ui_origin = UIOrigin::CENTER;
     int font_size = 0;
     Vector2Df text_position = Vector2Df();
@@ -52,7 +52,7 @@ struct TextButtonArgs {
                         text_scale,
                         text_color,
                         0,
-                        nullptr,
+                        utils::Handle<UITransformComponent>(),
                         spacing,
                         nullptr,
                         texture_scale};

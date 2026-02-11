@@ -34,7 +34,7 @@ class Entity : public utils::Identified {
 
     virtual ~Entity() override;
 
-    inline Event<Entity *> &get_on_destroy_event() { return this->_on_destroy_event; }
+    inline Event<utils::Handle<Entity>> &get_on_destroy_event() { return this->_on_destroy_event; }
 
     template <typename ComponentType, typename... Args>
     utils::Handle<ComponentType> create_component(Args &&...args) {
@@ -83,6 +83,6 @@ class Entity : public utils::Identified {
 
    private:
     unique_ptr<ComponentsVector> _components;
-    Event<Entity *> _on_destroy_event;
+    Event<utils::Handle<Entity>> _on_destroy_event;
     ActivityState _activity_state;
 };

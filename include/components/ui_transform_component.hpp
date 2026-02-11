@@ -13,7 +13,7 @@ enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT
 
 struct UITransformComponentArgs {
     UIOrigin ui_origin;
-    UITransformComponent *parent_ui_transform = nullptr;
+    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);
@@ -64,9 +64,9 @@ class UITransformComponent final : public Component {
 
    private:
     UIOrigin _ui_origin;
-    UITransformComponent *_parent_ui_transform;
-    TransformComponent *_parent_transform_component;
-    GraphicsComponent *_parent_graphics_component;
-    TransformComponent *_transform_component;
-    GraphicsComponent *_graphics_component;
+    utils::Handle<UITransformComponent> _parent_ui_transform;
+    utils::Handle<TransformComponent> _parent_transform_component;
+    utils::Handle<GraphicsComponent> _parent_graphics_component;
+    utils::Handle<TransformComponent> _transform_component;
+    utils::Handle<GraphicsComponent> _graphics_component;
 };

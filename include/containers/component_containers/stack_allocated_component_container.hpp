@@ -16,9 +16,9 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 
     // The first type parameter is declared to satisfy the calls. See the HeapAllocatedComponentContainer
     template <typename, typename... Args>
-    utils::Handle<ComponentType> *create_component(Entity *entity, Args &&...args) {
+    utils::Handle<ComponentType> create_component(Entity *entity, Args &&...args) {
         ComponentType component = ComponentType(entity, std::forward<Args>(args)...);
-        utils::Id component_id = static_cast<utils::Identified>(component).get_id();
+        utils::Id component_id = static_cast<utils::Identified *>(&component)->get_id();
         utils::Handle<ComponentType> handle = utils::Handle<ComponentType>(component_id);
 
         this->push_back(std::move(component));

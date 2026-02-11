@@ -54,7 +54,7 @@ class TextComponent final : public Component {
     int _font_size;
     float _spacing;
     Color _color;
-    GraphicsComponent *_graphics_component;
+    utils::Handle<GraphicsComponent> _graphics_component;
     Image _text_image;
     Texture2D _text_texture;
 };
