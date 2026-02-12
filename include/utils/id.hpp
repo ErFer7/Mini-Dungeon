@@ -29,6 +29,9 @@ class IdReferences : public Uncopiable {
     std::unique_ptr<std::unordered_map<Id, void *>> _id_reference_map;
 };
 
+// TODO: Find a way to make this more reliable.
+// We are currently relying on the way things are oriented in memory to cast between types.
+// Multiple inheritance could break everything.
 class Identified : public Uncopiable {
    public:
     Identified(void *pointer);
@@ -83,6 +86,29 @@ class Handle {
     inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
 
     inline Type *get_pointer() const { return static_cast<Type *>(HandlHelper::_get_pointer(this->_id)); }
+
+   private:
+    Id _id;
+};
+
+template <>
+class Handle<void> {
+    template <typename DerivedType>
+    friend class Handle;
+
+   public:
+    Handle() : _id(-1LL) {}
+
+    Handle(Id id) : _id(id) {}
+
+    template <typename OtherType>
+    Handle(const Handle<OtherType> &other) : _id(other._id) {}
+
+    inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
+
+    inline void *get_pointer() const { return HandlHelper::_get_pointer(this->_id); }
+
+    inline Id get_id() const { return _id; }
 
    private:
     Id _id;

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "event.hpp"
-#include "utils/uncopiable.hpp"
+#include "utils/id.hpp"
 
-using std::function;
 using std::make_unique;
 using std::move;
 using std::remove;
@@ -12,7 +11,7 @@ using std::vector;
 
 namespace utils {
 
-class ActivityState : public Uncopiable {
+class ActivityState : public utils::Identified {
    public:
     typedef Event<bool> ActivityUpdateEvent;
     typedef ActivityUpdateEvent::Listener ActivityUpdateListener;
@@ -21,10 +20,11 @@ class ActivityState : public Uncopiable {
     ActivityState(bool active = true, ActivityState *parent_activity_state = nullptr)
         : _is_active(true),
           _is_self_active(true),
-          _is_parent_active(true) {
+          _is_parent_active(true),
+          utils::Identified(this) {
         if (parent_activity_state != nullptr) {
-            this->_parent_update_listener.set_callable(
-                [this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
+                utils::Handle<ActivityState>(this->get_id()));
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
         }
     }
@@ -51,8 +51,8 @@ class ActivityState : public Uncopiable {
         }
 
         if (parent_activity_state != nullptr) {
-            this->_parent_update_listener.set_callable(
-                [this](bool is_parent_active) { this->_update_parent_activity(is_parent_active); });
+            this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
+                utils::Handle<ActivityState>(this->get_id()));
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
 
             this->_update_parent_activity(parent_activity_state->is_active());

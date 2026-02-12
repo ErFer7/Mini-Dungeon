@@ -1,10 +1,10 @@
 #pragma once
 
 #include <algorithm>
-#include <functional>
 #include <memory>
 #include <vector>
 
+#include "utils/id.hpp"
 #include "utils/uncopiable.hpp"
 
 namespace utils {
@@ -40,9 +40,19 @@ class Event : public Uncopiable {
             return *this;
         }
 
-        inline void set_callable(std::function<void(Args...)> callable) { this->_callable = callable; }
+        template <typename Type, auto Method>
+        inline void bind_callable(Handle<Type> handle) {
+            this->_handle = handle;
 
-        inline std::function<void(Args...)> get_callable() const { return this->_callable; }
+            this->_invoker = [](const Handle<void> &generic_handle, Args... args) {
+                void *pointer = generic_handle.get_pointer();
+                Type *instance = static_cast<Type *>(pointer);
+
+                if (instance != nullptr) {
+                    (instance->*Method)(args...);
+                }
+            };
+        }
 
         inline bool is_subscribed() const { return !this->_events->empty(); }
 
@@ -66,12 +76,12 @@ class Event : public Uncopiable {
         }
 
        private:
-        // FIX: This is breaking
         inline void _move(Listener &&other) {
             if (this != &other) {
                 // other->unsubscribe_all();
 
-                this->_callable = std::move(other._callable);
+                this->_handle = std::move(other._handle);
+                this->_invoker = std::move(other._invoker);
                 this->_events = std::move(other._events);
 
                 // for (auto &event : *this->_events) {
@@ -80,10 +90,15 @@ class Event : public Uncopiable {
             }
         }
 
-        inline void _call(Args... args) { this->_callable(args...); }
+        inline void _call(Args... args) {
+            if (this->_invoker != nullptr) {
+                this->_invoker(_handle, args...);
+            }
+        }
 
        private:
-        std::function<void(Args...)> _callable;
+        Handle<void> _handle;
+        void (*_invoker)(const Handle<void> &, Args...);
         std::unique_ptr<EventVector> _events;
     };
 
