@@ -21,6 +21,12 @@ class MenuScene : public Scene {
     void exit() override;
 
    private:
+    // This only exists because of the listeners
+    void _transition_to_gameplay();
+
+    void _exit();
+
+   private:
     utils::Handle<Background> _background;
     utils::Handle<Text> _title;
     utils::Handle<Text> _version;

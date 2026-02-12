@@ -15,7 +15,9 @@ class ButtonComponent : public BehaviorComponent {
 
     ~ButtonComponent() override { utils::log_trace(__FUNCTION__); }
 
-    inline ButtonClickEvent *get_on_click_event() { return &this->_on_click_event; }
+    inline utils::Handle<ButtonClickEvent> get_on_click_event() {
+        return utils::Handle<ButtonClickEvent>(this->_on_click_event.get_id());
+    }
 
     inline void start() override {}
 

@@ -36,7 +36,10 @@ class Identified : public Uncopiable {
    public:
     Identified(void *pointer);
 
-    Identified(Identified &&other) noexcept;
+    Identified(Identified &&other) noexcept : _id(other._id) {
+        // this->update_reference(this);
+        other._id = -1;
+    }
 
     ~Identified();
 
@@ -82,6 +85,8 @@ class Handle {
     inline Type *operator->() const noexcept { return this->get_pointer(); }
 
     inline Type &operator*() const { return *this->get_pointer(); }
+
+    inline bool operator==(Handle<Type> &other) const { return this->_id == other._id; }
 
     inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
 

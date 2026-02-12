@@ -5,26 +5,25 @@
 #include <vector>
 
 #include "utils/id.hpp"
-#include "utils/uncopiable.hpp"
 
 namespace utils {
 
 // TODO: Rewrite this entire class considering that addresses could change, move semantics, etc.
 // It should be capable of handling everything
 template <typename... Args>
-class Event : public Uncopiable {
+class Event : public Identified {
     friend class Listener;
 
    public:
-    class Listener : public Uncopiable {
+    class Listener : public Identified {
         friend class Event;
 
        public:
-        typedef std::vector<Event<Args...> *> EventVector;
+        typedef std::vector<Handle<Event<Args...>>> EventVector;
 
-        Listener() { this->_events = std::make_unique<EventVector>(); };
+        Listener() : Identified(this) { this->_events = std::make_unique<EventVector>(); };
 
-        Listener(Listener &&other) noexcept { this->_move(std::move(other)); }
+        Listener(Listener &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
         ~Listener() {
             if (this->_events == nullptr) {
@@ -56,20 +55,20 @@ class Event : public Uncopiable {
 
         inline bool is_subscribed() const { return !this->_events->empty(); }
 
-        inline void subscribe(Event<Args...> *event) {
+        inline void subscribe(Handle<Event<Args...>> event) {
             this->_events->push_back(event);
-            event->_add_listener(this);
+            event->_add_listener(Handle<Listener>(this->get_id()));
         }
 
-        inline void unsubscribe(Event<Args...> *event) {
-            event->_remove_listener(this);
+        inline void unsubscribe(Handle<Event<Args...>> event) {
+            event->_remove_listener(Handle<Listener>(this->get_id()));
             this->_events->erase(std::remove(this->_events->begin(), this->_events->end(), event),
                                  this->_events->end());
         }
 
         void unsubscribe_all() {
             for (auto &event : *this->_events) {
-                event->_remove_listener(this);
+                event->_remove_listener(Handle<Listener>(this->get_id()));
             }
 
             this->_events->clear();
@@ -78,15 +77,11 @@ class Event : public Uncopiable {
        private:
         inline void _move(Listener &&other) {
             if (this != &other) {
-                // other->unsubscribe_all();
+                this->update_reference(this);
 
                 this->_handle = std::move(other._handle);
                 this->_invoker = std::move(other._invoker);
                 this->_events = std::move(other._events);
-
-                // for (auto &event : *this->_events) {
-                //     event->_add_listener(this);
-                // }
             }
         }
 
@@ -102,15 +97,15 @@ class Event : public Uncopiable {
         std::unique_ptr<EventVector> _events;
     };
 
-    typedef std::vector<Listener *> ListenerVector;
+    typedef std::vector<Handle<Listener>> ListenerVector;
 
    public:
-    Event() { this->_listeners = std::make_unique<ListenerVector>(); }
+    Event() : Identified(this) { this->_listeners = std::make_unique<ListenerVector>(); }
 
     // Events can't be copied because of listeners (see above)
     Event(const Event &other) noexcept = delete;
 
-    Event(Event &&other) noexcept { this->_move(std::move(other)); }
+    Event(Event &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~Event() {
         if (this->_listeners == nullptr) {
@@ -118,7 +113,7 @@ class Event : public Uncopiable {
         }
 
         for (const auto &listener : *this->_listeners) {
-            listener->unsubscribe(this);
+            listener->unsubscribe(Handle<Event<Args...>>(this->get_id()));
         }
     };
 
@@ -139,15 +134,17 @@ class Event : public Uncopiable {
     inline bool has_listeners() { return !this->_listeners->empty(); }
 
    private:
-    inline void _add_listener(Listener *listener) { this->_listeners->push_back(listener); }
+    inline void _add_listener(Handle<Listener> listener) { this->_listeners->push_back(listener); }
 
-    inline void _remove_listener(Listener *listener) {
+    inline void _remove_listener(Handle<Listener> listener) {
         _listeners->erase(std::remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
     }
 
     // FIX: This is breaking
     inline void _move(Event &&other) {
         if (this != &other) {
+            this->update_reference(this);
+
             this->_listeners.reset();
             this->_listeners = std::move(other._listeners);
         }

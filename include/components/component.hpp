@@ -35,7 +35,9 @@ class Component : public utils::Identified {
 
     inline Entity *get_entity() const { return this->_entity; }
 
-    inline Event<utils::Handle<Component>> *get_on_destroy_event() { return &this->_on_destroy_event; }
+    inline utils::Handle<Event<utils::Handle<Component>>> get_on_destroy_event() {
+        return utils::Handle<Event<utils::Handle<Component>>>(this->_on_destroy_event.get_id());
+    }
 
     inline ActivityState *get_activity_state() { return &this->_activity_state; }
 

@@ -54,7 +54,13 @@ class GraphicsComponent final : public Component {
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();
 
+    void _update_drawing_transform_listener_call(const Vector2Df &, const TransformData &) {
+        this->_update_drawing_transform();
+    }
+
     void _unregister_on_space();
+
+    void _unregister_on_space_listener_call(utils::Handle<Component>) { this->_unregister_on_space(); }
 
    private:
     Texture2D _texture;

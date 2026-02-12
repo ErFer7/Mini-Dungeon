@@ -13,7 +13,8 @@ GameCore::GameCore(int screen_width,
                    bool resizable,
                    bool fullscreen,
                    bool show_fps)
-    : _entity_container(std::make_unique<EntityContainer>()),
+    : _id_references(),
+      _entity_container(std::make_unique<EntityContainer>()),
       _texture_container(),
       _image_container(),
       _font_container(),
@@ -28,7 +29,6 @@ GameCore::GameCore(int screen_width,
       _behavior_component_manager(),
       _physics_component_manager(),
       _graphics_component_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
-      _id_references(),
       _is_exiting(false) {
     utils::log_trace(__FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
 }

@@ -104,6 +104,7 @@ class GameCore {
 
    private:
     static inline GameCore *_instance;
+    utils::IdReferences _id_references;
     std::unique_ptr<EntityContainer> _entity_container;
     ImageContainer _image_container;
     TextureContainer _texture_container;
@@ -120,6 +121,5 @@ class GameCore {
     PhysicsComponentManager _physics_component_manager;
     GraphicsComponentManager _graphics_component_manager;
     AudioComponentManager _audio_component_manager;
-    utils::IdReferences _id_references;
     bool _is_exiting;
 };

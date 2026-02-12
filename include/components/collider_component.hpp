@@ -22,6 +22,8 @@ class ColliderComponent final : public Component {
    private:
     void _update_rectangle();
 
+    void _update_rectangle_listener_call(const Vector2Df &, const TransformData &) { this->_update_rectangle(); }
+
    private:
     Rectangle _rectangle;
     utils::Handle<TransformComponent> _transform_component;

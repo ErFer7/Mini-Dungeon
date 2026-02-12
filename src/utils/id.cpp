@@ -10,11 +10,6 @@ utils::Identified::Identified(void *pointer) : _id(_next_id++) {
     GameCore::get_instance()->get_id_references()->_set_pointer(this->_id, pointer);
 }
 
-utils::Identified::Identified(Identified &&other) noexcept : _id(other._id) {
-    this->update_reference(this);
-    other._id = -1;
-}
-
 utils::Identified &utils::Identified::operator=(Identified &&other) noexcept {
     if (this != &other) {
         this->_id = other._id;

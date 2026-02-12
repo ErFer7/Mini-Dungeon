@@ -3,14 +3,10 @@
 #include "scenes/gameplay_scene.hpp"
 #include "scenes/menu_scene.hpp"
 
-GameManager::GameManager() {
+void GameManager::init() {
     this->_menu_scene = std::make_unique<MenuScene>();
     this->_gameplay_scene = std::make_unique<GameplayScene>();
-}
 
-GameManager::~GameManager() { this->_menu_scene.reset(); }
-
-void GameManager::init() {
     this->_current_scene = _menu_scene.get();
 
     this->_current_scene->init();

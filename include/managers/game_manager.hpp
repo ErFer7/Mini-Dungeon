@@ -10,9 +10,9 @@ using std::unique_ptr;
 
 class GameManager : public Manager {
    public:
-    GameManager();
+    GameManager() {};
 
-    ~GameManager();
+    ~GameManager() {};
 
     void init() override;
 

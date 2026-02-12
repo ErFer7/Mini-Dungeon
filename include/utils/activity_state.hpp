@@ -43,7 +43,9 @@ class ActivityState : public utils::Identified {
 
     inline bool is_active() { return this->_is_active; }
 
-    inline ActivityUpdateEvent *get_activity_update_event() { return &this->_on_update_event; }
+    inline utils::Handle<ActivityUpdateEvent> get_activity_update_event() {
+        return utils::Handle<ActivityUpdateEvent>(this->_on_update_event.get_id());
+    }
 
     void set_parent_activity_state(ActivityState *parent_activity_state) {
         if (this->_parent_update_listener.is_subscribed()) {

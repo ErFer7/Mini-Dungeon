@@ -14,8 +14,9 @@ ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs
     utils::log_trace(__FUNCTION__);
 
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
-    this->_transform_update_listener.bind_callable<ColliderComponent, &ColliderComponent::_update_rectangle>(
-        utils::Handle<ColliderComponent>(this->get_id()));
+    this->_transform_update_listener
+        .bind_callable<ColliderComponent, &ColliderComponent::_update_rectangle_listener_call>(
+            utils::Handle<ColliderComponent>(this->get_id()));
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     if (this->_rectangle.width == 0.0f && this->_rectangle.height == 0.0f) {

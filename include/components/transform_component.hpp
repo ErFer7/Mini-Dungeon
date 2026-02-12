@@ -32,7 +32,9 @@ class TransformComponent final : public Component {
 
     inline Vector2Df get_scale() const { return this->_transform.get_scale(); }
 
-    inline TransformUpdateEvent *get_on_update_event() { return &this->_on_update_event; }
+    inline utils::Handle<TransformUpdateEvent> get_on_update_event() {
+        return utils::Handle<TransformUpdateEvent>(this->_on_update_event.get_id());
+    }
 
     void set_position(Vector2Df position);
 

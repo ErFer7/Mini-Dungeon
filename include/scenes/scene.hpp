@@ -1,10 +1,11 @@
 #pragma once
 
 #include "types.hpp"
+#include "utils/id.hpp"
 
-class Scene {
+class Scene : public utils::Identified {
    public:
-    Scene() : _was_initialized(false) {};
+    Scene() : _was_initialized(false), utils::Identified(this) {};
 
     virtual ~Scene() = default;
 
