@@ -8,9 +8,9 @@ class BehaviorComponent : public Component {
     friend class BehaviorComponentManager;
 
    public:
-    BehaviorComponent(Entity *entity) : Component(entity) { utils::log_trace(__FUNCTION__, entity); }
+    BehaviorComponent(Entity *entity) : Component(entity) { utils::log_trace(this,__FUNCTION__, entity); }
 
-    ~BehaviorComponent() override { utils::log_trace(__FUNCTION__); };
+    ~BehaviorComponent() override { utils::log_trace(this, __FUNCTION__); };
 
     virtual void start() {};
 

@@ -13,7 +13,7 @@ class ButtonComponent : public BehaviorComponent {
    public:
     ButtonComponent(Entity *entity);
 
-    ~ButtonComponent() override { utils::log_trace(__FUNCTION__); }
+    ~ButtonComponent() override { utils::log_trace(this, __FUNCTION__); }
 
     inline utils::Handle<ButtonClickEvent> get_on_click_event() {
         return utils::Handle<ButtonClickEvent>(this->_on_click_event.get_id());

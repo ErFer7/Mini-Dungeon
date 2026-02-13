@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "utils/debug.hpp"
 #include "utils/id.hpp"
 
 namespace utils {
@@ -21,11 +22,17 @@ class Event : public Identified {
        public:
         typedef std::vector<Handle<Event<Args...>>> EventVector;
 
-        Listener() : Identified(this) { this->_events = std::make_unique<EventVector>(); };
+        Listener() : Identified(this) {
+            log_trace(this, __FUNCTION__);
+
+            this->_events = std::make_unique<EventVector>();
+        };
 
         Listener(Listener &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
         ~Listener() {
+            log_trace(this, __FUNCTION__);
+
             if (this->_events == nullptr) {
                 return;
             }
@@ -100,7 +107,11 @@ class Event : public Identified {
     typedef std::vector<Handle<Listener>> ListenerVector;
 
    public:
-    Event() : Identified(this) { this->_listeners = std::make_unique<ListenerVector>(); }
+    Event() : Identified(this) {
+        log_trace(this, __FUNCTION__);
+
+        this->_listeners = std::make_unique<ListenerVector>();
+    }
 
     // Events can't be copied because of listeners (see above)
     Event(const Event &other) noexcept = delete;
@@ -108,6 +119,8 @@ class Event : public Identified {
     Event(Event &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~Event() {
+        log_trace(this, __FUNCTION__);
+
         if (this->_listeners == nullptr) {
             return;
         }
@@ -126,7 +139,10 @@ class Event : public Identified {
     }
 
     inline void invoke(Args... args) {
+        log_trace(this, __FUNCTION__, std::forward<Args>(args)...);
+
         for (const auto &listener : *this->_listeners) {
+            log_info("Calling on listener ", listener);
             listener->_call(args...);
         }
     }
@@ -134,18 +150,22 @@ class Event : public Identified {
     inline bool has_listeners() { return !this->_listeners->empty(); }
 
    private:
-    inline void _add_listener(Handle<Listener> listener) { this->_listeners->push_back(listener); }
+    inline void _add_listener(Handle<Listener> listener) {
+        log_trace(this, __FUNCTION__, listener);
+        this->_listeners->push_back(listener);
+    }
 
     inline void _remove_listener(Handle<Listener> listener) {
+        log_trace(this, __FUNCTION__, listener);
         _listeners->erase(std::remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
     }
 
-    // FIX: This is breaking
     inline void _move(Event &&other) {
+        log_trace(this, __FUNCTION__, &other);
+
         if (this != &other) {
             this->update_reference(this);
 
-            this->_listeners.reset();
             this->_listeners = std::move(other._listeners);
         }
     }

@@ -5,7 +5,7 @@
 #include "utils/vector.hpp"
 
 TransformComponent::TransformComponent(Entity *entity, const TransformComponentArgs &args) : Component(entity) {
-    utils::log_trace(__FUNCTION__, entity);
+    utils::log_trace(this, __FUNCTION__, entity);
 
     this->_transform = utils::Transform(args.position, args.rotation, args.scale);
 }

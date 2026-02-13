@@ -11,18 +11,20 @@ using std::vector;
 
 namespace utils {
 
-class ActivityState : public utils::Identified {
+class ActivityState : public Identified {
    public:
     typedef Event<bool> ActivityUpdateEvent;
     typedef ActivityUpdateEvent::Listener ActivityUpdateListener;
 
    public:
-    ActivityState(bool active = true, ActivityState *parent_activity_state = nullptr)
+    ActivityState(bool active = true, Handle<ActivityState> parent_activity_state = Handle<ActivityState>())
         : _is_active(true),
           _is_self_active(true),
           _is_parent_active(true),
           utils::Identified(this) {
-        if (parent_activity_state != nullptr) {
+        log_trace(this, __FUNCTION__);
+
+        if (!parent_activity_state.is_null()) {
             this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
                 utils::Handle<ActivityState>(this->get_id()));
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
@@ -32,7 +34,7 @@ class ActivityState : public utils::Identified {
     // TODO: Implement move semantics
     ActivityState(ActivityState &&other) = default;
 
-    ~ActivityState() override = default;
+    ~ActivityState() override { log_trace(this, __FUNCTION__); }
 
     ActivityState &operator=(ActivityState &&other) noexcept = default;
 
@@ -47,12 +49,12 @@ class ActivityState : public utils::Identified {
         return utils::Handle<ActivityUpdateEvent>(this->_on_update_event.get_id());
     }
 
-    void set_parent_activity_state(ActivityState *parent_activity_state) {
+    void set_parent_activity_state(Handle<ActivityState> parent_activity_state) {
         if (this->_parent_update_listener.is_subscribed()) {
             this->_parent_update_listener.unsubscribe_all();
         }
 
-        if (parent_activity_state != nullptr) {
+        if (!parent_activity_state.is_null()) {
             this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
                 utils::Handle<ActivityState>(this->get_id()));
             this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());

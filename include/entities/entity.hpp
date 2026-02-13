@@ -64,14 +64,14 @@ class Entity : public utils::Identified {
     template <typename ComponentType>
     void destroy_component();
 
-    inline ActivityState *get_activity_state() { return &this->_activity_state; }
+    inline utils::Handle<ActivityState> get_activity_state() { return utils::Handle<ActivityState>(this->_activity_state.get_id()); }
 
     inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
 
     inline bool is_active() { return this->_activity_state.is_active(); }
 
    protected:
-    inline void set_activity_state_parent(ActivityState *activity_state) {
+    inline void set_activity_state_parent(utils::Handle<ActivityState> activity_state) {
         this->_activity_state.set_parent_activity_state(activity_state);
     }
 

@@ -12,7 +12,7 @@ TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
       _color(args.color),
       _text_image(Image()),
       _text_texture(Texture2D()) {
-    utils::log_trace(__FUNCTION__, entity);
+    utils::log_trace(this, __FUNCTION__, entity);
 
     int font_size = args.font_size;
 

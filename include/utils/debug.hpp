@@ -22,10 +22,10 @@ void log_info(Args... args) {
 }
 
 template <typename... Args>
-void log_trace(std::string function, Args... args) {
+void log_trace(void *object_address, std::string function, Args... args) {
     if constexpr (!(DEBUGGED && DEBUG_TRACE)) return;
 
-    std::cout << "[TRACE]: " << function << "(";
+    std::cout << "[TRACE]: " << '[' << object_address << "] " << function << "(";
     int n = 0;
     ((std::cout << (n++ == 0 ? "" : ", ") << args), ...);
     std::cout << ")" << std::endl;

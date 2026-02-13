@@ -11,7 +11,7 @@ ColliderComponent::ColliderComponent(Entity *entity, const ColliderComponentArgs
     : _rectangle(args.rectangle),
       Component(entity) {
     // FIX: Args
-    utils::log_trace(__FUNCTION__);
+    utils::log_trace(this, __FUNCTION__);
 
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_transform_update_listener

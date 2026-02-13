@@ -7,5 +7,5 @@ Component::Component(Entity *entity)
     : _entity(entity),
       _activity_state(true, entity->get_activity_state()),
       utils::Identified(static_cast<void *>(this)) {
-    utils::log_trace(__FUNCTION__, entity);
+    utils::log_trace(this, __FUNCTION__, entity);
 }

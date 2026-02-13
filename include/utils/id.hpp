@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "types.hpp"
+#include "utils/debug.hpp"
 #include "utils/uncopiable.hpp"
 
 namespace utils {
@@ -21,7 +22,11 @@ class IdReferences : public Uncopiable {
     void *get_pointer(Id id) { return this->_id_reference_map->at(id); }
 
    private:
-    void _set_pointer(Id id, void *pointer) { this->_id_reference_map->insert_or_assign(id, pointer); }
+    void _set_pointer(Id id, void *pointer) {
+        log_trace(this, __FUNCTION__, id, pointer);
+
+        this->_id_reference_map->insert_or_assign(id, pointer);
+    }
 
     // TODO: Implement _remove_pointer
 
@@ -36,18 +41,29 @@ class Identified : public Uncopiable {
    public:
     Identified(void *pointer);
 
-    Identified(Identified &&other) noexcept : _id(other._id) {
-        // this->update_reference(this);
-        other._id = -1;
-    }
+    Identified(Identified &&other) noexcept { this->_move(std::move(other)); }
 
     ~Identified();
 
-    Identified &operator=(Identified &&other) noexcept;
+    Identified &operator=(Identified &&other) noexcept {
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     Id get_id() const { return _id; }
 
     void update_reference(void *pointer);
+
+   private:
+    void _move(Identified &&other) {
+        log_trace(this, __FUNCTION__, &other);
+
+        if (this != &other) {
+            this->_id = other._id;
+            other._id = -1LL;
+        }
+    }
 
    private:
     static inline Id _next_id = 0LL;
@@ -118,5 +134,11 @@ class Handle<void> {
    private:
     Id _id;
 };
+
+inline std::ostream &operator<<(std::ostream &ostream, const Handle<void> &handle) {
+    ostream << "Handle {" << handle.get_id() << "}";
+
+    return ostream;
+}
 
 }  // namespace utils

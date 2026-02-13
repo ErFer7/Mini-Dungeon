@@ -193,7 +193,7 @@ Vector2D<T> operator*(T scalar, const Vector2D<T> &vector) {
 
 template <Numeric T>
 std::ostream &operator<<(std::ostream &os, const Vector2D<T> &vector) {
-    os << '{' << vector.x << ", " << vector.y << '}';
+    os << "Vector2D {" << vector.x << ", " << vector.y << '}';
     return os;
 }
 

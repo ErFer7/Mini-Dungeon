@@ -26,7 +26,7 @@ struct TextButtonArgs {
     Vector2Df text_scale = Vector2Df(1.0f);
     Color text_color = WHITE;
     float spacing = 1.0f;
-    ActivityState *parent_activity_state = nullptr;
+    utils::Handle<ActivityState> parent_activity_state = utils::Handle<ActivityState>();
     float texture_scale = 1.0f;
 
     operator ButtonArgs() const {
@@ -54,7 +54,7 @@ struct TextButtonArgs {
                         0,
                         utils::Handle<UITransformComponent>(),
                         spacing,
-                        nullptr,
+                        utils::Handle<ActivityState>(),
                         texture_scale};
     }
 };

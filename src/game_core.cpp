@@ -30,11 +30,11 @@ GameCore::GameCore(int screen_width,
       _physics_component_manager(),
       _graphics_component_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
       _is_exiting(false) {
-    utils::log_trace(__FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
+    utils::log_trace(this, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
 }
 
 void GameCore::init_main_loop() {
-    utils::log_trace(__FUNCTION__);
+    utils::log_trace(this, __FUNCTION__);
 
     this->_behavior_component_manager.init();
     this->_physics_component_manager.init();

@@ -18,7 +18,7 @@ struct UIEntityArgs {
     Color color = WHITE;
     int layer = 0;
     utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
-    ActivityState *parent_activity_state = nullptr;
+    utils::Handle<ActivityState> parent_activity_state = utils::Handle<ActivityState>();
     float texture_scale = 1.0f;
 
     operator Entity2DArgs() const {
