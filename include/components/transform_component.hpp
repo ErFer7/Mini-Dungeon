@@ -20,11 +20,17 @@ class TransformComponent final : public Component {
    public:
     TransformComponent(Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
-    TransformComponent(TransformComponent &&other) noexcept = default;
+    TransformComponent(TransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
     ~TransformComponent() override = default;
 
-    TransformComponent &operator=(TransformComponent &&other) noexcept = default;
+    TransformComponent &operator=(TransformComponent &&other) {
+        Component::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline Vector2Df get_position() const { return this->_transform.get_position(); }
 
@@ -65,6 +71,16 @@ class TransformComponent final : public Component {
     void rotate(float rotation);
 
     void scale(Vector2Df scale);
+
+   private:
+    void _move(TransformComponent &&other) {
+        if (this == &other) {
+            return;
+        }
+
+        this->_transform = std::move(other._transform);
+        this->_on_update_event = std::move(other._on_update_event);
+    }
 
    private:
     utils::Transform _transform;

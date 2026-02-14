@@ -5,6 +5,11 @@
 #include "components/collider_component.hpp"
 #include "components/physics_component.hpp"
 #include "containers/component_containers/stack_allocated_component_container.hpp"
+#include "game_core.hpp"
+
+void PhysicsComponentManager::init() {
+    this->_physics_component_container = GameCore::get_instance()->get_physics_component_container();
+}
 
 void PhysicsComponentManager::update() {
     std::vector<PhysicsComponent> *physics_components = this->_physics_component_container->get_data_structure();

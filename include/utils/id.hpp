@@ -11,6 +11,8 @@ namespace utils {
 
 typedef long long Id;
 
+// TODO: Clean this file
+
 class IdReferences : public Uncopiable {
     friend class Identified;
 
@@ -53,6 +55,8 @@ class Identified : public Uncopiable {
 
     Id get_id() const { return _id; }
 
+    // TODO: Add make_handle
+
     void update_reference(void *pointer);
 
    private:
@@ -81,7 +85,7 @@ class HandlHelper {
 template <typename Type>
 class Handle {
     template <typename DerivedType>
-    friend class Handle;  // Friends are the handles we casted along the way
+    friend class Handle;  // Friends are the handles we cast along the way
 
    public:
     Handle() : _id(-1LL) {}

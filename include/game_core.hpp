@@ -36,7 +36,8 @@ class GameCore {
                                bool resizable = false,
                                bool fullscreen = false,
                                bool show_fps = false) {
-        utils::log_trace(nullptr, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
+        utils::log_trace(
+            nullptr, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
         _instance = new GameCore(screen_height, screen_height, title, target_fps, resizable, fullscreen, show_fps);
     }
 
@@ -53,6 +54,8 @@ class GameCore {
     inline BehaviorComponentContainer *get_behavior_component_container() {
         return &this->_behavior_component_container;
     }
+
+    inline PhysicsComponentContainer *get_physics_component_container() { return &this->_physics_component_container; }
 
     inline GameManager *get_game_manager() { return &this->_game_manager; };
 

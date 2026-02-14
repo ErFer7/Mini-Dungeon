@@ -24,7 +24,8 @@ GraphicsComponent::GraphicsComponent(Entity *entity, const GraphicsComponentArgs
 
     this->set_texture(args.texture);
 
-    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(this);
+    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(
+        utils::Handle<GraphicsComponent>(this->get_id()));
 
     this->_on_destroy_listener.bind_callable<GraphicsComponent, &GraphicsComponent::_unregister_on_space_listener_call>(
         utils::Handle<GraphicsComponent>(this->get_id()));
@@ -77,5 +78,6 @@ void GraphicsComponent::_update_drawing_transform() {
 }
 
 void GraphicsComponent::_unregister_on_space() {
-    GameCore::get_instance()->get_graphics_component_manager()->unregister_component_on_space(this);
+    GameCore::get_instance()->get_graphics_component_manager()->unregister_component_on_space(
+        utils::Handle<GraphicsComponent>(this->get_id()));
 }

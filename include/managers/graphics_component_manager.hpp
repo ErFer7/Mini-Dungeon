@@ -9,6 +9,7 @@
 
 #include "components/graphics_component.hpp"
 #include "managers/manager.hpp"
+#include "utils/id.hpp"
 
 using std::make_unique;
 using std::move;
@@ -24,19 +25,28 @@ enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
 // TODO: Move this to a separate file
 class Space {
    public:
-    Space() : _sorting_mode(SortingMode::NONE) { this->_components = make_unique<vector<GraphicsComponent *>>(); }
+    Space() : _sorting_mode(SortingMode::NONE) {
+        this->_components = make_unique<vector<utils::Handle<GraphicsComponent>>>();
+    }
 
     // TODO: Check if this is necessary
     Space(const Space &other) { this->_copy(other); }
 
     // TODO: Check if this is necessary
-    Space(Space &&other) { this->_move(move(other)); }
+    Space(Space &&other) { this->_move(std::move(other)); }
 
     ~Space() = default;
 
     // TODO: Check if this is necessary
-    Space &operator=(const Space &other) noexcept {
+    Space &operator=(Space &other) {
         this->_copy(other);
+
+        return *this;
+    }
+
+    // TODO: Check if this is necessary
+    Space &operator=(Space &&other) {
+        this->_move(std::move(other));
 
         return *this;
     }
@@ -45,9 +55,9 @@ class Space {
 
     inline void set_sorting_mode(SortingMode sorting_mode) { this->_sorting_mode = sorting_mode; }
 
-    void add_component(GraphicsComponent *component);
+    void add_component(utils::Handle<GraphicsComponent> component);
 
-    void remove_component(GraphicsComponent *component);
+    void remove_component(utils::Handle<GraphicsComponent> component);
 
     void sort();
 
@@ -57,18 +67,18 @@ class Space {
     // TODO: Check if this is necessary
     inline void _move(Space &&other) {
         this->_components.reset();
-        this->_components = move(other._components);
+        this->_components = std::move(other._components);
     }
 
     // TODO: Check if this is necessary
     inline void _copy(const Space &other) {
         this->_components.reset();
-        this->_components = make_unique<vector<GraphicsComponent *>>(*other._components);
+        this->_components = std::make_unique<vector<utils::Handle<GraphicsComponent>>>(*other._components);
     }
 
    private:
     SortingMode _sorting_mode;
-    unique_ptr<vector<GraphicsComponent *>> _components;
+    unique_ptr<vector<utils::Handle<GraphicsComponent>>> _components;
 };
 
 class GraphicsComponentManager : public Manager {
@@ -121,9 +131,9 @@ class GraphicsComponentManager : public Manager {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
 
-    void register_component_on_space(GraphicsComponent *graphics_component);
+    void register_component_on_space(utils::Handle<GraphicsComponent> graphics_component);
 
-    void unregister_component_on_space(GraphicsComponent *graphics_component);
+    void unregister_component_on_space(utils::Handle<GraphicsComponent> graphics_component);
 
    private:
     // TODO: Implement set methods for all of these

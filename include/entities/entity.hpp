@@ -32,7 +32,17 @@ class Entity : public utils::Identified {
    public:
     Entity();
 
+    Entity(Entity &&other) : utils::Identified(std::move(other)) { this->_move(std::move(other)); }
+
     virtual ~Entity() override;
+
+    Entity &operator=(Entity &&other) {
+        utils::Identified::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline Event<utils::Handle<Entity>> &get_on_destroy_event() { return this->_on_destroy_event; }
 
@@ -64,7 +74,9 @@ class Entity : public utils::Identified {
     template <typename ComponentType>
     void destroy_component();
 
-    inline utils::Handle<ActivityState> get_activity_state() { return utils::Handle<ActivityState>(this->_activity_state.get_id()); }
+    inline utils::Handle<ActivityState> get_activity_state() {
+        return utils::Handle<ActivityState>(this->_activity_state.get_id());
+    }
 
     inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
 
@@ -76,6 +88,18 @@ class Entity : public utils::Identified {
     }
 
    private:
+    void _move(Entity &&other) {
+        if (this == &other) {
+            return;
+        }
+
+        this->update_reference(this);
+
+        this->_components = std::move(other._components);
+        this->_on_destroy_event = std::move(other._on_destroy_event);
+        this->_activity_state = std::move(other._activity_state);
+    }
+
     utils::Handle<Component> _get_component(const type_info &type_info) const;
 
     template <typename ComponentType>

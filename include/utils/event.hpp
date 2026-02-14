@@ -41,6 +41,8 @@ class Event : public Identified {
         };
 
         inline Listener &operator=(Listener &&other) {
+            utils::Identified::operator=(std::move(other));
+
             this->_move(std::move(other));
 
             return *this;
@@ -74,6 +76,8 @@ class Event : public Identified {
         }
 
         void unsubscribe_all() {
+            log_trace(this, __FUNCTION__);
+
             for (auto &event : *this->_events) {
                 event->_remove_listener(Handle<Listener>(this->get_id()));
             }
@@ -83,6 +87,8 @@ class Event : public Identified {
 
        private:
         inline void _move(Listener &&other) {
+            log_trace(this, __FUNCTION__, &other);
+
             if (this != &other) {
                 this->update_reference(this);
 
@@ -133,6 +139,8 @@ class Event : public Identified {
     inline Event &operator=(const Event &other) noexcept = delete;
 
     inline Event &operator=(Event &&other) {
+        utils::Identified::operator=(std::move(other));
+
         this->_move(std::move(other));
 
         return *this;

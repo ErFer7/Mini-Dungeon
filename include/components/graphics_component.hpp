@@ -24,11 +24,17 @@ class GraphicsComponent final : public Component {
    public:
     GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args);
 
-    GraphicsComponent(GraphicsComponent &&other) noexcept = default;
+    GraphicsComponent(GraphicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
     ~GraphicsComponent() override = default;
 
-    GraphicsComponent &operator=(GraphicsComponent &&other) noexcept = default;
+    GraphicsComponent &operator=(GraphicsComponent &&other) {
+        Component::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline Texture2D get_texture() const { return this->_texture; }
 
@@ -50,6 +56,24 @@ class GraphicsComponent final : public Component {
 
    private:
     inline Vector2Df _get_position() { return this->_transform_component->get_position(); }
+
+    void _move(GraphicsComponent &&other) {
+        // TODO: Maybe use std::move for everything? Would this avoid unecessary copies?
+        if (this != &other) {
+            this->_texture = std::move(other._texture);
+            this->_transform_component = std::move(other._transform_component);
+            this->_source_rectangle = std::move(other._source_rectangle);
+            this->_destination_rectangle = std::move(other._destination_rectangle);
+            this->_origin = std::move(other._origin);
+            this->_rotation = other._rotation;
+            this->_texture_scale = other._texture_scale;
+            this->_color = std::move(other._color);
+            this->_rendering_mode = std::move(other._rendering_mode);
+            this->_layer = other._layer;
+            this->_transform_update_listener = std::move(other._transform_update_listener);
+            this->_on_destroy_listener = std::move(other._on_destroy_listener);
+        }
+    }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();

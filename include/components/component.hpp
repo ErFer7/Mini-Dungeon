@@ -27,7 +27,9 @@ class Component : public utils::Identified {
 
     Component &operator=(Component &&other) noexcept {
         utils::Identified::operator=(std::move(other));
+
         this->_move(std::move(other));
+
         return *this;
     };
 
@@ -47,11 +49,13 @@ class Component : public utils::Identified {
 
    private:
     void _move(Component &&other) {
-        this->_entity = other.get_entity();
-        this->_on_destroy_event = std::move(other._on_destroy_event);
-        this->_activity_state = std::move(other._activity_state);
+        if (this != &other) {
+            this->update_reference(this);
 
-        this->update_reference(this);
+            this->_entity = other.get_entity();
+            this->_on_destroy_event = std::move(other._on_destroy_event);
+            this->_activity_state = std::move(other._activity_state);
+        }
     }
 
    private:

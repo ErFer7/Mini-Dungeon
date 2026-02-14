@@ -21,11 +21,17 @@ class PhysicsComponent final : public Component {
    public:
     PhysicsComponent(Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
-    PhysicsComponent(PhysicsComponent &&other) noexcept = default;
+    PhysicsComponent(PhysicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
     ~PhysicsComponent() override = default;
 
-    PhysicsComponent &operator=(PhysicsComponent &&other) noexcept = default;
+    PhysicsComponent &operator=(PhysicsComponent &&other) {
+        Component::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline Vector2Df get_velocity() const { return this->_velocity; }
 
@@ -86,6 +92,22 @@ class PhysicsComponent final : public Component {
 
     // Bypass for the PhysicsComponentManager
     inline utils::Handle<ColliderComponent> get_collider_component() const { return this->_collider_component; }
+
+   private:
+    void _move(PhysicsComponent &&other) {
+        if (this == &other) {
+            return;
+        }
+
+        this->_velocity = std::move(other._velocity);
+        this->_acceleration = std::move(other._acceleration);
+        this->_drag = std::move(other._drag);
+        this->_time = std::move(other._time);
+        this->_is_statically_stable = std::move(other._is_statically_stable);
+        this->_is_colliding = std::move(other._is_colliding);
+        this->_transform_component = std::move(other._transform_component);
+        this->_collider_component = std::move(other._collider_component);
+    }
 
    private:
     // TODO: Model force and mass

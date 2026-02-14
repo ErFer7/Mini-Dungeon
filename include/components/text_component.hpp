@@ -19,11 +19,17 @@ class TextComponent final : public Component {
    public:
     TextComponent(Entity *entity, const TextComponentArgs &args);
 
-    TextComponent(TextComponent &&other) noexcept = default;
+    TextComponent(TextComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
     ~TextComponent() override;
 
-    TextComponent &operator=(TextComponent &&other) noexcept = default;
+    TextComponent &operator=(TextComponent &&other) {
+        Component::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline std::string get_content() const { return this->_content; }
 
@@ -46,6 +52,21 @@ class TextComponent final : public Component {
     void set_color(Color color);
 
    private:
+    void _move(TextComponent &&other) {
+        if (this == &other) {
+            return;
+        }
+
+        this->_content = std::move(other._content);
+        this->_font = std::move(other._font);
+        this->_font_size = std::move(other._font_size);
+        this->_spacing = std::move(other._spacing);
+        this->_color = std::move(other._color);
+        this->_graphics_component = std::move(other._graphics_component);
+        this->_text_image = std::move(other._text_image);
+        this->_text_texture = std::move(other._text_texture);
+    }
+
     void _update_texture();
 
    private:

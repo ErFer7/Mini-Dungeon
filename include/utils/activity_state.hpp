@@ -31,12 +31,17 @@ class ActivityState : public Identified {
         }
     }
 
-    // TODO: Implement move semantics
-    ActivityState(ActivityState &&other) = default;
+    ActivityState(ActivityState &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~ActivityState() override { log_trace(this, __FUNCTION__); }
 
-    ActivityState &operator=(ActivityState &&other) noexcept = default;
+    ActivityState &operator=(ActivityState &&other) noexcept {
+        utils::Identified::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     inline void set_active(bool is_active) {
         this->_is_self_active = is_active;
@@ -66,6 +71,18 @@ class ActivityState : public Identified {
     }
 
    private:
+    void _move(ActivityState &&other) {
+        if (this != &other) {
+            this->update_reference(this);
+
+            this->_is_active = other._is_active;
+            this->_is_self_active = other._is_self_active;
+            this->_is_parent_active = other._is_parent_active;
+            this->_on_update_event = std::move(other._on_update_event);
+            this->_parent_update_listener = std::move(other._parent_update_listener);
+        }
+    }
+
     void _update_parent_activity(bool is_parent_active) {
         this->_is_parent_active = is_parent_active;
         this->_update_activity();

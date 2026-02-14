@@ -30,7 +30,8 @@ GameCore::GameCore(int screen_width,
       _physics_component_manager(),
       _graphics_component_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
       _is_exiting(false) {
-    utils::log_trace(this, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
+    utils::log_trace(
+        this, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
 }
 
 void GameCore::init_main_loop() {
@@ -47,6 +48,8 @@ void GameCore::init_main_loop() {
         this->_physics_component_manager.update();
         this->_graphics_component_manager.update();
     }
+
+    // FIX: Segfault on exit
 
     this->_entity_container->destroy_all_entities();
     this->_texture_container.unload_all_textures();

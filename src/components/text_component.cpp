@@ -23,6 +23,10 @@ TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
 }
 
 TextComponent::~TextComponent() {
+    if (this->get_id() == -1LL) {
+        return;
+    }
+
     if (IsImageValid(this->_text_image)) {
         UnloadImage(this->_text_image);
     }

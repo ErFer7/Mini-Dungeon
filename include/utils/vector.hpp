@@ -22,9 +22,23 @@ struct Vector2D {
 
     Vector2D(T x, T y) : x(x), y(y) {}
 
-    Vector2D(const Vector2D &other) : x(other.x), y(other.y) {}
+    Vector2D(const Vector2D &other) {
+        if (this == &other) {
+            return;
+        }
 
-    Vector2D(Vector2 &&other) noexcept : x(std::move(other.x)), y(std::move(other.y)) {}
+        x = other.x;
+        y = other.y;
+    }
+
+    Vector2D(Vector2 &&other) noexcept {
+        if (this == &other) {
+            return;
+        }
+
+        x = std::move(other.x);
+        y = std::move(other.y);
+    }
 
     explicit Vector2D(T value) : x(value), y(value) {}
 
@@ -51,18 +65,24 @@ struct Vector2D {
     }
 
     Vector2D &operator=(const Vector2D &other) {
-        if (this != &other) {
-            x = other.x;
-            y = other.y;
+        if (this == &other) {
+            return *this;
         }
+
+        x = other.x;
+        y = other.y;
+
         return *this;
     }
 
     Vector2D &operator=(Vector2D &&other) noexcept {
-        if (this != &other) {
-            x = std::move(other.x);
-            y = std::move(other.y);
+        if (this == &other) {
+            return *this;
         }
+
+        x = std::move(other.x);
+        y = std::move(other.y);
+
         return *this;
     }
 

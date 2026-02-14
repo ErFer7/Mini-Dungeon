@@ -24,12 +24,18 @@ class UITransformComponent final : public Component {
    public:
     UITransformComponent(Entity *entity, const UITransformComponentArgs &args);
 
-    UITransformComponent(UITransformComponent &&other) noexcept = default;
+    UITransformComponent(UITransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override = default;
 
-    UITransformComponent &operator=(UITransformComponent &&other) noexcept = default;
+    UITransformComponent &operator=(UITransformComponent &&other) {
+        Component::operator=(std::move(other));
+
+        this->_move(std::move(other));
+
+        return *this;
+    }
 
     Vector2Df get_position() const;
 
@@ -55,6 +61,19 @@ class UITransformComponent final : public Component {
     void scale(Vector2Df scale);
 
    private:
+    void _move(UITransformComponent &&other) {
+        if (this == &other) {
+            return;
+        }
+
+        this->_ui_origin = std::move(other._ui_origin);
+        this->_parent_ui_transform = std::move(other._parent_ui_transform);
+        this->_parent_transform_component = std::move(other._parent_transform_component);
+        this->_parent_graphics_component = std::move(other._parent_graphics_component);
+        this->_transform_component = std::move(other._transform_component);
+        this->_graphics_component = std::move(other._graphics_component);
+    }
+
     Vector2Df _get_origin() const;
 
     // The point in the UI entity that is considered to be the "center" or the origin

@@ -15,7 +15,7 @@ class PhysicsComponentManager : public Manager {
 
     ~PhysicsComponentManager() override = default;
 
-    void init() override {};
+    void init() override;
     void update() override;
     void exit() override {};
 
