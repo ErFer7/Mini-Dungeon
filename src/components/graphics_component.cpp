@@ -14,7 +14,7 @@ GraphicsComponent::GraphicsComponent(Entity *entity, const GraphicsComponentArgs
       _texture_scale(args.texture_scale),
       _color(args.color),
       _layer(args.layer) {
-    utils::log_trace(this, __FUNCTION__, entity);
+    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
     this->_transform_update_listener

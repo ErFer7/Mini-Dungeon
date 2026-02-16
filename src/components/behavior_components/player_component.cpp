@@ -8,7 +8,7 @@
 #include "entities/entity.hpp"
 
 PlayerComponent::PlayerComponent(Entity *entity) : BehaviorComponent(entity) {
-    utils::log_trace(this, __FUNCTION__, entity);
+    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
 
     this->_physics_component = entity->get_component<PhysicsComponent>();
 }

@@ -36,8 +36,15 @@ class GameCore {
                                bool resizable = false,
                                bool fullscreen = false,
                                bool show_fps = false) {
-        utils::log_trace(
-            nullptr, __FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
+        utils::log_trace(nullptr,
+                         __PRETTY_FUNCTION__,
+                         screen_width,
+                         screen_height,
+                         title,
+                         target_fps,
+                         resizable,
+                         fullscreen,
+                         show_fps);
         _instance = new GameCore(screen_height, screen_height, title, target_fps, resizable, fullscreen, show_fps);
     }
 

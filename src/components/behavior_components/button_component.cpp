@@ -7,7 +7,7 @@
 #include "entities/entity.hpp"
 
 ButtonComponent::ButtonComponent(Entity *entity) : BehaviorComponent(entity) {
-    utils::log_info(__FUNCTION__, '(', entity, ')');
+    utils::log_info(__PRETTY_FUNCTION__, '(', entity, ')');
 
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 

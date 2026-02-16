@@ -15,7 +15,7 @@ class ButtonComponent : public BehaviorComponent {
 
     ButtonComponent(ButtonComponent &&other) : BehaviorComponent(std::move(other)) { this->_move(std::move(other)); }
 
-    ~ButtonComponent() override { utils::log_trace(this, __FUNCTION__); }
+    ~ButtonComponent() override { utils::log_trace(this, __PRETTY_FUNCTION__); }
 
     ButtonComponent &operator=(ButtonComponent &&other) {
         BehaviorComponent::operator=(std::move(other));

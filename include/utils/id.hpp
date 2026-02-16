@@ -25,7 +25,7 @@ class IdReferences : public Uncopiable {
 
    private:
     void _set_pointer(Id id, void *pointer) {
-        log_trace(this, __FUNCTION__, id, pointer);
+        log_trace(this, __PRETTY_FUNCTION__, id, pointer);
 
         this->_id_reference_map->insert_or_assign(id, pointer);
     }
@@ -61,7 +61,7 @@ class Identified : public Uncopiable {
 
    private:
     void _move(Identified &&other) {
-        log_trace(this, __FUNCTION__, &other);
+        log_trace(this, __PRETTY_FUNCTION__, &other);
 
         if (this != &other) {
             this->_id = other._id;
@@ -129,6 +129,7 @@ class Handle<void> {
     template <typename OtherType>
     Handle(const Handle<OtherType> &other) : _id(other._id) {}
 
+    // TODO: This could mislead the comparison between what is null (ID !-> 0) or what is valid (Id != -1)
     inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
 
     inline void *get_pointer() const { return HandlHelper::_get_pointer(this->_id); }

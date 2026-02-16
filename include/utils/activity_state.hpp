@@ -22,7 +22,7 @@ class ActivityState : public Identified {
           _is_self_active(true),
           _is_parent_active(true),
           utils::Identified(this) {
-        log_trace(this, __FUNCTION__);
+        log_trace(this, __PRETTY_FUNCTION__);
 
         if (!parent_activity_state.is_null()) {
             this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
@@ -33,7 +33,7 @@ class ActivityState : public Identified {
 
     ActivityState(ActivityState &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
-    ~ActivityState() override { log_trace(this, __FUNCTION__); }
+    ~ActivityState() override { log_trace(this, __PRETTY_FUNCTION__); }
 
     ActivityState &operator=(ActivityState &&other) noexcept {
         utils::Identified::operator=(std::move(other));

@@ -11,7 +11,7 @@ UITransformComponent::UITransformComponent(Entity *entity, const UITransformComp
       _parent_ui_transform(args.parent_ui_transform),
       _parent_transform_component(),
       _parent_graphics_component() {
-    utils::log_trace(this, __FUNCTION__, entity);
+    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
 
     if (!this->_parent_ui_transform.is_null()) {
         Entity *parent = this->_parent_ui_transform->get_entity();

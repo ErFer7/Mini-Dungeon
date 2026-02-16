@@ -23,7 +23,7 @@ class Event : public Identified {
         typedef std::vector<Handle<Event<Args...>>> EventVector;
 
         Listener() : Identified(this) {
-            log_trace(this, __FUNCTION__);
+            log_trace(this, __PRETTY_FUNCTION__);
 
             this->_events = std::make_unique<EventVector>();
         };
@@ -31,7 +31,7 @@ class Event : public Identified {
         Listener(Listener &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
         ~Listener() {
-            log_trace(this, __FUNCTION__);
+            log_trace(this, __PRETTY_FUNCTION__);
 
             if (this->_events == nullptr) {
                 return;
@@ -76,7 +76,7 @@ class Event : public Identified {
         }
 
         void unsubscribe_all() {
-            log_trace(this, __FUNCTION__);
+            log_trace(this, __PRETTY_FUNCTION__);
 
             for (auto &event : *this->_events) {
                 event->_remove_listener(Handle<Listener>(this->get_id()));
@@ -87,7 +87,7 @@ class Event : public Identified {
 
        private:
         inline void _move(Listener &&other) {
-            log_trace(this, __FUNCTION__, &other);
+            log_trace(this, __PRETTY_FUNCTION__, &other);
 
             if (this != &other) {
                 this->update_reference(this);
@@ -114,7 +114,7 @@ class Event : public Identified {
 
    public:
     Event() : Identified(this) {
-        log_trace(this, __FUNCTION__);
+        log_trace(this, __PRETTY_FUNCTION__);
 
         this->_listeners = std::make_unique<ListenerVector>();
     }
@@ -125,7 +125,7 @@ class Event : public Identified {
     Event(Event &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~Event() {
-        log_trace(this, __FUNCTION__);
+        log_trace(this, __PRETTY_FUNCTION__);
 
         if (this->_listeners == nullptr) {
             return;
@@ -147,7 +147,7 @@ class Event : public Identified {
     }
 
     inline void invoke(Args... args) {
-        log_trace(this, __FUNCTION__, std::forward<Args>(args)...);
+        log_trace(this, __PRETTY_FUNCTION__, std::forward<Args>(args)...);
 
         for (const auto &listener : *this->_listeners) {
             log_info("Calling on listener ", listener);
@@ -159,17 +159,17 @@ class Event : public Identified {
 
    private:
     inline void _add_listener(Handle<Listener> listener) {
-        log_trace(this, __FUNCTION__, listener);
+        log_trace(this, __PRETTY_FUNCTION__, listener);
         this->_listeners->push_back(listener);
     }
 
     inline void _remove_listener(Handle<Listener> listener) {
-        log_trace(this, __FUNCTION__, listener);
+        log_trace(this, __PRETTY_FUNCTION__, listener);
         _listeners->erase(std::remove(_listeners->begin(), _listeners->end(), listener), _listeners->end());
     }
 
     inline void _move(Event &&other) {
-        log_trace(this, __FUNCTION__, &other);
+        log_trace(this, __PRETTY_FUNCTION__, &other);
 
         if (this != &other) {
             this->update_reference(this);
