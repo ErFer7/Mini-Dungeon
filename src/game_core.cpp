@@ -49,8 +49,6 @@ void GameCore::init_main_loop() {
         this->_graphics_component_manager.update();
     }
 
-    // FIX: Segfault on exit
-
     this->_entity_container->destroy_all_entities();
     this->_texture_container.unload_all_textures();
     this->_image_container.unload_all_images();

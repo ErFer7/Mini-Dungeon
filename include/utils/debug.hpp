@@ -13,12 +13,12 @@ void log(Args &&...args) {
 }
 
 template <typename... Args>
-void log_info(Args... args) {
+void log_info(void *object_address, Args... args) {
     if constexpr (!(DEBUGGED && DEBUG_INFO)) {
         return;
     }
 
-    log("[INFO ]: ", std::forward<Args>(args)...);
+    log("[INFO ]: [", object_address, "] ", std::forward<Args>(args)...);
 }
 
 template <typename... Args>
@@ -32,20 +32,20 @@ void log_trace(void *object_address, std::string function, Args... args) {
 }
 
 template <typename... Args>
-void log_warn(Args... args) {
+void log_warn(void *object_address, Args... args) {
     if constexpr (!(DEBUGGED && DEBUG_WARN)) {
         return;
     }
 
-    log("[WARN ]: ", std::forward<Args>(args)...);
+    log("[WARN ]: [", object_address, "] ", std::forward<Args>(args)...);
 }
 
 template <typename... Args>
-void log_error(Args... args) {
+void log_error(void *object_address, Args... args) {
     if constexpr (!(DEBUGGED && DEBUG_ERROR)) {
         return;
     }
 
-    log("[ERROR]: ", std::forward<Args>(args)...);
+    log("[ERROR]: [", object_address, "] ", std::forward<Args>(args)...);
 }
 }  // namespace utils

@@ -3,12 +3,6 @@
 #include "event.hpp"
 #include "utils/id.hpp"
 
-using std::make_unique;
-using std::move;
-using std::remove;
-using std::unique_ptr;
-using std::vector;
-
 namespace utils {
 
 class ActivityState : public Identified {
@@ -72,15 +66,17 @@ class ActivityState : public Identified {
 
    private:
     void _move(ActivityState &&other) {
-        if (this != &other) {
-            this->update_reference(this);
-
-            this->_is_active = other._is_active;
-            this->_is_self_active = other._is_self_active;
-            this->_is_parent_active = other._is_parent_active;
-            this->_on_update_event = std::move(other._on_update_event);
-            this->_parent_update_listener = std::move(other._parent_update_listener);
+        if (this == &other) {
+            return;
         }
+
+        this->update_reference(this);
+
+        this->_is_active = std::move(other._is_active);
+        this->_is_self_active = std::move(other._is_self_active);
+        this->_is_parent_active = std::move(other._is_parent_active);
+        this->_on_update_event = std::move(other._on_update_event);
+        this->_parent_update_listener = std::move(other._parent_update_listener);
     }
 
     void _update_parent_activity(bool is_parent_active) {

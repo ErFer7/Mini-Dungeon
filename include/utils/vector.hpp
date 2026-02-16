@@ -9,8 +9,6 @@
 
 #include "definitions.hpp"
 
-using std::string;
-
 namespace utils {
 
 template <typename T>
@@ -57,7 +55,7 @@ struct Vector2D {
 
     operator Vector2() const { return Vector2{static_cast<float>(x), static_cast<float>(y)}; }
 
-    operator string() const {
+    operator std::string() const {
         std::ostringstream string;
         string << '{' << x << ", " << y << '}';
 

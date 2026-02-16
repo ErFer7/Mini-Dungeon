@@ -6,8 +6,6 @@
 #include "scenes/gameplay_scene.hpp"
 #include "scenes/menu_scene.hpp"
 
-using std::unique_ptr;
-
 class GameManager : public Manager {
    public:
     GameManager() {};
@@ -29,7 +27,7 @@ class GameManager : public Manager {
     void _transition(Scene *next_scene);
 
    private:
-    unique_ptr<MenuScene> _menu_scene;
-    unique_ptr<GameplayScene> _gameplay_scene;
+    std::unique_ptr<MenuScene> _menu_scene;
+    std::unique_ptr<GameplayScene> _gameplay_scene;
     Scene *_current_scene;
 };

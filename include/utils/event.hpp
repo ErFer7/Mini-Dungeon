@@ -41,7 +41,7 @@ class Event : public Identified {
         };
 
         inline Listener &operator=(Listener &&other) {
-            utils::Identified::operator=(std::move(other));
+            Identified::operator=(std::move(other));
 
             this->_move(std::move(other));
 
@@ -89,13 +89,15 @@ class Event : public Identified {
         inline void _move(Listener &&other) {
             log_trace(this, __PRETTY_FUNCTION__, &other);
 
-            if (this != &other) {
-                this->update_reference(this);
-
-                this->_handle = std::move(other._handle);
-                this->_invoker = std::move(other._invoker);
-                this->_events = std::move(other._events);
+            if (this == &other) {
+                return;
             }
+
+            this->update_reference(this);
+
+            this->_handle = std::move(other._handle);
+            this->_invoker = std::move(other._invoker);
+            this->_events = std::move(other._events);
         }
 
         inline void _call(Args... args) {
@@ -139,7 +141,7 @@ class Event : public Identified {
     inline Event &operator=(const Event &other) noexcept = delete;
 
     inline Event &operator=(Event &&other) {
-        utils::Identified::operator=(std::move(other));
+        Identified::operator=(std::move(other));
 
         this->_move(std::move(other));
 
@@ -150,7 +152,7 @@ class Event : public Identified {
         log_trace(this, __PRETTY_FUNCTION__, std::forward<Args>(args)...);
 
         for (const auto &listener : *this->_listeners) {
-            log_info("Calling on listener ", listener);
+            log_info(this, "Event: Calling on listener ", listener);
             listener->_call(args...);
         }
     }
@@ -171,11 +173,13 @@ class Event : public Identified {
     inline void _move(Event &&other) {
         log_trace(this, __PRETTY_FUNCTION__, &other);
 
-        if (this != &other) {
-            this->update_reference(this);
-
-            this->_listeners = std::move(other._listeners);
+        if (this == &other) {
+            return;
         }
+
+        this->update_reference(this);
+
+        this->_listeners = std::move(other._listeners);
     }
 
    private:

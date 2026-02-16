@@ -33,8 +33,8 @@ void PhysicsComponentManager::update() {
                 continue;
             }
 
-            utils::Handle<ColliderComponent> collider_component_i = it_i->get_collider_component();
-            utils::Handle<ColliderComponent> collider_component_j = it_j->get_collider_component();
+            Handle<ColliderComponent> collider_component_i = it_i->get_collider_component();
+            Handle<ColliderComponent> collider_component_j = it_j->get_collider_component();
         }
     }
 }

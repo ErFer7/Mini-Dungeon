@@ -11,11 +11,7 @@
 #include "managers/manager.hpp"
 #include "utils/id.hpp"
 
-using std::make_unique;
-using std::move;
-using std::string;
-using std::unique_ptr;
-using std::vector;
+using utils::Handle;
 
 // TODO: Quad tree
 
@@ -25,9 +21,10 @@ enum class SortingMode { NONE, TOP_TO_DOWN, ISOMETRIC };
 // TODO: Move this to a separate file
 class Space {
    public:
-    Space() : _sorting_mode(SortingMode::NONE) {
-        this->_components = make_unique<vector<utils::Handle<GraphicsComponent>>>();
-    }
+    typedef std::vector<Handle<GraphicsComponent>> GraphicsComponentVector;
+
+   public:
+    Space() : _sorting_mode(SortingMode::NONE) { this->_components = std::make_unique<GraphicsComponentVector>(); }
 
     // TODO: Check if this is necessary
     Space(const Space &other) { this->_copy(other); }
@@ -55,9 +52,9 @@ class Space {
 
     inline void set_sorting_mode(SortingMode sorting_mode) { this->_sorting_mode = sorting_mode; }
 
-    void add_component(utils::Handle<GraphicsComponent> component);
+    void add_component(Handle<GraphicsComponent> component);
 
-    void remove_component(utils::Handle<GraphicsComponent> component);
+    void remove_component(Handle<GraphicsComponent> component);
 
     void sort();
 
@@ -73,12 +70,12 @@ class Space {
     // TODO: Check if this is necessary
     inline void _copy(const Space &other) {
         this->_components.reset();
-        this->_components = std::make_unique<vector<utils::Handle<GraphicsComponent>>>(*other._components);
+        this->_components = std::make_unique<GraphicsComponentVector>(*other._components);
     }
 
    private:
     SortingMode _sorting_mode;
-    unique_ptr<vector<utils::Handle<GraphicsComponent>>> _components;
+    std::unique_ptr<GraphicsComponentVector> _components;
 };
 
 class GraphicsComponentManager : public Manager {
@@ -107,7 +104,7 @@ class GraphicsComponentManager : public Manager {
 
     inline int get_screen_height() const { return this->_screen_height; }
 
-    inline string get_title() const { return this->_title; }
+    inline std::string get_title() const { return this->_title; }
 
     inline bool is_resizable() const { return this->_resizable; }
 
@@ -131,15 +128,15 @@ class GraphicsComponentManager : public Manager {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
 
-    void register_component_on_space(utils::Handle<GraphicsComponent> graphics_component);
+    void register_component_on_space(Handle<GraphicsComponent> graphics_component);
 
-    void unregister_component_on_space(utils::Handle<GraphicsComponent> graphics_component);
+    void unregister_component_on_space(Handle<GraphicsComponent> graphics_component);
 
    private:
     // TODO: Implement set methods for all of these
     int _screen_width;
     int _screen_height;
-    string _title;
+    std::string _title;
     bool _resizable;
     bool _fullscreen;
     bool _show_fps;

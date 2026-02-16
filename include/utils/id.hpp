@@ -55,18 +55,23 @@ class Identified : public Uncopiable {
 
     Id get_id() const { return _id; }
 
-    // TODO: Add make_handle
-
     void update_reference(void *pointer);
+
+    template <typename Type>
+    Handle<Type> make_handle() {
+        return Handle<Type>(this->_id);
+    }
 
    private:
     void _move(Identified &&other) {
         log_trace(this, __PRETTY_FUNCTION__, &other);
 
-        if (this != &other) {
-            this->_id = other._id;
-            other._id = -1LL;
+        if (this == &other) {
+            return;
         }
+
+        this->_id = std::move(other._id);
+        other._id = -1LL;
     }
 
    private:
@@ -74,7 +79,7 @@ class Identified : public Uncopiable {
     Id _id;
 };
 
-class HandlHelper {
+class HandleHelper {
     template <typename Type>
     friend class Handle;
 
@@ -108,9 +113,9 @@ class Handle {
 
     inline bool operator==(Handle<Type> &other) const { return this->_id == other._id; }
 
-    inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
+    inline bool is_null() const { return this->_id < 0 || HandleHelper::_get_pointer(this->_id) == nullptr; }
 
-    inline Type *get_pointer() const { return static_cast<Type *>(HandlHelper::_get_pointer(this->_id)); }
+    inline Type *get_pointer() const { return static_cast<Type *>(HandleHelper::_get_pointer(this->_id)); }
 
    private:
     Id _id;
@@ -130,9 +135,9 @@ class Handle<void> {
     Handle(const Handle<OtherType> &other) : _id(other._id) {}
 
     // TODO: This could mislead the comparison between what is null (ID !-> 0) or what is valid (Id != -1)
-    inline bool is_null() const { return this->_id < 0 || HandlHelper::_get_pointer(this->_id) == nullptr; }
+    inline bool is_null() const { return this->_id < 0 || HandleHelper::_get_pointer(this->_id) == nullptr; }
 
-    inline void *get_pointer() const { return HandlHelper::_get_pointer(this->_id); }
+    inline void *get_pointer() const { return HandleHelper::_get_pointer(this->_id); }
 
     inline Id get_id() const { return _id; }
 

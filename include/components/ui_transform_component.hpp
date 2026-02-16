@@ -7,13 +7,14 @@
 #include "components/transform_component.hpp"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
 
 struct UITransformComponentArgs {
     UIOrigin ui_origin;
-    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
+    Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);
@@ -22,7 +23,7 @@ struct UITransformComponentArgs {
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent final : public Component {
    public:
-    UITransformComponent(Entity *entity, const UITransformComponentArgs &args);
+    UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args);
 
     UITransformComponent(UITransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -83,9 +84,9 @@ class UITransformComponent final : public Component {
 
    private:
     UIOrigin _ui_origin;
-    utils::Handle<UITransformComponent> _parent_ui_transform;
-    utils::Handle<TransformComponent> _parent_transform_component;
-    utils::Handle<GraphicsComponent> _parent_graphics_component;
-    utils::Handle<TransformComponent> _transform_component;
-    utils::Handle<GraphicsComponent> _graphics_component;
+    Handle<UITransformComponent> _parent_ui_transform;
+    Handle<TransformComponent> _parent_transform_component;
+    Handle<GraphicsComponent> _parent_graphics_component;
+    Handle<TransformComponent> _transform_component;
+    Handle<GraphicsComponent> _graphics_component;
 };

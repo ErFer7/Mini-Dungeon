@@ -5,16 +5,16 @@
 #include "entities/entity.hpp"
 #include "utils/vector.hpp"
 
-UITransformComponent::UITransformComponent(Entity *entity, const UITransformComponentArgs &args)
+UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args)
     : Component(entity),
       _ui_origin(args.ui_origin),
       _parent_ui_transform(args.parent_ui_transform),
       _parent_transform_component(),
       _parent_graphics_component() {
-    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
+    log_trace(this, __PRETTY_FUNCTION__, entity);
 
     if (!this->_parent_ui_transform.is_null()) {
-        Entity *parent = this->_parent_ui_transform->get_entity();
+        Handle<Entity> parent = this->_parent_ui_transform->get_entity();
         this->_parent_transform_component = parent->get_component<TransformComponent>();
         this->_parent_graphics_component = parent->get_component<GraphicsComponent>();
     }

@@ -5,17 +5,21 @@
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
 
+using utils::Event;
+using utils::Handle;
+using utils::log_trace;
+
 class ButtonComponent : public BehaviorComponent {
    public:
-    typedef utils::Event<> ButtonClickEvent;
+    typedef Event<> ButtonClickEvent;
     typedef ButtonClickEvent::Listener ButtonClickListener;
 
    public:
-    ButtonComponent(Entity *entity);
+    ButtonComponent(Handle<Entity> entity);
 
     ButtonComponent(ButtonComponent &&other) : BehaviorComponent(std::move(other)) { this->_move(std::move(other)); }
 
-    ~ButtonComponent() override { utils::log_trace(this, __PRETTY_FUNCTION__); }
+    ~ButtonComponent() override { log_trace(this, __PRETTY_FUNCTION__); }
 
     ButtonComponent &operator=(ButtonComponent &&other) {
         BehaviorComponent::operator=(std::move(other));
@@ -25,8 +29,8 @@ class ButtonComponent : public BehaviorComponent {
         return *this;
     }
 
-    inline utils::Handle<ButtonClickEvent> get_on_click_event() {
-        return utils::Handle<ButtonClickEvent>(this->_on_click_event.get_id());
+    inline Handle<ButtonClickEvent> get_on_click_event() {
+        return Handle<ButtonClickEvent>(this->_on_click_event.get_id());
     }
 
     inline void start() override {}
@@ -35,6 +39,8 @@ class ButtonComponent : public BehaviorComponent {
 
    private:
     void _move(ButtonComponent &&other) {
+        log_trace(this, __PRETTY_FUNCTION__, &other);
+
         if (this == &other) {
             return;
         }
@@ -45,5 +51,5 @@ class ButtonComponent : public BehaviorComponent {
 
    private:
     ButtonClickEvent _on_click_event;
-    utils::Handle<GraphicsComponent> _graphics_component;
+    Handle<GraphicsComponent> _graphics_component;
 };

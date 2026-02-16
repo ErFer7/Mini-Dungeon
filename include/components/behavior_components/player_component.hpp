@@ -4,9 +4,11 @@
 #include "components/physics_component.hpp"
 #include "types.hpp"
 
+using utils::Handle;
+
 class PlayerComponent : public BehaviorComponent {
    public:
-    PlayerComponent(Entity *entity);
+    PlayerComponent(Handle<Entity> entity);
 
     PlayerComponent(PlayerComponent &&other) : BehaviorComponent(std::move(other)) { this->_move(std::move(other)); }
 
@@ -34,5 +36,5 @@ class PlayerComponent : public BehaviorComponent {
     }
 
    private:
-    utils::Handle<PhysicsComponent> _physics_component;
+    Handle<PhysicsComponent> _physics_component;
 };

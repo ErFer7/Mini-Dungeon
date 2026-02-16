@@ -10,10 +10,9 @@
 #include "game_core.hpp"
 #include "utils/id.hpp"
 
-using std::make_unique;
-using std::type_info;
-
-Entity::Entity() : utils::Identified(static_cast<void *>(this)) { this->_components = make_unique<ComponentsVector>(); }
+Entity::Entity() : utils::Identified(static_cast<void *>(this)) {
+    this->_components = std::make_unique<ComponentsVector>();
+}
 
 Entity::~Entity() { this->destroy_all_components(); }
 
@@ -49,7 +48,7 @@ inline bool Entity::has_component() const {
     return false;
 }
 
-utils::Handle<Component> Entity::_get_component(const type_info &type_info) const {
+utils::Handle<Component> Entity::_get_component(const std::type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
             return component;

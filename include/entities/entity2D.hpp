@@ -5,6 +5,7 @@
 #include "managers/graphics_component_manager.hpp"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct Entity2DArgs {
@@ -30,11 +31,11 @@ class Entity2D : public Entity {
 
     ~Entity2D() override = default;
 
-    inline utils::Handle<TransformComponent> get_transform_component() { return this->_transform_component; }
+    inline Handle<TransformComponent> get_transform_component() { return this->_transform_component; }
 
-    inline utils::Handle<GraphicsComponent> get_graphics_component() { return this->_graphics_component; }
+    inline Handle<GraphicsComponent> get_graphics_component() { return this->_graphics_component; }
 
    private:
-    utils::Handle<TransformComponent> _transform_component;
-    utils::Handle<GraphicsComponent> _graphics_component;
+    Handle<TransformComponent> _transform_component;
+    Handle<GraphicsComponent> _graphics_component;
 };

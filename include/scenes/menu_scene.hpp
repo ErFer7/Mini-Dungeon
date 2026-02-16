@@ -4,6 +4,8 @@
 #include "scene.hpp"
 #include "utils/id.hpp"
 
+using utils::Handle;
+
 class MenuScene : public Scene {
    public:
     MenuScene() = default;
@@ -27,11 +29,11 @@ class MenuScene : public Scene {
     void _exit();
 
    private:
-    utils::Handle<Background> _background;
-    utils::Handle<Text> _title;
-    utils::Handle<Text> _version;
-    utils::Handle<TextButton> _play_button;
-    utils::Handle<TextButton> _exit_button;
+    Handle<Background> _background;
+    Handle<Text> _title;
+    Handle<Text> _version;
+    Handle<TextButton> _play_button;
+    Handle<TextButton> _exit_button;
     Texture2D _button_texture;
     ButtonComponent::ButtonClickListener _play_listener;
     ButtonComponent::ButtonClickListener _exit_listener;

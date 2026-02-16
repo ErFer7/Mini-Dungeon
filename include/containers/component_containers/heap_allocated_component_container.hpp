@@ -4,6 +4,10 @@
 
 #include "components/component.hpp"
 #include "containers/vector_container.hpp"
+#include "utils/id.hpp"
+
+using utils::Handle;
+using utils::Identified;
 
 class HeapAllocatedComponentContainer : public VectorContainer<std::unique_ptr<Component>> {
    public:
@@ -13,10 +17,9 @@ class HeapAllocatedComponentContainer : public VectorContainer<std::unique_ptr<C
 
    protected:
     template <typename ComponentType, typename... Args>
-    utils::Handle<ComponentType> create_component(Entity *entity, Args &&...args) {
+    Handle<ComponentType> create_component(Handle<Entity> entity, Args &&...args) {
         std::unique_ptr<ComponentType> component = std::make_unique<ComponentType>(entity, std::forward<Args>(args)...);
-        utils::Id component_id = static_cast<utils::Identified *>(component.get())->get_id();
-        utils::Handle<ComponentType> handle = utils::Handle<ComponentType>(component_id);
+        Handle<ComponentType> handle = static_cast<Identified *>(component.get())->make_handle<ComponentType>();
 
         this->push_back(std::move(component));
 

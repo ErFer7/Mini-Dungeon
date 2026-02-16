@@ -8,11 +8,11 @@
 #include "components/ui_transform_component.hpp"
 #include "entities/user_interface/ui_entity.hpp"
 
-using std::string;
+using utils::Handle;
 using utils::Vector2Df;
 
 struct TextArgs {
-    string content;
+    std::string content;
     Font font;
     UIOrigin ui_origin;
     int font_size = 0;
@@ -21,9 +21,9 @@ struct TextArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
+    Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
     float spacing = 1.0f;
-    utils::Handle<ActivityState> parent_activity_state = utils::Handle<ActivityState>();
+    Handle<ActivityState> parent_activity_state = Handle<ActivityState>();
     float texture_scale = 1.0f;
 
     operator UIEntityArgs() const {
@@ -48,8 +48,8 @@ class Text : public UIEntity {
 
     ~Text() override = default;
 
-    inline utils::Handle<TextComponent> get_text_component() { return this->_text_component; }
+    inline Handle<TextComponent> get_text_component() { return this->_text_component; }
 
    private:
-    utils::Handle<TextComponent> _text_component;
+    Handle<TextComponent> _text_component;
 };

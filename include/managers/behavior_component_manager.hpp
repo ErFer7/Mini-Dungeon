@@ -1,21 +1,14 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "components/behavior_components/behavior_component.hpp"
 #include "containers/component_containers/heap_allocated_component_container.hpp"
 #include "managers/manager.hpp"
-
-using std::make_unique;
-using std::unique_ptr;
-using std::vector;
 
 class BehaviorComponentManager : public Manager {
     friend class BehaviorComponent;
 
    public:
-    typedef vector<unique_ptr<BehaviorComponent>> BehaviorComponentVector;
+    typedef std::vector<std::unique_ptr<BehaviorComponent>> BehaviorComponentVector;
 
    public:
     BehaviorComponentManager() = default;

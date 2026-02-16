@@ -7,6 +7,9 @@
 #include "entities/entity.hpp"
 #include "types.hpp"
 
+using utils::Handle;
+using utils::Identified;
+
 class EntityContainer : public VectorContainer<std::unique_ptr<Entity>> {
    public:
     EntityContainer() : VectorContainer<std::unique_ptr<Entity>>() {}
@@ -14,13 +17,11 @@ class EntityContainer : public VectorContainer<std::unique_ptr<Entity>> {
     ~EntityContainer() override = default;
 
     template <typename EntityType, typename... Args>
-    utils::Handle<EntityType> create_entity(Args &&...args) {
-        std::unique_ptr<EntityType> entity_unique_ptr = std::make_unique<EntityType>(std::forward<Args>(args)...);
-        EntityType *entity = entity_unique_ptr.get();
-        utils::Handle<EntityType> handle =
-            utils::Handle<EntityType>(static_cast<utils::Identified *>(entity)->get_id());
+    Handle<EntityType> create_entity(Args &&...args) {
+        std::unique_ptr<EntityType> entity = std::make_unique<EntityType>(std::forward<Args>(args)...);
+        Handle<EntityType> handle = static_cast<Identified *>(entity.get())->make_handle<EntityType>();
 
-        this->push_back(std::move(entity_unique_ptr));
+        this->push_back(std::move(entity));
 
         return handle;
     }

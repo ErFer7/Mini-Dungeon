@@ -7,6 +7,8 @@
 #include "containers/container.hpp"
 #include "utils/id.hpp"
 
+using utils::Id;
+
 template <typename Object>
     requires IdentifiedCompatible<Object>
 class VectorContainer : public Container<std::vector<Object>, unsigned int, Object> {
@@ -38,7 +40,7 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
     }
 
     void remove(const Object &object) override {
-        utils::Id target_id;
+        Id target_id;
 
         if constexpr (IsUniquePtr<Object>::value) {
             target_id = object->get_id();

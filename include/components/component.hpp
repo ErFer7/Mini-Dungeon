@@ -8,25 +8,26 @@
 #include "utils/event.hpp"
 #include "utils/id.hpp"
 
-using std::forward;
 using utils::ActivityState;
 using utils::Event;
+using utils::Handle;
+using utils::Identified;
 using utils::log_info;
 
-class Component : public utils::Identified {
+class Component : public Identified {
     friend class Entity;
 
    public:
-    typedef Event<utils::Handle<Component>> OnDestroyEvent;
+    typedef Event<Handle<Component>> OnDestroyEvent;
     typedef OnDestroyEvent::Listener OnDestroyListener;
 
    public:
-    Component(Entity *entity);
+    Component(Handle<Entity> entity);
 
-    Component(Component &&other) : utils::Identified(std::move(other)) { this->_move(std::move(other)); };
+    Component(Component &&other) : Identified(std::move(other)) { this->_move(std::move(other)); };
 
     Component &operator=(Component &&other) noexcept {
-        utils::Identified::operator=(std::move(other));
+        Identified::operator=(std::move(other));
 
         this->_move(std::move(other));
 
@@ -35,13 +36,13 @@ class Component : public utils::Identified {
 
     ~Component() override = default;
 
-    inline Entity *get_entity() const { return this->_entity; }
+    inline Handle<Entity> get_entity() const { return this->_entity; }
 
-    inline utils::Handle<Event<utils::Handle<Component>>> get_on_destroy_event() {
-        return utils::Handle<Event<utils::Handle<Component>>>(this->_on_destroy_event.get_id());
+    inline Handle<Event<Handle<Component>>> get_on_destroy_event() {
+        return this->_on_destroy_event.make_handle<Event<Handle<Component>>>();
     }
 
-    inline ActivityState *get_activity_state() { return &this->_activity_state; }
+    inline Handle<ActivityState> get_activity_state() { return this->_activity_state.make_handle<ActivityState>(); }
 
     inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
 
@@ -49,17 +50,19 @@ class Component : public utils::Identified {
 
    private:
     void _move(Component &&other) {
-        if (this != &other) {
-            this->update_reference(this);
-
-            this->_entity = other.get_entity();
-            this->_on_destroy_event = std::move(other._on_destroy_event);
-            this->_activity_state = std::move(other._activity_state);
+        if (this == &other) {
+            return;
         }
+
+        this->update_reference(this);
+
+        this->_entity = std::move(other._entity);
+        this->_on_destroy_event = std::move(other._on_destroy_event);
+        this->_activity_state = std::move(other._activity_state);
     }
 
    private:
-    Entity *_entity;
+    Handle<Entity> _entity;
     OnDestroyEvent _on_destroy_event;
     ActivityState _activity_state;
 };

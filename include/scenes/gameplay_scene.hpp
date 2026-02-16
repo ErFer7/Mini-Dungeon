@@ -4,6 +4,8 @@
 #include "types.hpp"
 #include "utils/id.hpp"
 
+using utils::Handle;
+
 class GameplayScene : public Scene {
    public:
     GameplayScene() = default;
@@ -21,6 +23,6 @@ class GameplayScene : public Scene {
     void exit() override {};
 
    private:
-    utils::Handle<Player> _player;
-    utils::Handle<Wall> _wall;
+    Handle<Player> _player;
+    Handle<Wall> _wall;
 };

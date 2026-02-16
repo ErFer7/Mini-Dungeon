@@ -6,6 +6,7 @@
 #include "managers/physics_component_manager.hpp"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct PhysicsComponentArgs {
@@ -19,7 +20,7 @@ class PhysicsComponent final : public Component {
     friend class PhysicsComponentManager;
 
    public:
-    PhysicsComponent(Entity *entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
+    PhysicsComponent(Handle<Entity> entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
     PhysicsComponent(PhysicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -78,7 +79,7 @@ class PhysicsComponent final : public Component {
 
     void update();
 
-    inline void set_collider_component(utils::Handle<ColliderComponent> collider_component) {
+    inline void set_collider_component(Handle<ColliderComponent> collider_component) {
         this->_collider_component = collider_component;
     }
 
@@ -88,10 +89,10 @@ class PhysicsComponent final : public Component {
     }
 
     // Bypass for the PhysicsComponentManager
-    inline utils::Handle<TransformComponent> get_transform_component() const { return this->_transform_component; }
+    inline Handle<TransformComponent> get_transform_component() const { return this->_transform_component; }
 
     // Bypass for the PhysicsComponentManager
-    inline utils::Handle<ColliderComponent> get_collider_component() const { return this->_collider_component; }
+    inline Handle<ColliderComponent> get_collider_component() const { return this->_collider_component; }
 
    private:
     void _move(PhysicsComponent &&other) {

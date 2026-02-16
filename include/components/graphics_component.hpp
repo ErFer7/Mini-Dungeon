@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct GraphicsComponentArgs {
@@ -22,7 +23,7 @@ class GraphicsComponent final : public Component {
     friend class GraphicsComponentManager;
 
    public:
-    GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args);
+    GraphicsComponent(Handle<Entity> entity, const GraphicsComponentArgs &args);
 
     GraphicsComponent(GraphicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -58,21 +59,22 @@ class GraphicsComponent final : public Component {
     inline Vector2Df _get_position() { return this->_transform_component->get_position(); }
 
     void _move(GraphicsComponent &&other) {
-        // TODO: Maybe use std::move for everything? Would this avoid unecessary copies?
-        if (this != &other) {
-            this->_texture = std::move(other._texture);
-            this->_transform_component = std::move(other._transform_component);
-            this->_source_rectangle = std::move(other._source_rectangle);
-            this->_destination_rectangle = std::move(other._destination_rectangle);
-            this->_origin = std::move(other._origin);
-            this->_rotation = other._rotation;
-            this->_texture_scale = other._texture_scale;
-            this->_color = std::move(other._color);
-            this->_rendering_mode = std::move(other._rendering_mode);
-            this->_layer = other._layer;
-            this->_transform_update_listener = std::move(other._transform_update_listener);
-            this->_on_destroy_listener = std::move(other._on_destroy_listener);
+        if (this == &other) {
+            return;
         }
+
+        this->_texture = std::move(other._texture);
+        this->_transform_component = std::move(other._transform_component);
+        this->_source_rectangle = std::move(other._source_rectangle);
+        this->_destination_rectangle = std::move(other._destination_rectangle);
+        this->_origin = std::move(other._origin);
+        this->_rotation = std::move(other._rotation);
+        this->_texture_scale = std::move(other._texture_scale);
+        this->_color = std::move(other._color);
+        this->_rendering_mode = std::move(other._rendering_mode);
+        this->_layer = std::move(other._layer);
+        this->_transform_update_listener = std::move(other._transform_update_listener);
+        this->_on_destroy_listener = std::move(other._on_destroy_listener);
     }
 
     // TODO: Check the way that methods are divided
@@ -84,11 +86,11 @@ class GraphicsComponent final : public Component {
 
     void _unregister_on_space();
 
-    void _unregister_on_space_listener_call(utils::Handle<Component>) { this->_unregister_on_space(); }
+    void _unregister_on_space_listener_call(Handle<Component>) { this->_unregister_on_space(); }
 
    private:
     Texture2D _texture;
-    utils::Handle<TransformComponent> _transform_component;
+    Handle<TransformComponent> _transform_component;
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
     Vector2Df _origin;

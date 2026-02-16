@@ -6,20 +6,20 @@
 #include "definitions.hpp"
 #include "entities/entity.hpp"
 
-ButtonComponent::ButtonComponent(Entity *entity) : BehaviorComponent(entity) {
-    utils::log_info(__PRETTY_FUNCTION__, '(', entity, ')');
+ButtonComponent::ButtonComponent(Handle<Entity> entity) : BehaviorComponent(entity) {
+    log_trace(this, __PRETTY_FUNCTION__, entity);
 
     this->_graphics_component = entity->get_component<GraphicsComponent>();
 
     if (DEBUG_ERROR && this->_graphics_component.is_null()) {
-        log_error("ButtonComponent [", this, "] -> _graphics_component is null");
+        // TODO: Standardize this error and warning prints
+        log_error(this, "ButtonComponent: _graphics_component is null");
     }
 }
 
 void ButtonComponent::update() {
-    // TODO: Create a log_loop_info for this
     if constexpr (DEBUGGED_ON_LOOP) {
-        log_info("ButtonComponent::update()");
+        log_trace(this, __PRETTY_FUNCTION__);
     }
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -27,9 +27,8 @@ void ButtonComponent::update() {
         Rectangle button_rect = this->_graphics_component->get_rectangle();
 
         if (CheckCollisionPointRec(mouse_position, button_rect)) {
-            log_info("ButtonComponent [",
-                     this,
-                     "] -> Button clicked with mouse position on {",
+            log_info(this,
+                     "ButtonComponent: Button clicked with mouse position on {",
                      mouse_position.x,
                      ", ",
                      mouse_position.y,

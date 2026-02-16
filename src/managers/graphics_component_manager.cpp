@@ -2,9 +2,9 @@
 
 #include "components/graphics_component.hpp"
 
-void Space::add_component(utils::Handle<GraphicsComponent> component) { this->_components->push_back(component); }
+void Space::add_component(Handle<GraphicsComponent> component) { this->_components->push_back(component); }
 
-void Space::remove_component(utils::Handle<GraphicsComponent> component) {
+void Space::remove_component(Handle<GraphicsComponent> component) {
     this->_components->erase(std::remove(this->_components->begin(), this->_components->end(), component),
                              this->_components->end());
 }
@@ -14,7 +14,7 @@ void Space::sort() {
         case SortingMode::NONE:
             std::sort(this->_components->begin(),
                       this->_components->end(),
-                      [](utils::Handle<GraphicsComponent> comp_a, utils::Handle<GraphicsComponent> comp_b) -> bool {
+                      [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
                           } else if (comp_b.is_null()) {
@@ -27,7 +27,7 @@ void Space::sort() {
         case SortingMode::TOP_TO_DOWN:
             std::sort(this->_components->begin(),
                       this->_components->end(),
-                      [](utils::Handle<GraphicsComponent> comp_a, utils::Handle<GraphicsComponent> comp_b) -> bool {
+                      [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
                           } else if (comp_b.is_null()) {
@@ -44,7 +44,7 @@ void Space::sort() {
         case SortingMode::ISOMETRIC:
             std::sort(this->_components->begin(),
                       this->_components->end(),
-                      [](utils::Handle<GraphicsComponent> comp_a, utils::Handle<GraphicsComponent> comp_b) -> bool {
+                      [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
                           } else if (comp_b.is_null()) {
@@ -133,7 +133,7 @@ void GraphicsComponentManager::update() {
 
 void GraphicsComponentManager::exit() { CloseWindow(); }
 
-void GraphicsComponentManager::register_component_on_space(utils::Handle<GraphicsComponent> graphics_component) {
+void GraphicsComponentManager::register_component_on_space(Handle<GraphicsComponent> graphics_component) {
     // NOTE: This should be refactored if more rendering modes are added
     if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
         this->_screen_space.add_component(graphics_component);
@@ -142,7 +142,7 @@ void GraphicsComponentManager::register_component_on_space(utils::Handle<Graphic
     }
 }
 
-void GraphicsComponentManager::unregister_component_on_space(utils::Handle<GraphicsComponent> graphics_component) {
+void GraphicsComponentManager::unregister_component_on_space(Handle<GraphicsComponent> graphics_component) {
     // NOTE: This should be refactored if more rendering modes are added
     if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
         this->_screen_space.remove_component(graphics_component);

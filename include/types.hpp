@@ -10,6 +10,8 @@ namespace utils {
 class ActivityState;
 class IdReferences;
 class Identified;
+template <typename Type>
+class Handle;
 
 }  // namespace utils
 

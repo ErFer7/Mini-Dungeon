@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct DynamicPhysicalEntity2DArgs {
@@ -39,8 +40,8 @@ class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
 
     ~DynamicPhysicalEntity2D() override = default;
 
-    inline utils::Handle<PhysicsComponent> get_physics_component() { return this->_physics_component; }
+    inline Handle<PhysicsComponent> get_physics_component() { return this->_physics_component; }
 
    private:
-    utils::Handle<PhysicsComponent> _physics_component;
+    Handle<PhysicsComponent> _physics_component;
 };

@@ -7,8 +7,10 @@
 #include "utils/debug.hpp"
 #include "utils/id.hpp"
 
+using utils::log_warn;
+
 void EntityContainer::destroy_entity(unsigned int index) {
-    utils::log_trace(this, __PRETTY_FUNCTION__, index);
+    log_trace(this, __PRETTY_FUNCTION__, index);
     Entity *entity = this->get_ref(index)->get();
 
     entity->get_on_destroy_event().invoke(utils::Handle<Entity>(static_cast<utils::Identified *>(entity)->get_id()));
@@ -19,7 +21,7 @@ void EntityContainer::destroy_entity(utils::Handle<Entity> entity) {
     utils::log_trace(this, __PRETTY_FUNCTION__, entity);
 
     if (entity.is_null()) {
-        utils::log_warn("Atempt to destroy already destroyed entity");
+        log_warn(this, "EntityContainer: Atempt to destroy already destroyed entity");
         return;
     }
 
@@ -28,11 +30,10 @@ void EntityContainer::destroy_entity(utils::Handle<Entity> entity) {
 };
 
 void EntityContainer::destroy_all_entities() {
-    utils::log_trace(this, __PRETTY_FUNCTION__);
+    log_trace(this, __PRETTY_FUNCTION__);
 
     for (auto &entity : *this->get_data_structure()) {
-        entity->get_on_destroy_event().invoke(
-            utils::Handle<Entity>(static_cast<utils::Identified *>(entity.get())->get_id()));
+        entity->get_on_destroy_event().invoke(static_cast<Identified *>(entity.get())->make_handle<Entity>());
     }
 
     this->free();

@@ -4,8 +4,8 @@
 #include "utils/transform_data.hpp"
 #include "utils/vector.hpp"
 
-TransformComponent::TransformComponent(Entity *entity, const TransformComponentArgs &args) : Component(entity) {
-    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
+TransformComponent::TransformComponent(Handle<Entity> entity, const TransformComponentArgs &args) : Component(entity) {
+    log_trace(this, __PRETTY_FUNCTION__, entity);
 
     this->_transform = utils::Transform(args.position, args.rotation, args.scale);
 }

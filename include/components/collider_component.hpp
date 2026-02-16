@@ -4,6 +4,8 @@
 #include "components/transform_component.hpp"
 #include "raylib.h"
 
+using utils::Handle;
+
 struct ColliderComponentArgs {
     Rectangle rectangle = Rectangle();
 };
@@ -11,7 +13,7 @@ struct ColliderComponentArgs {
 // For now this is only a rect collider
 class ColliderComponent final : public Component {
    public:
-    ColliderComponent(Entity *entity, const ColliderComponentArgs &args = ColliderComponentArgs());
+    ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args = ColliderComponentArgs());
 
     ColliderComponent(ColliderComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -27,11 +29,13 @@ class ColliderComponent final : public Component {
 
    private:
     void _move(ColliderComponent &&other) {
-        if (this != &other) {  // TODO: Invert these checks
-            this->_rectangle = std::move(other._rectangle);
-            this->_transform_component = std::move(other._transform_component);
-            this->_transform_update_listener = std::move(other._transform_update_listener);
+        if (this == &other) {
+            return;
         }
+
+        this->_rectangle = std::move(other._rectangle);
+        this->_transform_component = std::move(other._transform_component);
+        this->_transform_update_listener = std::move(other._transform_update_listener);
     }
 
     void _update_rectangle();
@@ -40,6 +44,6 @@ class ColliderComponent final : public Component {
 
    private:
     Rectangle _rectangle;
-    utils::Handle<TransformComponent> _transform_component;
+    Handle<TransformComponent> _transform_component;
     TransformComponent::TransformUpdateListener _transform_update_listener;
 };

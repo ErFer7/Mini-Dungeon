@@ -4,7 +4,7 @@
 
 #include "entities/entity.hpp"
 
-TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
+TextComponent::TextComponent(Handle<Entity> entity, const TextComponentArgs &args)
     : Component(entity),
       _content(args.content),
       _font(args.font),
@@ -12,7 +12,7 @@ TextComponent::TextComponent(Entity *entity, const TextComponentArgs &args)
       _color(args.color),
       _text_image(Image()),
       _text_texture(Texture2D()) {
-    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
+    log_trace(this, __PRETTY_FUNCTION__, entity);
 
     int font_size = args.font_size;
 
@@ -36,7 +36,7 @@ TextComponent::~TextComponent() {
     }
 }
 
-void TextComponent::set_content(string content) {
+void TextComponent::set_content(std::string content) {
     this->_content = content;
     this->_update_texture();
 }

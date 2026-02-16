@@ -4,6 +4,7 @@
 #include "components/ui_transform_component.hpp"
 #include "entities/user_interface/ui_entity.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct ButtonArgs {
@@ -14,8 +15,8 @@ struct ButtonArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
-    utils::Handle<ActivityState> parent_activity_state = utils::Handle<ActivityState>();
+    Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
+    Handle<ActivityState> parent_activity_state = Handle<ActivityState>();
     float texture_scale = 1.0f;
 
     operator UIEntityArgs() const {
@@ -38,8 +39,8 @@ class Button : public UIEntity {
 
     ~Button() override = default;
 
-    inline utils::Handle<ButtonComponent> get_button_component() { return this->_button_component; }
+    inline Handle<ButtonComponent> get_button_component() { return this->_button_component; }
 
    private:
-    utils::Handle<ButtonComponent> _button_component;
+    Handle<ButtonComponent> _button_component;
 };

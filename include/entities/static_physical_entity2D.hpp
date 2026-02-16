@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 struct StaticPhysicalEntity2DArgs {
@@ -35,8 +36,8 @@ class StaticPhysicalEntity2D : public Entity2D {
 
     ~StaticPhysicalEntity2D() override = default;
 
-    inline utils::Handle<ColliderComponent> get_collider_component() { return this->_collider_component; }
+    inline Handle<ColliderComponent> get_collider_component() { return this->_collider_component; }
 
    private:
-    utils::Handle<ColliderComponent> _collider_component;
+    Handle<ColliderComponent> _collider_component;
 };

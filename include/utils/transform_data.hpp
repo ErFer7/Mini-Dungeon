@@ -16,8 +16,9 @@ struct TransformData {
     Vector2Df scale;
 };
 
-inline std::ostream& operator<<(std::ostream& ostream, const TransformData& transform_data) {
-    ostream << "TransformData {" << transform_data.position << ", " << transform_data.rotation << ", " << transform_data.scale << "}";
+inline std::ostream &operator<<(std::ostream &ostream, const TransformData &transform_data) {
+    ostream << "TransformData {" << transform_data.position << ", " << transform_data.rotation << ", "
+            << transform_data.scale << "}";
 
     return ostream;
 }

@@ -7,6 +7,8 @@
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
 
+using utils::Handle;
+
 struct TextComponentArgs {
     std::string content;
     Font font;
@@ -17,7 +19,7 @@ struct TextComponentArgs {
 
 class TextComponent final : public Component {
    public:
-    TextComponent(Entity *entity, const TextComponentArgs &args);
+    TextComponent(Handle<Entity> entity, const TextComponentArgs &args);
 
     TextComponent(TextComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -75,7 +77,7 @@ class TextComponent final : public Component {
     int _font_size;
     float _spacing;
     Color _color;
-    utils::Handle<GraphicsComponent> _graphics_component;
+    Handle<GraphicsComponent> _graphics_component;
     Image _text_image;
     Texture2D _text_texture;
 };

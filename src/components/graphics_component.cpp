@@ -8,27 +8,27 @@
 #include "utils/vector.hpp"
 
 // TODO: Register this component in the right space
-GraphicsComponent::GraphicsComponent(Entity *entity, const GraphicsComponentArgs &args)
+GraphicsComponent::GraphicsComponent(Handle<Entity> entity, const GraphicsComponentArgs &args)
     : Component(entity),
       _rendering_mode(args.rendering_mode),
       _texture_scale(args.texture_scale),
       _color(args.color),
       _layer(args.layer) {
-    utils::log_trace(this, __PRETTY_FUNCTION__, entity);
+    log_trace(this, __PRETTY_FUNCTION__, entity);
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
 
+    Handle<GraphicsComponent> handle = this->make_handle<GraphicsComponent>();
+
     this->_transform_update_listener
-        .bind_callable<GraphicsComponent, &GraphicsComponent::_update_drawing_transform_listener_call>(
-            utils::Handle<GraphicsComponent>(this->get_id()));
+        .bind_callable<GraphicsComponent, &GraphicsComponent::_update_drawing_transform_listener_call>(handle);
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     this->set_texture(args.texture);
 
-    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(
-        utils::Handle<GraphicsComponent>(this->get_id()));
+    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(handle);
 
     this->_on_destroy_listener.bind_callable<GraphicsComponent, &GraphicsComponent::_unregister_on_space_listener_call>(
-        utils::Handle<GraphicsComponent>(this->get_id()));
+        handle);
     this->_on_destroy_listener.subscribe(this->get_on_destroy_event());
 }
 
@@ -79,5 +79,5 @@ void GraphicsComponent::_update_drawing_transform() {
 
 void GraphicsComponent::_unregister_on_space() {
     GameCore::get_instance()->get_graphics_component_manager()->unregister_component_on_space(
-        utils::Handle<GraphicsComponent>(this->get_id()));
+        this->make_handle<GraphicsComponent>());
 }

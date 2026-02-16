@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "utils/vector.hpp"
 
+using utils::Handle;
 using utils::Vector2Df;
 
 class Player : public DynamicPhysicalEntity2D {
@@ -12,8 +13,8 @@ class Player : public DynamicPhysicalEntity2D {
 
     ~Player() override = default;
 
-    inline utils::Handle<PlayerComponent> get_player_component() { return this->_player_component; }
+    inline Handle<PlayerComponent> get_player_component() { return this->_player_component; }
 
    private:
-    utils::Handle<PlayerComponent> _player_component;
+    Handle<PlayerComponent> _player_component;
 };

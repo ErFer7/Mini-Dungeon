@@ -5,20 +5,20 @@
 #include "entities/user_interface/button.hpp"
 #include "entities/user_interface/text.hpp"
 
-using std::string;
+using utils::Handle;
 using utils::Vector2Df;
 
 struct TextButtonArgs {
     Texture2D texture;
     UIOrigin ui_origin;
-    string content;
+    std::string content;
     Font font;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    utils::Handle<UITransformComponent> parent_ui_transform = utils::Handle<UITransformComponent>();
+    Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
     UIOrigin text_ui_origin = UIOrigin::CENTER;
     int font_size = 0;
     Vector2Df text_position = Vector2Df();
@@ -26,7 +26,7 @@ struct TextButtonArgs {
     Vector2Df text_scale = Vector2Df(1.0f);
     Color text_color = WHITE;
     float spacing = 1.0f;
-    utils::Handle<ActivityState> parent_activity_state = utils::Handle<ActivityState>();
+    Handle<ActivityState> parent_activity_state = Handle<ActivityState>();
     float texture_scale = 1.0f;
 
     operator ButtonArgs() const {
@@ -52,9 +52,9 @@ struct TextButtonArgs {
                         text_scale,
                         text_color,
                         0,
-                        utils::Handle<UITransformComponent>(),
+                        Handle<UITransformComponent>(),
                         spacing,
-                        utils::Handle<ActivityState>(),
+                        Handle<ActivityState>(),
                         texture_scale};
     }
 };
@@ -65,8 +65,8 @@ class TextButton : public Button {
 
     ~TextButton() override;
 
-    inline utils::Handle<Text> get_text() { return this->_text; }
+    inline Handle<Text> get_text() { return this->_text; }
 
    private:
-    utils::Handle<Text> _text;
+    Handle<Text> _text;
 };

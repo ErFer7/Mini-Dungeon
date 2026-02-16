@@ -3,6 +3,7 @@
 #include "components/component.hpp"
 #include "utils/transform.hpp"
 
+using utils::Handle;
 using utils::TransformData;
 using utils::Vector2Df;
 
@@ -18,7 +19,7 @@ class TransformComponent final : public Component {
     typedef TransformUpdateEvent::Listener TransformUpdateListener;
 
    public:
-    TransformComponent(Entity *entity, const TransformComponentArgs &args = TransformComponentArgs{});
+    TransformComponent(Handle<Entity> entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
     TransformComponent(TransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
 
@@ -38,8 +39,8 @@ class TransformComponent final : public Component {
 
     inline Vector2Df get_scale() const { return this->_transform.get_scale(); }
 
-    inline utils::Handle<TransformUpdateEvent> get_on_update_event() {
-        return utils::Handle<TransformUpdateEvent>(this->_on_update_event.get_id());
+    inline Handle<TransformUpdateEvent> get_on_update_event() {
+        return Handle<TransformUpdateEvent>(this->_on_update_event.get_id());
     }
 
     void set_position(Vector2Df position);
@@ -83,6 +84,7 @@ class TransformComponent final : public Component {
     }
 
    private:
+    // TODO: Check if utils:: is necessary here
     utils::Transform _transform;
     TransformUpdateEvent _on_update_event;
 };

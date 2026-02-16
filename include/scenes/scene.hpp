@@ -3,9 +3,11 @@
 #include "types.hpp"
 #include "utils/id.hpp"
 
-class Scene : public utils::Identified {
+using utils::Identified;
+
+class Scene : public Identified {
    public:
-    Scene() : _was_initialized(false), utils::Identified(this) {};
+    Scene() : _was_initialized(false), Identified(this) {};
 
     virtual ~Scene() = default;
 
