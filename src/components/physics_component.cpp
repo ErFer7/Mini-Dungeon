@@ -26,16 +26,16 @@ PhysicsComponent::PhysicsComponent(Handle<Entity> entity, const PhysicsComponent
 
 void PhysicsComponent::update() {
     double current_time = GetTime();
-    float time_diff = static_cast<float>(current_time - this->_time);
+    this->_time_diff = static_cast<float>(current_time - this->_time);
     this->_time = current_time;
 
     if (this->_is_statically_stable) {
         return;
     }
 
-    this->_transform_component->translate(this->_velocity * time_diff);
+    this->_transform_component->translate(this->_velocity * this->_time_diff);
 
-    this->_velocity += this->_acceleration * time_diff;
+    this->_velocity += this->_acceleration * this->_time_diff;
     this->_acceleration = -this->_velocity * this->_drag;
 
     bool is_velocity_stable = false;

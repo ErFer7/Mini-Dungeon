@@ -20,6 +20,8 @@ ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderCompon
     this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
 
     if (this->_rectangle.width == 0.0f && this->_rectangle.height == 0.0f) {
+        log_info(this, "ColliderComponent: Using the graphics rect for the collider");
+
         Handle<GraphicsComponent> graphics_component = this->get_entity()->get_component<GraphicsComponent>();
 
         this->_rectangle = graphics_component->get_rectangle();

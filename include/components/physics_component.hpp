@@ -109,12 +109,15 @@ class PhysicsComponent final : public Component {
 
     inline Handle<ColliderComponent> _get_collider_component() const { return this->_collider_component; }
 
+    inline double _get_time_diff() const { return this->_time_diff; }
+
    private:
     // TODO: Model force and mass
     Vector2Df _velocity;
     Vector2Df _acceleration;
     float _drag;  // This is more of a "logical" drag that is applied in order to force objects to slow down
     double _time;
+    double _time_diff;  // TODO: Remove in the future. This is used by the dumb solver for now
     // This is used for checking the movement state without checking if the velocity and acceleration are 0
     bool _is_statically_stable;
     bool _is_colliding;

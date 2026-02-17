@@ -41,49 +41,15 @@ class ColliderComponent final : public Component {
     bool check_collision(Handle<ColliderComponent> &other) {
         // TODO: Handle collisions with rotated colliders
 
-        // if (DEBUGGED_ON_LOOP) {
-        //     log_info(this,
-        //              "ColliderComponent: This rect: { x: ",
-        //              this->_rectangle.x,
-        //              ", y: ",
-        //              this->_rectangle.y,
-        //              ", width: ",
-        //              this->_rectangle.width,
-        //              ", height: ",
-        //              this->_rectangle.height,
-        //              " }, other rect: { x: ",
-        //              other->_rectangle.x,
-        //              ", y: ",
-        //              other->_rectangle.y,
-        //              ", width: ",
-        //              other->_rectangle.width,
-        //              ", height: ",
-        //              other->_rectangle.height,
-        //              " }");
-        // }
-
-        // FIX: The collisions don't work for now
         Vector2Df top_left = Vector2Df(this->_rectangle.x - this->_rectangle.width / 2.0f,
-                                       this->_rectangle.y - this->_rectangle.height / 2.0f);
+                                       this->_rectangle.y + this->_rectangle.height / 2.0f);
         Vector2Df bottom_right = Vector2Df(this->_rectangle.x + this->_rectangle.width / 2.0f,
-                                           this->_rectangle.y + this->_rectangle.height / 2.0f);
+                                           this->_rectangle.y - this->_rectangle.height / 2.0f);
 
         Vector2Df other_top_left = Vector2Df(other->_rectangle.x - other->_rectangle.width / 2.0f,
-                                             other->_rectangle.y - other->_rectangle.height / 2.0f);
+                                             other->_rectangle.y + other->_rectangle.height / 2.0f);
         Vector2Df other_bottom_right = Vector2Df(other->_rectangle.x + other->_rectangle.width / 2.0f,
-                                                 other->_rectangle.y + other->_rectangle.height / 2.0f);
-
-        if (DEBUGGED_ON_LOOP) {
-            log_info(this,
-                     "ColliderComponent: This TL: ",
-                     top_left,
-                     ", this BR: ",
-                     bottom_right,
-                     ", other TL: ",
-                     other_top_left,
-                     ", other BR: ",
-                     other_bottom_right);
-        }
+                                                 other->_rectangle.y - other->_rectangle.height / 2.0f);
 
         if (top_left.x > other_bottom_right.x || other_top_left.x > bottom_right.x) {
             return false;
@@ -112,6 +78,8 @@ class ColliderComponent final : public Component {
     void _update_rectangle_listener_call(const Vector2Df &, const TransformData &) { this->_update_rectangle(); }
 
     inline Handle<PhysicsComponent> _get_physics_component() { return this->_physics_component; }
+
+    inline Handle<TransformComponent> _get_transform_component() { return this->_transform_component; }
 
    private:
     Rectangle _rectangle;
