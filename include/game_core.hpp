@@ -64,6 +64,10 @@ class GameCore {
 
     inline PhysicsComponentContainer *get_physics_component_container() { return &this->_physics_component_container; }
 
+    inline ColliderComponentContainer *get_collider_component_container() {
+        return &this->_collider_component_container;
+    }
+
     inline GameManager *get_game_manager() { return &this->_game_manager; };
 
     inline BehaviorComponentManager *get_behavior_component_manager() { return &this->_behavior_component_manager; };

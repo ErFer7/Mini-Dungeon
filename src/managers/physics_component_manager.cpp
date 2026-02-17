@@ -6,13 +6,17 @@
 #include "components/physics_component.hpp"
 #include "containers/component_containers/stack_allocated_component_container.hpp"
 #include "game_core.hpp"
+#include "utils/debug.hpp"
 
 void PhysicsComponentManager::init() {
     this->_physics_component_container = GameCore::get_instance()->get_physics_component_container();
+    this->_collider_component_container = GameCore::get_instance()->get_collider_component_container();
 }
 
 void PhysicsComponentManager::update() {
+    // TODO: Check if this could be dangerous
     std::vector<PhysicsComponent> *physics_components = this->_physics_component_container->get_data_structure();
+    std::vector<ColliderComponent> *collider_components = this->_collider_component_container->get_data_structure();
 
     for (auto it = physics_components->begin(); it != physics_components->end(); ++it) {
         if (it->is_active()) {
@@ -27,14 +31,21 @@ void PhysicsComponentManager::update() {
     // TODO: Fix this horrible implementation, this was done just to have some collision solving
     // TODO: Allow managers to manage more than one type of component
     for (auto it_i = physics_components->begin(); it_i != physics_components->end(); ++it_i) {
-        for (auto it_j = it_i + 1; it_j != physics_components->end(); ++it_j) {
+        for (auto it_j = collider_components->begin(); it_j != collider_components->end(); ++it_j) {
             // Both didn't move in this frame
-            if (it_i->is_statically_stable() && it_j->is_statically_stable()) {
+            if (!it_i->is_active() || !it_j->is_active() ||
+                it_i->_get_collider_component()->get_id() == it_j->get_id() ||
+                it_i->is_statically_stable() && (it_j->_get_physics_component().is_null() ||
+                                                 it_j->_get_physics_component()->is_statically_stable())) {
                 continue;
             }
 
-            Handle<ColliderComponent> collider_component_i = it_i->get_collider_component();
-            Handle<ColliderComponent> collider_component_j = it_j->get_collider_component();
+            Handle<ColliderComponent> collider_i = it_i->_get_collider_component();
+            Handle<ColliderComponent> collider_j = it_j->make_handle<ColliderComponent>();
+
+            if (collider_i->check_collision(collider_j)) {
+                utils::log_info(this, "PhysicsComponentManager: Collision!");
+            }
         }
     }
 }

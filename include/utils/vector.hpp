@@ -140,6 +140,8 @@ struct Vector2D {
 
     bool is_zero() const { return x == 0 && y == 0; }
 
+    bool is_approximately_zero() const { return approximately_equal(*this, Vector2D<T>()); }
+
     T dot(const Vector2D &other) const { return x * other.x + y * other.y; }
 
     T cross(const Vector2D &other) const { return x * other.y - y * other.x; }
@@ -211,7 +213,7 @@ Vector2D<T> operator*(T scalar, const Vector2D<T> &vector) {
 
 template <Numeric T>
 std::ostream &operator<<(std::ostream &os, const Vector2D<T> &vector) {
-    os << "Vector2D {" << vector.x << ", " << vector.y << '}';
+    os << "Vector2D { x: " << vector.x << ", y: " << vector.y << '}';
     return os;
 }
 

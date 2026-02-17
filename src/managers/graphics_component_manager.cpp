@@ -1,6 +1,7 @@
 #include "managers/graphics_component_manager.hpp"
 
 #include "components/graphics_component.hpp"
+#include "raylib.h"
 
 void Space::add_component(Handle<GraphicsComponent> component) { this->_components->push_back(component); }
 
@@ -112,14 +113,14 @@ void GraphicsComponentManager::update() {
         this->_camera2D.offset = {(float)this->_screen_width / 2.0f, (float)this->_screen_height / 2.0f};
     }
 
-    this->_world2D_space.sort();
+    this->_world_space2D.sort();
     this->_screen_space.sort();
 
     BeginDrawing();
     ClearBackground(BLACK);
 
     BeginMode2D(this->_camera2D);
-    this->_world2D_space.draw();
+    this->_world_space2D.draw();
     EndMode2D();
 
     this->_screen_space.draw();
@@ -133,20 +134,37 @@ void GraphicsComponentManager::update() {
 
 void GraphicsComponentManager::exit() { CloseWindow(); }
 
+void GraphicsComponentManager::debug_draw_rectangle(Rectangle rectangle,
+                                                    Vector2Df position,
+                                                    float rotation,
+                                                    Color color) {
+    BeginMode2D(this->_camera2D);
+    DrawRectanglePro(rectangle, static_cast<Vector2>(position), rotation, color);
+    EndMode2D();
+}
+
 void GraphicsComponentManager::register_component_on_space(Handle<GraphicsComponent> graphics_component) {
-    // NOTE: This should be refactored if more rendering modes are added
-    if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
-        this->_screen_space.add_component(graphics_component);
-    } else {
-        this->_world2D_space.add_component(graphics_component);
+    switch (graphics_component->get_rendering_mode()) {
+        case RenderingMode::SCREEN_SPACE:
+            this->_screen_space.add_component(graphics_component);
+            break;
+        case RenderingMode::WORLD_SPACE_2D:
+            this->_world_space2D.add_component(graphics_component);
+            break;
+        default:
+            break;
     }
 }
 
 void GraphicsComponentManager::unregister_component_on_space(Handle<GraphicsComponent> graphics_component) {
-    // NOTE: This should be refactored if more rendering modes are added
-    if (graphics_component->get_rendering_mode() == RenderingMode::SCREEN_SPACE) {
-        this->_screen_space.remove_component(graphics_component);
-    } else {
-        this->_world2D_space.remove_component(graphics_component);
+    switch (graphics_component->get_rendering_mode()) {
+        case RenderingMode::SCREEN_SPACE:
+            this->_screen_space.remove_component(graphics_component);
+            break;
+        case RenderingMode::WORLD_SPACE_2D:
+            this->_world_space2D.remove_component(graphics_component);
+            break;
+        default:
+            break;
     }
 }

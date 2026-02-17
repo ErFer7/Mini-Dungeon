@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/collider_component.hpp"
 #include "components/graphics_component.hpp"
 #include "components/physics_component.hpp"
 #include "definitions.hpp"
@@ -32,6 +33,8 @@ struct DynamicPhysicalEntity2DArgs {
     }
 
     operator PhysicsComponentArgs() const { return PhysicsComponentArgs{initial_velocity, initial_acceleration, drag}; }
+
+    operator ColliderComponentArgs() const { return ColliderComponentArgs{collider_rectangle}; }
 };
 
 class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
@@ -42,6 +45,9 @@ class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
 
     inline Handle<PhysicsComponent> get_physics_component() { return this->_physics_component; }
 
+    inline Handle<ColliderComponent> get_collider_component() { return this->_collider_component; }
+
    private:
     Handle<PhysicsComponent> _physics_component;
+    Handle<ColliderComponent> _collider_component;
 };

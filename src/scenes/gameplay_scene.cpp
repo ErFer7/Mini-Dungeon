@@ -26,6 +26,8 @@ void GameplayScene::init() {
 
     this->_player->set_active(false);
     this->_wall->set_active(false);
+
+    this->_was_initialized = true;
 }
 
 void GameplayScene::enter() {

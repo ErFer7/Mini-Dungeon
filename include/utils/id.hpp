@@ -146,7 +146,7 @@ class Handle<void> {
 };
 
 inline std::ostream &operator<<(std::ostream &ostream, const Handle<void> &handle) {
-    ostream << "Handle {" << handle.get_id() << "}";
+    ostream << "Handle { id: " << handle.get_id() << "}";
 
     return ostream;
 }

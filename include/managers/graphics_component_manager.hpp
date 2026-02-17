@@ -2,7 +2,6 @@
 
 #include <raylib.h>
 
-#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -116,10 +115,10 @@ class GraphicsComponentManager : public Manager {
 
     inline Camera2D get_camera2D() const { return this->_camera2D; }
 
-    inline SortingMode get_world2d_space_sorting_mode() const { return this->_world2D_space.get_sorting_mode(); }
+    inline SortingMode get_world_space2D_sorting_mode() const { return this->_world_space2D.get_sorting_mode(); }
 
-    inline void set_world2d_space_sorting_mode(SortingMode sorting_mode) {
-        this->_world2D_space.set_sorting_mode(sorting_mode);
+    inline void set_world_space_sorting_mode(SortingMode sorting_mode) {
+        this->_world_space2D.set_sorting_mode(sorting_mode);
     }
 
     inline SortingMode get_screen_space_sorting_mode() const { return this->_screen_space.get_sorting_mode(); }
@@ -127,6 +126,8 @@ class GraphicsComponentManager : public Manager {
     inline void set_screen_space_sorting_mode(SortingMode sorting_mode) {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
+
+    void debug_draw_rectangle(Rectangle rectangle, Vector2Df position, float rotation, Color color);
 
     void register_component_on_space(Handle<GraphicsComponent> graphics_component);
 
@@ -143,5 +144,5 @@ class GraphicsComponentManager : public Manager {
     int _target_fps;
     Camera2D _camera2D;  // TODO: Fix pixel perfect camera
     Space _screen_space;
-    Space _world2D_space;
+    Space _world_space2D;
 };

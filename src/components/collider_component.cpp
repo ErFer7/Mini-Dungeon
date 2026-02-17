@@ -4,6 +4,7 @@
 #include "components/graphics_component.hpp"
 #include "components/physics_component.hpp"
 #include "entities/entity.hpp"
+#include "managers/graphics_component_manager.hpp"
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
@@ -29,12 +30,15 @@ ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderCompon
     Handle<PhysicsComponent> physics_component = this->get_entity()->get_component<PhysicsComponent>();
 
     if (!physics_component.is_null()) {
+        this->_physics_component = physics_component;
         physics_component->set_collider_component(this->make_handle<ColliderComponent>());
     }
 }
 
 // TODO: Add support for rotation
 void ColliderComponent::_update_rectangle() {
+    log_trace(this, __PRETTY_FUNCTION__);
+
     Vector2Df position = this->_transform_component->get_position();
     Vector2Df scale = this->_transform_component->get_scale();
 

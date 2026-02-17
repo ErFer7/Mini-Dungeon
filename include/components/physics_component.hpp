@@ -79,6 +79,7 @@ class PhysicsComponent final : public Component {
 
     void update();
 
+    // TODO: Possibly set this as private to avoid missuse
     inline void set_collider_component(Handle<ColliderComponent> collider_component) {
         this->_collider_component = collider_component;
     }
@@ -87,12 +88,6 @@ class PhysicsComponent final : public Component {
         this->_is_colliding = is_colliding;
         this->_is_statically_stable = !is_colliding;
     }
-
-    // Bypass for the PhysicsComponentManager
-    inline Handle<TransformComponent> get_transform_component() const { return this->_transform_component; }
-
-    // Bypass for the PhysicsComponentManager
-    inline Handle<ColliderComponent> get_collider_component() const { return this->_collider_component; }
 
    private:
     void _move(PhysicsComponent &&other) {
@@ -109,6 +104,10 @@ class PhysicsComponent final : public Component {
         this->_transform_component = std::move(other._transform_component);
         this->_collider_component = std::move(other._collider_component);
     }
+
+    inline Handle<TransformComponent> _get_transform_component() const { return this->_transform_component; }
+
+    inline Handle<ColliderComponent> _get_collider_component() const { return this->_collider_component; }
 
    private:
     // TODO: Model force and mass

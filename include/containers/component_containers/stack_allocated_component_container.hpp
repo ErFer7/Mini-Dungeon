@@ -38,7 +38,10 @@ class PhysicsComponentContainer final : public StackAllocatedComponentContainer<
     friend class PhysicsComponentManager;
 };
 
-typedef StackAllocatedComponentContainer<ColliderComponent> ColliderComponentContainer;
+class ColliderComponentContainer final : public StackAllocatedComponentContainer<ColliderComponent> {
+    friend class PhysicsComponentManager;
+};
+
 typedef StackAllocatedComponentContainer<GraphicsComponent> GraphicsComponentContainer;
 typedef StackAllocatedComponentContainer<TextComponent> TextComponentContainer;
 typedef StackAllocatedComponentContainer<TransformComponent> TransformComponentContainer;

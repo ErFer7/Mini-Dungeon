@@ -21,4 +21,5 @@ class PhysicsComponentManager : public Manager {
 
    private:
     PhysicsComponentContainer *_physics_component_container;
+    ColliderComponentContainer *_collider_component_container;
 };

@@ -44,6 +44,8 @@ struct GraphicsComponentArgs;
 class PhysicsComponent;
 struct PhysicsComponentArgs;
 
+class ColliderComponentContainer;
+
 class TextComponent;
 struct TextComponentArgs;
 
@@ -115,6 +117,7 @@ class BehaviorComponentManager;
 
 class GraphicsComponentManager;
 enum class RenderingMode;
+class Space;
 
 class MainBehaviourManager;
 
@@ -127,6 +130,5 @@ enum class SortingMode;
 
 // structs
 struct Layer;
-struct Space;
 
 // Utilities are not included here

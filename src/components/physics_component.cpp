@@ -14,11 +14,14 @@ PhysicsComponent::PhysicsComponent(Handle<Entity> entity, const PhysicsComponent
       _drag(args.drag),
       _time(GetTime()),
       _is_statically_stable(!args.initial_velocity.is_zero() || !args.initial_acceleration.is_zero()),
+      _is_colliding(false),
       Component(entity) {
     log_trace(this, __PRETTY_FUNCTION__, entity);
 
     this->_transform_component = this->get_entity()->get_component<TransformComponent>();
     this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
+
+    this->_collider_component->set_physics_component(this->make_handle<PhysicsComponent>());
 }
 
 void PhysicsComponent::update() {
@@ -30,20 +33,23 @@ void PhysicsComponent::update() {
         return;
     }
 
-    if (this->_velocity.is_zero() && this->_acceleration.is_zero() && !this->_is_colliding) {
-        this->_is_statically_stable = true;
-    }
-
     this->_transform_component->translate(this->_velocity * time_diff);
 
     this->_velocity += this->_acceleration * time_diff;
     this->_acceleration = -this->_velocity * this->_drag;
 
+    bool is_velocity_stable = false;
+    bool is_acceleration_stable = false;
+
     if (this->_velocity.magnitude() < FLOAT_EPSILON) {
         this->_velocity = Vector2Df();
+        is_velocity_stable = true;
     }
 
     if (this->_acceleration.magnitude() < FLOAT_EPSILON) {
         this->_acceleration = Vector2Df();
+        is_acceleration_stable = true;
     }
+
+    this->_is_statically_stable = is_velocity_stable && is_acceleration_stable && !this->_is_colliding;
 }
