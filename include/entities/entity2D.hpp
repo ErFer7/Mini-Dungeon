@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/graphics_component.hpp"
+#include "definitions.hpp"
 #include "entity.hpp"
 #include "managers/graphics_component_manager.hpp"
 #include "utils/vector.hpp"
@@ -16,7 +17,7 @@ struct Entity2DArgs {
     Vector2Df scale = Vector2Df(1.0f);
     Color color = WHITE;
     int layer = 0;
-    float texture_scale = 1.0f;
+    float texture_scale = VIRTUAL_SCALE;
 
     operator TransformComponentArgs() const { return TransformComponentArgs{position, rotation, scale}; }
 

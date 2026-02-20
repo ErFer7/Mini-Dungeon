@@ -66,15 +66,18 @@ void GraphicsComponent::_update_drawing_transform() {
 
     Vector2Df scale = this->_transform_component->get_scale();
 
-    this->_origin = Vector2Df(width / 2.0f, height / 2.0f) * scale;
+    float scaled_width = width * scale.x * this->_texture_scale;
+    float scaled_height = height * scale.y * this->_texture_scale;
+
+    this->_origin = Vector2Df(scaled_width, scaled_height) / 2.0f;
     this->_rotation = this->_transform_component->get_rotation();
 
     Vector2Df position = this->_transform_component->get_position();
 
     this->_destination_rectangle.x = position.x;
     this->_destination_rectangle.y = position.y * y_axis_orientation;
-    this->_destination_rectangle.width = width * scale.x * this->_texture_scale;
-    this->_destination_rectangle.height = height * scale.y * this->_texture_scale;
+    this->_destination_rectangle.width = scaled_width;
+    this->_destination_rectangle.height = scaled_height;
 }
 
 void GraphicsComponent::_unregister_on_space() {

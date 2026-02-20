@@ -6,11 +6,12 @@
 
 #include "containers/entity_container.hpp"
 #include "definitions.hpp"
+#include "entities/gameplay/tiles.hpp"
 #include "entities/static_physical_entity2D.hpp"
 #include "game_core.hpp"
 
 Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool left_door, bool right_door) {
-    this->_walls = std::make_unique<WallVector>();
+    this->_tiles = std::make_unique<TileVector>();
 
     const float tile_size = BASE_SIZE * VIRTUAL_SCALE;
     const int max_index = 11;
@@ -72,13 +73,46 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
                     this->_create_wall("assets/sprites/walls/wall_right.png", position);
                     break;
                 case '+':
-                    this->_create_wall("assets/sprites/walls/wall_bottom_left.png", position);
+                    this->_create_wall("assets/sprites/walls/wall_top_left.png", position, 180.0f);
                     break;
                 case '=':
-                    this->_create_wall("assets/sprites/walls/wall_bottom.png", position);
+                    this->_create_wall("assets/sprites/walls/wall_top.png", position, 180.0f);
                     break;
                 case '-':
-                    this->_create_wall("assets/sprites/walls/wall_bottom_right.png", position);
+                    this->_create_wall("assets/sprites/walls/wall_top_right.png", position, 180.0f);
+                    break;
+                case '.':
+                    this->_create_wall("assets/sprites/walls/wall_0.png", position);
+                    break;
+                case '^':
+                    this->_create_floor("assets/sprites/floors/floor_border.png", position);
+                    break;
+                case '<':
+                    this->_create_floor("assets/sprites/floors/floor_border.png", position, -90.0f);
+                    break;
+                case '>':
+                    this->_create_floor("assets/sprites/floors/floor_border.png", position, 90.0f);
+                    break;
+                case 'v':
+                    this->_create_floor("assets/sprites/floors/floor_border.png", position, 180.0f);
+                    break;
+                case 'q':
+                    this->_create_floor("assets/sprites/floors/floor_corner.png", position);
+                    break;
+                case 'e':
+                    this->_create_floor("assets/sprites/floors/floor_corner.png", position, -90.0f);
+                    break;
+                case 'r':
+                    this->_create_floor("assets/sprites/floors/floor_corner.png", position, 180.0f);
+                    break;
+                case 'w':
+                    this->_create_floor("assets/sprites/floors/floor_corner.png", position, 90.0f);
+                    break;
+                case ';':
+                    this->_create_wall("assets/sprites/obstacles/box.png", position);
+                    break;
+                case '\'':
+                    this->_create_floor("assets/sprites/floors/floor.png", position);
                     break;
                 default:
                     log_warn(this, "Room: Invalid tile: ", character);
@@ -94,12 +128,28 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
     }
 }
 
-void Dungeon::Room::_create_wall(std::string sprite_path, Vector2Df position) {
+// TODO: Find a generic way to create tiles
+void Dungeon::Room::_create_wall(std::string sprite_path, Vector2Df position, float rotation) {
     Texture2D texture = GameCore::get_instance()->get_texture_container()->load_texture(sprite_path);
 
-    Handle<Wall> wall =
-        GameCore::get_instance()->get_entity_container()->create_entity<Wall>(StaticPhysicalEntity2DArgs{
-            .texture = texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D, .position = position});
+    Handle<Wall> wall = GameCore::get_instance()->get_entity_container()->create_entity<Wall>(
+        StaticPhysicalEntity2DArgs{.texture = texture,
+                                   .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+                                   .position = position,
+                                   .rotation = rotation});
 
-    this->_walls->push_back(wall);
+    this->_tiles->push_back(wall);
+}
+
+void Dungeon::Room::_create_floor(std::string sprite_path, Vector2Df position, float rotation) {
+    Texture2D texture = GameCore::get_instance()->get_texture_container()->load_texture(sprite_path);
+
+    Handle<Floor> floor = GameCore::get_instance()->get_entity_container()->create_entity<Floor>(
+        Entity2DArgs{.texture = texture,
+                     .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+                     .position = position,
+                     .rotation = rotation,
+                     .layer = -1});
+
+    this->_tiles->push_back(floor);
 }
