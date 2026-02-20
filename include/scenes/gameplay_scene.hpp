@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gameplay/dungeon.hpp"
 #include "scene.hpp"
 #include "types.hpp"
 #include "utils/id.hpp"
@@ -24,5 +25,5 @@ class GameplayScene : public Scene {
 
    private:
     Handle<Player> _player;
-    Handle<Wall> _wall;
+    Dungeon _dungeon;
 };

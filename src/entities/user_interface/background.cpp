@@ -13,7 +13,7 @@ Background::Background()
 
     Image background =
         GenImageColor(static_cast<int>(virtual_screen_width), static_cast<int>(virtual_screen_height), WHITE);
-    Image wall = GameCore::get_instance()->get_image_container()->load_image("assets/sprites/walls/Wall_0.png");
+    Image wall = GameCore::get_instance()->get_image_container()->load_image("assets/sprites/walls/wall_0.png");
 
     float wall_width = static_cast<float>(wall.width);
     float wall_height = static_cast<float>(wall.height);

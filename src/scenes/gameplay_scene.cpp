@@ -5,6 +5,7 @@
 #include "entities/gameplay/player.hpp"
 #include "entities/static_physical_entity2D.hpp"
 #include "game_core.hpp"
+#include "gameplay/dungeon.hpp"
 #include "managers/graphics_component_manager.hpp"
 #include "raylib.h"
 #include "types.hpp"
@@ -13,24 +14,20 @@
 using utils::Vector2Df;
 
 void GameplayScene::init() {
-    Texture2D player_texture = LoadTexture("assets/sprites/characters/Char_0.png");
-    Texture2D wall_texture = LoadTexture("assets/sprites/walls/Wall_0.png");
+    Texture2D player_texture =
+        GameCore::get_instance()->get_texture_container()->load_texture("assets/sprites/characters/Char_0.png");
 
     EntityContainer *entity_container = GameCore::get_instance()->get_entity_container();
 
     this->_player = entity_container->create_entity<Player>(
         DynamicPhysicalEntity2DArgs{.texture = player_texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D});
 
-    this->_wall = entity_container->create_entity<Wall>(StaticPhysicalEntity2DArgs{
-        .texture = wall_texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D, .position = Vector2Df(64.0f, 0.0f)});
-
     this->_player->set_active(false);
-    this->_wall->set_active(false);
 
     this->_was_initialized = true;
 }
 
 void GameplayScene::enter() {
     this->_player->set_active(true);
-    this->_wall->set_active(true);
+    this->_dungeon.generate();
 }

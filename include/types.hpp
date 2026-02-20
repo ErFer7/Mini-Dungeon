@@ -125,6 +125,8 @@ class MainBehaviourManager;
 class Scene;
 class MenuScene;
 
+class Dungeon;
+
 // Enums
 enum class SortingMode;
 

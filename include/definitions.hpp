@@ -13,3 +13,6 @@ static const bool DEBUG_WARN = true;
 static const bool DEBUG_TRACE = true;
 static const bool DEBUG_INFO = true;
 static const bool DEBUG_VISUAL = true;
+
+// Game specific
+static const unsigned int BASE_SIZE = 16;
