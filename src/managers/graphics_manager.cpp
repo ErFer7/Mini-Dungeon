@@ -37,7 +37,7 @@ void Space::sort() {
                           }
 
                           if (comp_a->get_layer() == comp_b->get_layer()) {
-                              return comp_a->_get_position().y < comp_b->_get_position().y;
+                              return comp_a->_get_position().y > comp_b->_get_position().y;
                           }
 
                           return comp_a->get_layer() < comp_b->get_layer();

@@ -118,7 +118,7 @@ class GraphicsManager : public Manager {
 
     inline SortingMode get_world_space2D_sorting_mode() const { return this->_world_space2D.get_sorting_mode(); }
 
-    inline void set_world_space_sorting_mode(SortingMode sorting_mode) {
+    inline void set_world_space2D_sorting_mode(SortingMode sorting_mode) {
         this->_world_space2D.set_sorting_mode(sorting_mode);
     }
 

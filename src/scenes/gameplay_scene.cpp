@@ -16,14 +16,12 @@ using utils::Vector2Df;
 void GameplayScene::init() {
     Texture2D player_texture = GameCore::get_texture_container()->load_texture("assets/sprites/characters/Char_0.png");
 
-    EntityContainer *entity_container = GameCore::get_entity_container();
-
-    this->_player = entity_container->create_entity<Player>(
+    this->_player = GameCore::get_entity_container()->create_entity<Player>(
         DynamicPhysicalEntity2DArgs{.texture = player_texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D});
 
     this->_player->set_active(false);
 
-    GameCore::get_graphics_manager()->set_screen_space_sorting_mode(SortingMode::TOP_TO_DOWN);
+    GameCore::get_graphics_manager()->set_world_space2D_sorting_mode(SortingMode::TOP_TO_DOWN);
 
     this->_was_initialized = true;
 }
