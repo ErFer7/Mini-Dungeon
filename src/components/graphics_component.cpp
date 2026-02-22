@@ -4,7 +4,7 @@
 
 #include "entities/entity.hpp"
 #include "game_core.hpp"
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 #include "utils/vector.hpp"
 
 // TODO: Register this component in the right space
@@ -25,7 +25,7 @@ GraphicsComponent::GraphicsComponent(Handle<Entity> entity, const GraphicsCompon
 
     this->set_texture(args.texture);
 
-    GameCore::get_instance()->get_graphics_component_manager()->register_component_on_space(handle);
+    GameCore::get_graphics_manager()->register_component_on_space(handle);
 
     this->_on_destroy_listener.bind_callable<GraphicsComponent, &GraphicsComponent::_unregister_on_space_listener_call>(
         handle);
@@ -47,6 +47,10 @@ Rectangle GraphicsComponent::get_rectangle() const {
                      this->_destination_rectangle.y - this->_destination_rectangle.height / 2.0f,
                      this->_destination_rectangle.width,
                      this->_destination_rectangle.height};
+}
+
+Vector2Df GraphicsComponent::get_size() const {
+    return Vector2Df(this->_destination_rectangle.width, this->_destination_rectangle.height);
 }
 
 void GraphicsComponent::draw() {
@@ -81,6 +85,5 @@ void GraphicsComponent::_update_drawing_transform() {
 }
 
 void GraphicsComponent::_unregister_on_space() {
-    GameCore::get_instance()->get_graphics_component_manager()->unregister_component_on_space(
-        this->make_handle<GraphicsComponent>());
+    GameCore::get_graphics_manager()->unregister_component_on_space(this->make_handle<GraphicsComponent>());
 }

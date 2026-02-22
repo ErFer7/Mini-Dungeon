@@ -45,7 +45,7 @@ class Entity : public Identified {
 
     template <typename ComponentType, typename... Args>
     Handle<ComponentType> create_component(Args &&...args) {
-        auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
+        auto *component_container = GameCore::get_component_container<ComponentType>();
 
         this->_components->push_back(component_container->template create_component<ComponentType>(
             this->make_handle<Entity>(), std::forward<Args>(args)...));

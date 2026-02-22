@@ -7,13 +7,13 @@
 
 using std::vector;
 
-class PhysicsComponentManager : public Manager {
+class PhysicsManager : public Manager {
     friend class PhysicsComponent;
 
    public:
-    PhysicsComponentManager() = default;
+    PhysicsManager() = default;
 
-    ~PhysicsComponentManager() override = default;
+    ~PhysicsManager() override = default;
 
     void init() override;
     void update() override;

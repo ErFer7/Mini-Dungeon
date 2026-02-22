@@ -2,8 +2,6 @@
 
 #include <raylib.h>
 
-#include <type_traits>
-
 #include "containers/entity_container.hpp"
 
 GameCore::GameCore(int screen_width,
@@ -26,38 +24,38 @@ GameCore::GameCore(int screen_width,
       _transform_component_container(),
       _ui_transform_component_container(),
       _game_manager(),
-      _behavior_component_manager(),
-      _physics_component_manager(),
-      _graphics_component_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
+      _behavior_manager(),
+      _physics_manager(),
+      _graphics_manager(screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps),
       _is_exiting(false) {
     utils::log_trace(
         this, __PRETTY_FUNCTION__, screen_width, screen_height, title, target_fps, resizable, fullscreen, show_fps);
 }
 
 void GameCore::init_main_loop() {
-    utils::log_trace(this, __PRETTY_FUNCTION__);
+    utils::log_trace(_instance, __PRETTY_FUNCTION__);
 
-    this->_behavior_component_manager.init();
-    this->_physics_component_manager.init();
-    this->_graphics_component_manager.init();
-    this->_game_manager.init();
+    _instance->_behavior_manager.init();
+    _instance->_physics_manager.init();
+    _instance->_graphics_manager.init();
+    _instance->_game_manager.init();
 
-    while (!WindowShouldClose() && !_is_exiting) {
-        this->_game_manager.update();
-        this->_behavior_component_manager.update();
-        this->_physics_component_manager.update();
-        this->_graphics_component_manager.update();
+    while (!WindowShouldClose() && !_instance->_is_exiting) {
+        _instance->_game_manager.update();
+        _instance->_behavior_manager.update();
+        _instance->_physics_manager.update();
+        _instance->_graphics_manager.update();
     }
 
-    this->_entity_container->destroy_all_entities();
-    this->_texture_container.unload_all_textures();
-    this->_image_container.unload_all_images();
-    this->_font_container.unload_all_fonts();
+    _instance->_entity_container->destroy_all_entities();
+    _instance->_texture_container.unload_all_textures();
+    _instance->_image_container.unload_all_images();
+    _instance->_font_container.unload_all_fonts();
 
     // By this point, all components should be already destroyed
 
-    this->_graphics_component_manager.exit();
-    this->_behavior_component_manager.exit();
-    this->_physics_component_manager.exit();
-    this->_game_manager.exit();
+    _instance->_graphics_manager.exit();
+    _instance->_behavior_manager.exit();
+    _instance->_physics_manager.exit();
+    _instance->_game_manager.exit();
 }

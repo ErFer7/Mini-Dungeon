@@ -53,3 +53,17 @@ void PhysicsComponent::update() {
 
     this->_is_statically_stable = is_velocity_stable && is_acceleration_stable && !this->_is_colliding;
 }
+
+void PhysicsComponent::debug_draw() {
+    Vector2Df position = this->_transform_component->get_position();
+    position.y *= -1.0f;
+
+    Vector2Df velocity = this->_velocity;
+    velocity.y *= -1.0f;
+
+    Vector2Df acceleration = this->_acceleration;
+    acceleration.y *= -1.0f;
+
+    DrawLineV(position, position + (velocity * 0.1f), WHITE);
+    DrawLineV(position, position + (acceleration * 0.1f), BLUE);
+}

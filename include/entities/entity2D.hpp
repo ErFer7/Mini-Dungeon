@@ -3,7 +3,7 @@
 #include "components/graphics_component.hpp"
 #include "definitions.hpp"
 #include "entity.hpp"
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 #include "utils/vector.hpp"
 
 using utils::Handle;

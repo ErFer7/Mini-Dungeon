@@ -1,6 +1,7 @@
 #include "components/transform_component.hpp"
 
 #include "entities/entity.hpp"
+#include "raylib.h"
 #include "utils/transform_data.hpp"
 #include "utils/vector.hpp"
 
@@ -123,4 +124,12 @@ void TransformComponent::scale(Vector2Df scale) {
     } else {
         this->_transform.scale(origin, scale);
     }
+}
+
+void TransformComponent::debug_draw() {
+    Vector2Df position = this->_transform.get_position();
+    position.y *= -1.0f;
+
+    DrawLineV(position, position + Vector2Df(10.0f, 0.0f), RED);
+    DrawLineV(position, position + Vector2Df(0.0f, -10.0f), GREEN);
 }

@@ -3,7 +3,7 @@
 #include "components/collider_component.hpp"
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "managers/physics_component_manager.hpp"
+#include "managers/physics_manager.hpp"
 #include "utils/vector.hpp"
 
 using utils::Handle;
@@ -17,7 +17,7 @@ struct PhysicsComponentArgs {
 
 class PhysicsComponent final : public Component {
     friend class ColliderComponent;
-    friend class PhysicsComponentManager;
+    friend class PhysicsManager;
 
    public:
     PhysicsComponent(Handle<Entity> entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
@@ -88,6 +88,8 @@ class PhysicsComponent final : public Component {
         this->_is_colliding = is_colliding;
         this->_is_statically_stable = !is_colliding;
     }
+
+    void debug_draw() override;
 
    private:
     void _move(PhysicsComponent &&other) {

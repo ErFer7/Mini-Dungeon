@@ -3,6 +3,8 @@
 #include <concepts>
 #include <memory>
 
+// TODO: Clean this file
+
 class GameCore;
 
 namespace utils {
@@ -67,6 +69,7 @@ template <typename Object>
 class VectorContainer;
 
 class PhysicsComponentContainer;
+class TransformComponentContainer;
 class AssetContainer;
 class ImageMap;
 class TextureMap;
@@ -113,11 +116,13 @@ class ComponentVector;
 
 class AudioComponentManager;
 
-class BehaviorComponentManager;
+class BehaviorManager;
 
-class GraphicsComponentManager;
+class GraphicsManager;
 enum class RenderingMode;
 class Space;
+
+class GraphicalDebuggingManager;
 
 class MainBehaviourManager;
 

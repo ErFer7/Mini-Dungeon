@@ -11,7 +11,7 @@ TextButton::TextButton(const TextButtonArgs &args) : Button(static_cast<ButtonAr
     text_args.parent_ui_transform = this->get_ui_transform_component();
     text_args.parent_activity_state = this->get_activity_state();
 
-    this->_text = GameCore::get_instance()->get_entity_container()->create_entity<Text>(text_args);
+    this->_text = GameCore::get_entity_container()->create_entity<Text>(text_args);
 }
 
-TextButton::~TextButton() { GameCore::get_instance()->get_entity_container()->destroy_entity(this->_text); }
+TextButton::~TextButton() { GameCore::get_entity_container()->destroy_entity(this->_text); }

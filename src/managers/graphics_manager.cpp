@@ -1,6 +1,7 @@
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 
 #include "components/graphics_component.hpp"
+#include "definitions.hpp"
 #include "raylib.h"
 
 void Space::add_component(Handle<GraphicsComponent> component) { this->_components->push_back(component); }
@@ -73,13 +74,13 @@ void Space::draw() {
     }
 }
 
-GraphicsComponentManager::GraphicsComponentManager(int screen_width,
-                                                   int screen_height,
-                                                   const char *title,
-                                                   int target_fps,
-                                                   bool resizable,
-                                                   bool fullscreen,
-                                                   bool show_fps) {
+GraphicsManager::GraphicsManager(int screen_width,
+                                 int screen_height,
+                                 const char *title,
+                                 int target_fps,
+                                 bool resizable,
+                                 bool fullscreen,
+                                 bool show_fps) {
     this->_screen_width = screen_width;
     this->_screen_height = screen_height;
     this->_title = title;
@@ -90,7 +91,7 @@ GraphicsComponentManager::GraphicsComponentManager(int screen_width,
     this->_camera2D = {Vector2{0.0f, 0.0f}, Vector2{0.0f, 0.0f}, 0.0f, 1.0f};
 }
 
-void GraphicsComponentManager::init() {
+void GraphicsManager::init() {
     InitWindow(this->_screen_width, this->_screen_height, this->_title.c_str());
 
     if (this->_resizable) {
@@ -104,9 +105,13 @@ void GraphicsComponentManager::init() {
     SetTargetFPS(this->_target_fps);
 
     this->_camera2D.offset = {(float)this->_screen_width / 2.0f, (float)this->_screen_height / 2.0f};
+
+    if constexpr (VISUALLY_DEBUGGED) {
+        this->_graphical_debugging_manager.init();
+    }
 }
 
-void GraphicsComponentManager::update() {
+void GraphicsManager::update() {
     if (IsWindowResized()) {
         this->_screen_width = GetScreenWidth();
         this->_screen_height = GetScreenHeight();
@@ -123,6 +128,10 @@ void GraphicsComponentManager::update() {
     this->_world_space2D.draw();
     EndMode2D();
 
+    if constexpr (VISUALLY_DEBUGGED) {
+        this->_graphical_debugging_manager.update();
+    }
+
     this->_screen_space.draw();
 
     if (this->_show_fps) {
@@ -132,18 +141,15 @@ void GraphicsComponentManager::update() {
     EndDrawing();
 }
 
-void GraphicsComponentManager::exit() { CloseWindow(); }
+void GraphicsManager::exit() {
+    if constexpr (VISUALLY_DEBUGGED) {
+        this->_graphical_debugging_manager.exit();
+    }
 
-void GraphicsComponentManager::debug_draw_rectangle(Rectangle rectangle,
-                                                    Vector2Df position,
-                                                    float rotation,
-                                                    Color color) {
-    BeginMode2D(this->_camera2D);
-    DrawRectanglePro(rectangle, static_cast<Vector2>(position), rotation, color);
-    EndMode2D();
+    CloseWindow();
 }
 
-void GraphicsComponentManager::register_component_on_space(Handle<GraphicsComponent> graphics_component) {
+void GraphicsManager::register_component_on_space(Handle<GraphicsComponent> graphics_component) {
     switch (graphics_component->get_rendering_mode()) {
         case RenderingMode::SCREEN_SPACE:
             this->_screen_space.add_component(graphics_component);
@@ -156,7 +162,7 @@ void GraphicsComponentManager::register_component_on_space(Handle<GraphicsCompon
     }
 }
 
-void GraphicsComponentManager::unregister_component_on_space(Handle<GraphicsComponent> graphics_component) {
+void GraphicsManager::unregister_component_on_space(Handle<GraphicsComponent> graphics_component) {
     switch (graphics_component->get_rendering_mode()) {
         case RenderingMode::SCREEN_SPACE:
             this->_screen_space.remove_component(graphics_component);

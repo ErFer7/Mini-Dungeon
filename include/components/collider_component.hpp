@@ -2,10 +2,8 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "definitions.hpp"
 #include "raylib.h"
 #include "utils/debug.hpp"
-#include "utils/vector.hpp"
 
 using utils::Handle;
 using utils::log_info;
@@ -16,7 +14,7 @@ struct ColliderComponentArgs {
 
 // For now this is only a rect collider
 class ColliderComponent final : public Component {
-    friend class PhysicsComponentManager;
+    friend class PhysicsManager;
 
    public:
     ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args = ColliderComponentArgs());
@@ -62,6 +60,8 @@ class ColliderComponent final : public Component {
         return true;
     }
 
+    void debug_draw() override;
+
    private:
     void _move(ColliderComponent &&other) {
         if (this == &other) {
@@ -83,6 +83,7 @@ class ColliderComponent final : public Component {
 
    private:
     Rectangle _rectangle;
+    Vector2Df _offset;
     Handle<TransformComponent> _transform_component;
     Handle<PhysicsComponent> _physics_component;
     TransformComponent::TransformUpdateListener _transform_update_listener;

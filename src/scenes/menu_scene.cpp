@@ -10,12 +10,10 @@
 #include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
 #include "game_core.hpp"
-#include "managers/game_manager.hpp"
 
 void MenuScene::init() {
-    GameCore *game_core = GameCore::get_instance();
-    EntityContainer *entity_container = game_core->get_entity_container();
-    FontContainer *font_container = game_core->get_font_container();
+    EntityContainer *entity_container = GameCore::get_entity_container();
+    FontContainer *font_container = GameCore::get_font_container();
 
     this->_background = entity_container->create_entity<Background>();
 
@@ -80,6 +78,6 @@ void MenuScene::leave() {
 
 void MenuScene::exit() { UnloadTexture(this->_button_texture); }
 
-void MenuScene::_transition_to_gameplay() { GameCore::get_instance()->get_game_manager()->transition_to_gameplay(); }
+void MenuScene::_transition_to_gameplay() { GameCore::get_game_manager()->transition_to_gameplay(); }
 
-void MenuScene::_exit() { GameCore::get_instance()->exit(); }
+void MenuScene::_exit() { GameCore::exit(); }

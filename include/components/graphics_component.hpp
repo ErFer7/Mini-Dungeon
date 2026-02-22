@@ -2,7 +2,7 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -20,7 +20,7 @@ struct GraphicsComponentArgs {
 // TODO: Add a dirty and clean state system
 class GraphicsComponent final : public Component {
     friend class Space;
-    friend class GraphicsComponentManager;
+    friend class GraphicsManager;
 
    public:
     GraphicsComponent(Handle<Entity> entity, const GraphicsComponentArgs &args);
@@ -53,7 +53,11 @@ class GraphicsComponent final : public Component {
 
     Rectangle get_rectangle() const;
 
+    Vector2Df get_size() const;
+
     void draw();
+
+    void debug_draw() override {}
 
    private:
     inline Vector2Df _get_position() { return this->_transform_component->get_position(); }

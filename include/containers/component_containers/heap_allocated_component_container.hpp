@@ -34,6 +34,6 @@ class HeapAllocatedComponentContainer : public VectorContainer<std::unique_ptr<C
 
 class BehaviorComponentContainer final : public HeapAllocatedComponentContainer {
     friend class Entity;
-    friend class BehaviorComponentManager;
+    friend class BehaviorManager;
     friend class BehaviorComponent;
 };

@@ -4,7 +4,7 @@
 #include "components/graphics_component.hpp"
 #include "components/physics_component.hpp"
 #include "entities/entity.hpp"
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
@@ -24,8 +24,12 @@ ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderCompon
 
         Handle<GraphicsComponent> graphics_component = this->get_entity()->get_component<GraphicsComponent>();
 
-        this->_rectangle = graphics_component->get_rectangle();
+        Vector2Df sprite_size = graphics_component->get_size();
+
+        this->_rectangle = Rectangle{0.0f, 0.0f, sprite_size.x, sprite_size.y};
     }
+
+    this->_offset = Vector2Df(this->_rectangle.x, this->_rectangle.y);
 
     this->_update_rectangle();
 
@@ -37,6 +41,14 @@ ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderCompon
     }
 }
 
+void ColliderComponent::debug_draw() {
+    DrawRectangleLines(this->_rectangle.x - this->_rectangle.width / 2.0f,
+                       -(this->_rectangle.y + this->_rectangle.height / 2.0f),
+                       this->_rectangle.width,
+                       this->_rectangle.height,
+                       RED);
+}
+
 // TODO: Add support for rotation
 void ColliderComponent::_update_rectangle() {
     log_trace(this, __PRETTY_FUNCTION__);
@@ -44,8 +56,8 @@ void ColliderComponent::_update_rectangle() {
     Vector2Df position = this->_transform_component->get_position();
     Vector2Df scale = this->_transform_component->get_scale();
 
-    this->_rectangle.x = position.x;
-    this->_rectangle.y = position.y;
+    this->_rectangle.x = position.x + this->_offset.x;
+    this->_rectangle.y = position.y + this->_offset.y;
     this->_rectangle.width = this->_rectangle.width * scale.x;
     this->_rectangle.height = this->_rectangle.height * scale.y;
 }

@@ -35,14 +35,19 @@ class StackAllocatedComponentContainer : public VectorContainer<ComponentType> {
 };
 
 class PhysicsComponentContainer final : public StackAllocatedComponentContainer<PhysicsComponent> {
-    friend class PhysicsComponentManager;
+    friend class PhysicsManager;
+    friend class GraphicalDebuggingManager;
 };
 
 class ColliderComponentContainer final : public StackAllocatedComponentContainer<ColliderComponent> {
-    friend class PhysicsComponentManager;
+    friend class PhysicsManager;
+    friend class GraphicalDebuggingManager;
+};
+
+class TransformComponentContainer final : public StackAllocatedComponentContainer<TransformComponent> {
+    friend class GraphicalDebuggingManager;
 };
 
 typedef StackAllocatedComponentContainer<GraphicsComponent> GraphicsComponentContainer;
 typedef StackAllocatedComponentContainer<TextComponent> TextComponentContainer;
-typedef StackAllocatedComponentContainer<TransformComponent> TransformComponentContainer;
 typedef StackAllocatedComponentContainer<UITransformComponent> UITransformComponentContainer;

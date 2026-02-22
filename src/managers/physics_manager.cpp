@@ -1,4 +1,4 @@
-#include "managers/physics_component_manager.hpp"
+#include "managers/physics_manager.hpp"
 
 #include <vector>
 
@@ -6,15 +6,14 @@
 #include "components/physics_component.hpp"
 #include "containers/component_containers/stack_allocated_component_container.hpp"
 #include "game_core.hpp"
-#include "utils/debug.hpp"
 #include "utils/vector.hpp"
 
-void PhysicsComponentManager::init() {
-    this->_physics_component_container = GameCore::get_instance()->get_physics_component_container();
-    this->_collider_component_container = GameCore::get_instance()->get_collider_component_container();
+void PhysicsManager::init() {
+    this->_physics_component_container = GameCore::get_physics_component_container();
+    this->_collider_component_container = GameCore::get_collider_component_container();
 }
 
-void PhysicsComponentManager::update() {
+void PhysicsManager::update() {
     // TODO: Check if this could be dangerous
     std::vector<PhysicsComponent> *physics_components = this->_physics_component_container->get_data_structure();
     std::vector<ColliderComponent> *collider_components = this->_collider_component_container->get_data_structure();

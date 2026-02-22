@@ -6,7 +6,7 @@
 #include "definitions.hpp"
 #include "entities/entity2D.hpp"
 #include "entities/static_physical_entity2D.hpp"
-#include "managers/graphics_component_manager.hpp"
+#include "managers/graphics_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 

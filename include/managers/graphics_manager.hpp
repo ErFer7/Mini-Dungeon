@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "components/graphics_component.hpp"
+#include "managers/graphical_debugging_manager.hpp"
 #include "managers/manager.hpp"
 #include "utils/id.hpp"
 
@@ -77,21 +78,21 @@ class Space {
     std::unique_ptr<GraphicsComponentVector> _components;
 };
 
-class GraphicsComponentManager : public Manager {
+class GraphicsManager : public Manager {
     friend class GraphicsComponent;
 
    public:
-    GraphicsComponentManager() = default;
+    GraphicsManager() = default;
 
-    GraphicsComponentManager(int screen_width,
-                             int screen_height,
-                             const char *title,
-                             int target_fps = 60,
-                             bool resizable = false,
-                             bool fullscreen = false,
-                             bool show_fps = false);
+    GraphicsManager(int screen_width,
+                    int screen_height,
+                    const char *title,
+                    int target_fps = 60,
+                    bool resizable = false,
+                    bool fullscreen = false,
+                    bool show_fps = false);
 
-    ~GraphicsComponentManager() override = default;
+    ~GraphicsManager() override = default;
 
     void init() override;
 
@@ -127,8 +128,6 @@ class GraphicsComponentManager : public Manager {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
 
-    void debug_draw_rectangle(Rectangle rectangle, Vector2Df position, float rotation, Color color);
-
     void register_component_on_space(Handle<GraphicsComponent> graphics_component);
 
     void unregister_component_on_space(Handle<GraphicsComponent> graphics_component);
@@ -145,4 +144,5 @@ class GraphicsComponentManager : public Manager {
     Camera2D _camera2D;  // TODO: Fix pixel perfect camera
     Space _screen_space;
     Space _world_space2D;
+    GraphicalDebuggingManager _graphical_debugging_manager;  // Submanager
 };

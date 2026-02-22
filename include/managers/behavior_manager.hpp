@@ -4,16 +4,16 @@
 #include "containers/component_containers/heap_allocated_component_container.hpp"
 #include "managers/manager.hpp"
 
-class BehaviorComponentManager : public Manager {
+class BehaviorManager : public Manager {
     friend class BehaviorComponent;
 
    public:
     typedef std::vector<std::unique_ptr<BehaviorComponent>> BehaviorComponentVector;
 
    public:
-    BehaviorComponentManager() = default;
+    BehaviorManager() = default;
 
-    ~BehaviorComponentManager() override = default;
+    ~BehaviorManager() override = default;
 
     void init() override;
     void update() override;

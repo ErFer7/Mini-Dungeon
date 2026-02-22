@@ -48,6 +48,8 @@ class Component : public Identified {
 
     inline bool is_active() { return this->_activity_state.is_active(); }
 
+    virtual void debug_draw() = 0;
+
    private:
     void _move(Component &&other) {
         if (this == &other) {

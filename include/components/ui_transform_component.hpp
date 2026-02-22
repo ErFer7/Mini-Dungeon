@@ -61,6 +61,8 @@ class UITransformComponent final : public Component {
 
     void scale(Vector2Df scale);
 
+    void debug_draw() override {}
+
    private:
     void _move(UITransformComponent &&other) {
         if (this == &other) {

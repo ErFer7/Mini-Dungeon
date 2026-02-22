@@ -2,13 +2,13 @@
 
 #include "managers/manager.hpp"
 
-class AudioComponentManager : public Manager {
+class AudioManager : public Manager {
     friend class AudioComponent;
 
    public:
-    AudioComponentManager() = default;
+    AudioManager() = default;
 
-    ~AudioComponentManager() override = default;
+    ~AudioManager() override = default;
 
     void init() override {};
     void update() override {};

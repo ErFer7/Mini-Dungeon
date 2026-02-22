@@ -73,6 +73,8 @@ class TransformComponent final : public Component {
 
     void scale(Vector2Df scale);
 
+    void debug_draw() override;
+
    private:
     void _move(TransformComponent &&other) {
         if (this == &other) {

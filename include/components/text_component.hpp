@@ -53,6 +53,8 @@ class TextComponent final : public Component {
 
     void set_color(Color color);
 
+    void debug_draw() override {}
+
    private:
     void _move(TextComponent &&other) {
         if (this == &other) {

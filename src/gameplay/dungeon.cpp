@@ -27,7 +27,7 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
 
     std::random_device random_device;
     std::mt19937 generator(random_device());
-    std::uniform_int_distribution<int> distribution(0, 11);
+    std::uniform_int_distribution<int> distribution(0, max_index);
 
     // TODO: Use a finite state machine
     while (file >> token) {
@@ -130,21 +130,23 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
 
 // TODO: Find a generic way to create tiles
 void Dungeon::Room::_create_wall(std::string sprite_path, Vector2Df position, float rotation) {
-    Texture2D texture = GameCore::get_instance()->get_texture_container()->load_texture(sprite_path);
+    Texture2D texture = GameCore::get_texture_container()->load_texture(sprite_path);
 
-    Handle<Wall> wall = GameCore::get_instance()->get_entity_container()->create_entity<Wall>(
-        StaticPhysicalEntity2DArgs{.texture = texture,
-                                   .rendering_mode = RenderingMode::WORLD_SPACE_2D,
-                                   .position = position,
-                                   .rotation = rotation});
+    Handle<Wall> wall = GameCore::get_entity_container()->create_entity<Wall>(StaticPhysicalEntity2DArgs{
+        .texture = texture,
+        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+        .position = position,
+        .rotation = rotation,
+        .collider_rectangle = Rectangle{
+            0.0f, -(BASE_SIZE * VIRTUAL_SCALE) / 4.0f, BASE_SIZE * VIRTUAL_SCALE, (BASE_SIZE * VIRTUAL_SCALE) / 2.0f}});
 
     this->_tiles->push_back(wall);
 }
 
 void Dungeon::Room::_create_floor(std::string sprite_path, Vector2Df position, float rotation) {
-    Texture2D texture = GameCore::get_instance()->get_texture_container()->load_texture(sprite_path);
+    Texture2D texture = GameCore::get_texture_container()->load_texture(sprite_path);
 
-    Handle<Floor> floor = GameCore::get_instance()->get_entity_container()->create_entity<Floor>(
+    Handle<Floor> floor = GameCore::get_entity_container()->create_entity<Floor>(
         Entity2DArgs{.texture = texture,
                      .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                      .position = position,

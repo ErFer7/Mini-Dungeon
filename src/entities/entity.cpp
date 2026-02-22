@@ -23,7 +23,7 @@ void Entity::destroy_component() {
 
     component->get_on_destroy_event()->invoke(component);
 
-    auto *component_container = GameCore::get_instance()->get_component_container<ComponentType>();
+    auto *component_container = GameCore::get_component_container<ComponentType>();
 
     component_container->template destroy_component<ComponentType>(component);
     this->_components->erase(this->_components->begin() + index);

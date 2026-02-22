@@ -39,7 +39,7 @@ class Dungeon {
     ~Dungeon() = default;
 
     void generate() {
-        this->_rooms->push_back(std::make_unique<Room>("assets/rooms/room_10.room", false, false, false, false));
+        this->_rooms->push_back(std::make_unique<Room>("assets/rooms/room_0.room", false, false, false, false));
     }
 
    private:
