@@ -5,18 +5,17 @@
 #include <vector>
 
 #include "utils/debug.hpp"
-#include "utils/id.hpp"
+#include "utils/id/handle.hpp"
+#include "utils/id/identifiable.hpp"
 
 namespace utils {
 
-// TODO: Rewrite this entire class considering that addresses could change, move semantics, etc.
-// It should be capable of handling everything
 template <typename... Args>
-class Event : public Identified {
+class Event final : public Identified {
     friend class Listener;
 
    public:
-    class Listener : public Identified {
+    class Listener final : public Identified {
         friend class Event;
 
        public:
@@ -28,7 +27,7 @@ class Event : public Identified {
             this->_events = std::make_unique<EventVector>();
         };
 
-        Listener(Listener &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
+        Listener(Listener &&other) noexcept : Identified(std::move(other)) { this->_move(std::move(other)); }
 
         ~Listener() {
             log_trace(this, __PRETTY_FUNCTION__);
@@ -40,7 +39,7 @@ class Event : public Identified {
             this->unsubscribe_all();
         };
 
-        inline Listener &operator=(Listener &&other) {
+        inline Listener &operator=(Listener &&other) noexcept {
             Identified::operator=(std::move(other));
 
             this->_move(std::move(other));
@@ -124,7 +123,7 @@ class Event : public Identified {
     // Events can't be copied because of listeners (see above)
     Event(const Event &other) noexcept = delete;
 
-    Event(Event &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
+    Event(Event &&other) noexcept : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~Event() {
         log_trace(this, __PRETTY_FUNCTION__);
@@ -140,7 +139,7 @@ class Event : public Identified {
 
     inline Event &operator=(const Event &other) noexcept = delete;
 
-    inline Event &operator=(Event &&other) {
+    inline Event &operator=(Event &&other) noexcept {
         Identified::operator=(std::move(other));
 
         this->_move(std::move(other));

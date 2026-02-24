@@ -21,11 +21,13 @@ class TransformComponent final : public Component {
    public:
     TransformComponent(Handle<Entity> entity, const TransformComponentArgs &args = TransformComponentArgs{});
 
-    TransformComponent(TransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
+    TransformComponent(TransformComponent &&other) noexcept : Component(std::move(other)) {
+        this->_move(std::move(other));
+    }
 
     ~TransformComponent() override = default;
 
-    TransformComponent &operator=(TransformComponent &&other) {
+    inline TransformComponent &operator=(TransformComponent &&other) noexcept {
         Component::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -76,14 +78,7 @@ class TransformComponent final : public Component {
     void debug_draw() override;
 
    private:
-    void _move(TransformComponent &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->_transform = std::move(other._transform);
-        this->_on_update_event = std::move(other._on_update_event);
-    }
+    void _move(TransformComponent &&other);
 
    private:
     // TODO: Check if utils:: is necessary here

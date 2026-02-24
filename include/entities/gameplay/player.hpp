@@ -7,7 +7,7 @@
 using utils::Handle;
 using utils::Vector2Df;
 
-class Player : public DynamicPhysicalEntity2D {
+class Player final : public DynamicPhysicalEntity2D {
    public:
     Player(const DynamicPhysicalEntity2DArgs &args);
 

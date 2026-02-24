@@ -7,7 +7,7 @@
 
 using std::vector;
 
-class PhysicsManager : public Manager {
+class PhysicsManager final : public Manager {
     friend class PhysicsComponent;
 
    public:

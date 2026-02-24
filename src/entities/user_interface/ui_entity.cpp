@@ -7,5 +7,5 @@
 UIEntity::UIEntity(const UIEntityArgs &args) : Entity2D(static_cast<Entity2DArgs>(args)) {
     this->_ui_transform_component =
         this->create_component<UITransformComponent>(static_cast<UITransformComponentArgs>(args));
-    this->set_activity_state_parent(args.parent_activity_state);
+    this->set_activity_state_parent(args.parent_activity_state);  // TODO: Check this out
 }

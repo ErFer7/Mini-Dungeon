@@ -15,8 +15,6 @@ class Container {
 
     virtual Object &get(LocalIdentifier local_identifier) const = 0;
 
-    virtual Object *get_ref(LocalIdentifier local_identifier) const = 0;
-
     virtual void remove(LocalIdentifier local_identifier) = 0;
 
     virtual void remove(const Object &object) = 0;

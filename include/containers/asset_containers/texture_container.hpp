@@ -13,5 +13,5 @@ class TextureContainer final : public MapContainer<std::string, Texture2D> {
    public:
     Texture2D load_texture(std::string path);
 
-    void unload_all_textures();
+    void unload_textures();
 };

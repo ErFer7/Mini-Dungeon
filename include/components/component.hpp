@@ -6,7 +6,7 @@
 #include "utils/activity_state.hpp"
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
-#include "utils/id.hpp"
+#include "utils/id/identifiable.hpp"
 
 using utils::ActivityState;
 using utils::Event;
@@ -24,15 +24,15 @@ class Component : public Identified {
    public:
     Component(Handle<Entity> entity);
 
-    Component(Component &&other) : Identified(std::move(other)) { this->_move(std::move(other)); };
+    Component(Component &&other) noexcept : Identified(std::move(other)) { this->_move(std::move(other)); }
 
-    Component &operator=(Component &&other) noexcept {
+    inline Component &operator=(Component &&other) noexcept {
         Identified::operator=(std::move(other));
 
         this->_move(std::move(other));
 
         return *this;
-    };
+    }
 
     ~Component() override = default;
 
@@ -46,22 +46,12 @@ class Component : public Identified {
 
     inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
 
-    inline bool is_active() { return this->_activity_state.is_active(); }
+    inline bool is_active() const { return this->_activity_state.is_active(); }
 
     virtual void debug_draw() = 0;
 
    private:
-    void _move(Component &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->update_reference(this);
-
-        this->_entity = std::move(other._entity);
-        this->_on_destroy_event = std::move(other._on_destroy_event);
-        this->_activity_state = std::move(other._activity_state);
-    }
+    void _move(Component &&other);
 
    private:
     Handle<Entity> _entity;

@@ -1,7 +1,7 @@
-#include "utils/id.hpp"
-
 #include "game_core.hpp"
 #include "utils/debug.hpp"
+#include "utils/id/handle.hpp"
+#include "utils/id/identifiable.hpp"
 
 using utils::HandleHelper;
 using utils::Identified;
@@ -26,5 +26,3 @@ void Identified::update_reference(void *pointer) {
 
     GameCore::get_id_references()->_set_pointer(this->_id, pointer);
 }
-
-void *HandleHelper::_get_pointer(utils::Id id) { return GameCore::get_id_references()->get_pointer(id); }

@@ -59,7 +59,7 @@ struct TextButtonArgs {
     }
 };
 
-class TextButton : public Button {
+class TextButton final : public Button {
    public:
     TextButton(const TextButtonArgs &args);
 

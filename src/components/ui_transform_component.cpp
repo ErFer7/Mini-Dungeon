@@ -110,6 +110,19 @@ void UITransformComponent::rotate(float rotation) { this->_transform_component->
 
 void UITransformComponent::scale(Vector2Df scale) { this->_transform_component->scale(scale); }
 
+void UITransformComponent::_move(UITransformComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_ui_origin = std::move(other._ui_origin);
+    this->_parent_ui_transform = std::move(other._parent_ui_transform);
+    this->_parent_transform_component = std::move(other._parent_transform_component);
+    this->_parent_graphics_component = std::move(other._parent_graphics_component);
+    this->_transform_component = std::move(other._transform_component);
+    this->_graphics_component = std::move(other._graphics_component);
+}
+
 Vector2Df UITransformComponent::_get_origin() const {
     Rectangle base_rect;
 

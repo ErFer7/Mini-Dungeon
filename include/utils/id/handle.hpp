@@ -1,83 +1,9 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-
 #include "types.hpp"
-#include "utils/debug.hpp"
-#include "utils/uncopiable.hpp"
+#include "utils/id/id_references.hpp"
 
 namespace utils {
-
-typedef long long Id;
-
-// TODO: Clean this file
-
-class IdReferences : public Uncopiable {
-    friend class Identified;
-
-   public:
-    typedef std::unordered_map<Id, void *> IdReferenceMap;
-
-    IdReferences() { this->_id_reference_map = std::make_unique<IdReferenceMap>(); }
-
-    void *get_pointer(Id id) { return this->_id_reference_map->at(id); }
-
-   private:
-    void _set_pointer(Id id, void *pointer) {
-        log_trace(this, __PRETTY_FUNCTION__, id, pointer);
-
-        this->_id_reference_map->insert_or_assign(id, pointer);
-    }
-
-    // TODO: Implement _remove_pointer
-
-   private:
-    std::unique_ptr<std::unordered_map<Id, void *>> _id_reference_map;
-};
-
-// TODO: Find a way to make this more reliable.
-// We are currently relying on the way things are oriented in memory to cast between types.
-// Multiple inheritance could break everything.
-class Identified : public Uncopiable {
-   public:
-    Identified(void *pointer);
-
-    Identified(Identified &&other) noexcept { this->_move(std::move(other)); }
-
-    ~Identified();
-
-    Identified &operator=(Identified &&other) noexcept {
-        this->_move(std::move(other));
-
-        return *this;
-    }
-
-    Id get_id() const { return _id; }
-
-    void update_reference(void *pointer);
-
-    template <typename Type>
-    Handle<Type> make_handle() {
-        return Handle<Type>(this->_id);
-    }
-
-   private:
-    void _move(Identified &&other) {
-        log_trace(this, __PRETTY_FUNCTION__, &other);
-
-        if (this == &other) {
-            return;
-        }
-
-        this->_id = std::move(other._id);
-        other._id = -1LL;
-    }
-
-   private:
-    static inline Id _next_id = 0LL;
-    Id _id;
-};
 
 class HandleHelper {
     template <typename Type>

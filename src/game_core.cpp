@@ -48,9 +48,9 @@ void GameCore::init_main_loop() {
     }
 
     _instance->_entity_container->destroy_all_entities();
-    _instance->_texture_container.unload_all_textures();
-    _instance->_image_container.unload_all_images();
-    _instance->_font_container.unload_all_fonts();
+    _instance->_texture_container.unload_textures();
+    _instance->_image_container.unload_images();
+    _instance->_font_container.unload_fonts();
 
     // By this point, all components should be already destroyed
 

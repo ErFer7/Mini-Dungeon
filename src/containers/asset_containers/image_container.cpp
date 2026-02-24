@@ -10,7 +10,7 @@ Image ImageContainer::load_image(std::string path) {
     return this->get(path);
 }
 
-void ImageContainer::unload_all_images() {
+void ImageContainer::unload_images() {
     for (auto [_, font] : *this->get_data_structure()) {
         if (IsImageValid(font)) {
             UnloadImage(font);

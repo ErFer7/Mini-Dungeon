@@ -2,7 +2,7 @@
 
 #include "entities/user_interface/ui_entity.hpp"
 
-class Background : public UIEntity {
+class Background final : public UIEntity {
    public:
     Background();
 

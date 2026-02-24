@@ -2,7 +2,9 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_enums.hpp"
+#include "managers/graphics/graphics_manager.hpp"
+#include "managers/graphics/space.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -25,11 +27,13 @@ class GraphicsComponent final : public Component {
    public:
     GraphicsComponent(Handle<Entity> entity, const GraphicsComponentArgs &args);
 
-    GraphicsComponent(GraphicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
+    GraphicsComponent(GraphicsComponent &&other) noexcept : Component(std::move(other)) {
+        this->_move(std::move(other));
+    }
 
     ~GraphicsComponent() override = default;
 
-    GraphicsComponent &operator=(GraphicsComponent &&other) {
+    inline GraphicsComponent &operator=(GraphicsComponent &&other) noexcept {
         Component::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -47,7 +51,7 @@ class GraphicsComponent final : public Component {
 
     inline RenderingMode get_rendering_mode() const { return this->_rendering_mode; }
 
-    inline int get_layer() { return this->_layer; }
+    inline int get_layer() const { return this->_layer; }
 
     inline void set_layer(int layer) { this->_layer = layer; }
 
@@ -60,26 +64,10 @@ class GraphicsComponent final : public Component {
     void debug_draw() override {}
 
    private:
-    inline Vector2Df _get_position() { return this->_transform_component->get_position(); }
+    void _move(GraphicsComponent &&other);
 
-    void _move(GraphicsComponent &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->_texture = std::move(other._texture);
-        this->_transform_component = std::move(other._transform_component);
-        this->_source_rectangle = std::move(other._source_rectangle);
-        this->_destination_rectangle = std::move(other._destination_rectangle);
-        this->_origin = std::move(other._origin);
-        this->_rotation = std::move(other._rotation);
-        this->_texture_scale = std::move(other._texture_scale);
-        this->_color = std::move(other._color);
-        this->_rendering_mode = std::move(other._rendering_mode);
-        this->_layer = std::move(other._layer);
-        this->_transform_update_listener = std::move(other._transform_update_listener);
-        this->_on_destroy_listener = std::move(other._on_destroy_listener);
-    }
+    // TODO: Replace with _get_transform()
+    inline Vector2Df _get_position() const { return this->_transform_component->get_position(); }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();

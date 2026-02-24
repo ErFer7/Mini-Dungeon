@@ -1,4 +1,4 @@
-#include "managers/graphical_debugging_manager.hpp"
+#include "managers/graphics/graphical_debugging_manager.hpp"
 
 #include "game_core.hpp"
 #include "raylib.h"

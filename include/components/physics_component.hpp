@@ -22,11 +22,11 @@ class PhysicsComponent final : public Component {
    public:
     PhysicsComponent(Handle<Entity> entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
 
-    PhysicsComponent(PhysicsComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
+    PhysicsComponent(PhysicsComponent &&other) noexcept : Component(std::move(other)) { this->_move(std::move(other)); }
 
     ~PhysicsComponent() override = default;
 
-    PhysicsComponent &operator=(PhysicsComponent &&other) {
+    inline PhysicsComponent &operator=(PhysicsComponent &&other) noexcept {
         Component::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -68,7 +68,7 @@ class PhysicsComponent final : public Component {
         this->_is_statically_stable = false;
     }
 
-    inline float get_drag() { return this->_drag; }
+    inline float get_drag() const { return this->_drag; }
 
     inline void set_drag(float drag) { this->_drag = drag; }
 
@@ -92,20 +92,7 @@ class PhysicsComponent final : public Component {
     void debug_draw() override;
 
    private:
-    void _move(PhysicsComponent &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->_velocity = std::move(other._velocity);
-        this->_acceleration = std::move(other._acceleration);
-        this->_drag = std::move(other._drag);
-        this->_time = std::move(other._time);
-        this->_is_statically_stable = std::move(other._is_statically_stable);
-        this->_is_colliding = std::move(other._is_colliding);
-        this->_transform_component = std::move(other._transform_component);
-        this->_collider_component = std::move(other._collider_component);
-    }
+    void _move(PhysicsComponent &&other);
 
     inline Handle<TransformComponent> _get_transform_component() const { return this->_transform_component; }
 

@@ -133,3 +133,12 @@ void TransformComponent::debug_draw() {
     DrawLineV(position, position + Vector2Df(10.0f, 0.0f), RED);
     DrawLineV(position, position + Vector2Df(0.0f, -10.0f), GREEN);
 }
+
+void TransformComponent::_move(TransformComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_transform = std::move(other._transform);
+    this->_on_update_event = std::move(other._on_update_event);
+}

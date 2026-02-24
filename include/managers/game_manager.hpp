@@ -19,6 +19,7 @@ class GameManager : public Manager {
     void exit() override {};
 
     // TODO: Refactor this to make the code more flexible
+    // use a map
     inline void transition_to_gameplay() { this->_transition(_gameplay_scene.get()); }
 
     inline void transition_to_menu() { this->_transition(_menu_scene.get()); }

@@ -18,5 +18,5 @@ class FontContainer final : public MapContainer<std::string, Font> {
                    int *code_points = nullptr,
                    int code_point_count = 0);
 
-    void unload_all_fonts();
+    void unload_fonts();
 };

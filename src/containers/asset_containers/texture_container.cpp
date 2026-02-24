@@ -10,7 +10,7 @@ Texture2D TextureContainer::load_texture(std::string path) {
     return this->get(path);
 }
 
-void TextureContainer::unload_all_textures() {
+void TextureContainer::unload_textures() {
     for (auto [_, texture] : *this->get_data_structure()) {
         if (IsTextureValid(texture)) {
             UnloadTexture(texture);

@@ -48,12 +48,12 @@ class Transform {
         this->_transform_data.position = origin_position + offset_position;
     }
 
-    void set_relative_rotation(Vector2Df origin, float origin_rotation, float offset_rotation) {
+    inline void set_relative_rotation(Vector2Df origin, float origin_rotation, float offset_rotation) {
         float diff_rotation = offset_rotation - (this->_transform_data.rotation - origin_rotation);
         this->rotate(origin, diff_rotation);
     }
 
-    void set_relative_scale(Vector2Df origin, Vector2Df origin_scale, Vector2Df offset_scale) {
+    inline void set_relative_scale(Vector2Df origin, Vector2Df origin_scale, Vector2Df offset_scale) {
         Vector2Df diff_scale = offset_scale / (this->_transform_data.scale / origin_scale);
         this->scale(origin, diff_scale);
     }
@@ -62,21 +62,9 @@ class Transform {
         this->_transform_data.position = this->_transform_data.position + translation;
     }
 
-    void rotate(Vector2Df origin, float rotation) {
-        this->_transform_data.position = this->_transform_data.position - origin;
-        this->_transform_data.position.rotate(DEG2RAD * rotation);
-        this->_transform_data.rotation = this->_transform_data.rotation + rotation;
-        this->_transform_data.position = this->_transform_data.position + origin;
-    }
+    void rotate(Vector2Df origin, float rotation);
 
-    void scale(Vector2Df origin, Vector2Df scale) {
-        this->_transform_data.position = this->_transform_data.position - origin;
-        this->_transform_data.position.rotate(DEG2RAD * -this->_transform_data.rotation);
-        this->_transform_data.position = this->_transform_data.position * scale;
-        this->_transform_data.scale = this->_transform_data.scale * scale;
-        this->_transform_data.position.rotate(DEG2RAD * this->_transform_data.rotation);
-        this->_transform_data.position = this->_transform_data.position + origin;
-    }
+    void scale(Vector2Df origin, Vector2Df scale);
 
    private:
     TransformData _transform_data;

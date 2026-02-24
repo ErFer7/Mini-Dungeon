@@ -8,7 +8,6 @@
 
 #include "components/component.hpp"
 #include "game_core.hpp"
-#include "utils/id.hpp"
 
 Entity::Entity() : utils::Identified(static_cast<void *>(this)) {
     this->_components = std::make_unique<ComponentsVector>();
@@ -19,7 +18,7 @@ Entity::~Entity() { this->destroy_all_components(); }
 template <typename ComponentType>
 void Entity::destroy_component() {
     int index = this->_get_component_index<ComponentType>();
-    utils::Handle<Component> component = this->_components->at(index);
+    Handle<Component> component = this->_components->at(index);
 
     component->get_on_destroy_event()->invoke(component);
 
@@ -48,7 +47,19 @@ inline bool Entity::has_component() const {
     return false;
 }
 
-utils::Handle<Component> Entity::_get_component(const std::type_info &type_info) const {
+void Entity::_move(Entity &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->update_reference(this);
+
+    this->_components = std::move(other._components);
+    this->_on_destroy_event = std::move(other._on_destroy_event);
+    this->_activity_state = std::move(other._activity_state);
+}
+
+Handle<Component> Entity::_get_component(const std::type_info &type_info) const {
     for (auto &component : *this->_components) {
         if (typeid(*component) == type_info) {
             return component;

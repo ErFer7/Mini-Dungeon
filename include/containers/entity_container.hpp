@@ -26,7 +26,9 @@ class EntityContainer : public VectorContainer<std::unique_ptr<Entity>> {
         return handle;
     }
 
-    inline Entity *get_entity(unsigned int index) const { return this->get_ref(index)->get(); }
+    inline Handle<Entity> get_entity(unsigned int index) const {
+        return static_cast<Identified *>(this->get(index).get())->make_handle<Entity>();
+    }
 
     inline size_t get_entity_count() const { return this->size(); }
 

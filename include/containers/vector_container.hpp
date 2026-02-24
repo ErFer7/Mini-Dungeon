@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "containers/container.hpp"
-#include "utils/id.hpp"
+#include "utils/id/id_references.hpp"
 
 using utils::Id;
 
@@ -27,13 +27,9 @@ class VectorContainer : public Container<std::vector<Object>, unsigned int, Obje
         this->_vector->insert(this->_vector->begin() + local_identifier, std::move(object));
     }
 
-    void push_back(Object object) { this->_vector->push_back(std::move(object)); }
+    void push_back(Object &&object) { this->_vector->push_back(std::move(object)); }
 
     inline Object &get(unsigned int local_identifier) const override { return this->_vector->at(local_identifier); };
-
-    inline Object *get_ref(unsigned int local_identifier) const override {
-        return &this->_vector->at(local_identifier);
-    };
 
     void remove(unsigned int local_identifier) override {
         this->_vector->erase(this->_vector->begin() + local_identifier);

@@ -6,7 +6,7 @@
 #include "entities/static_physical_entity2D.hpp"
 #include "game_core.hpp"
 #include "gameplay/dungeon.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "raylib.h"
 #include "types.hpp"
 #include "utils/vector.hpp"

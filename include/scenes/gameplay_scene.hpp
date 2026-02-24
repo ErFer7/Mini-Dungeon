@@ -3,11 +3,11 @@
 #include "gameplay/dungeon.hpp"
 #include "scene.hpp"
 #include "types.hpp"
-#include "utils/id.hpp"
+#include "utils/id/handle.hpp"
 
 using utils::Handle;
 
-class GameplayScene : public Scene {
+class GameplayScene final : public Scene {
    public:
     GameplayScene() = default;
 

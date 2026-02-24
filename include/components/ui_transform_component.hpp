@@ -25,12 +25,14 @@ class UITransformComponent final : public Component {
    public:
     UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args);
 
-    UITransformComponent(UITransformComponent &&other) : Component(std::move(other)) { this->_move(std::move(other)); }
+    UITransformComponent(UITransformComponent &&other) noexcept : Component(std::move(other)) {
+        this->_move(std::move(other));
+    }
 
     // TODO: Handle the destruction of the parent
     ~UITransformComponent() override = default;
 
-    UITransformComponent &operator=(UITransformComponent &&other) {
+    inline UITransformComponent &operator=(UITransformComponent &&other) noexcept {
         Component::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -64,18 +66,7 @@ class UITransformComponent final : public Component {
     void debug_draw() override {}
 
    private:
-    void _move(UITransformComponent &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->_ui_origin = std::move(other._ui_origin);
-        this->_parent_ui_transform = std::move(other._parent_ui_transform);
-        this->_parent_transform_component = std::move(other._parent_transform_component);
-        this->_parent_graphics_component = std::move(other._parent_graphics_component);
-        this->_transform_component = std::move(other._transform_component);
-        this->_graphics_component = std::move(other._graphics_component);
-    }
+    void _move(UITransformComponent &&other);
 
     Vector2Df _get_origin() const;
 

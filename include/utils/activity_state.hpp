@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event.hpp"
-#include "utils/id.hpp"
+#include "utils/id/identifiable.hpp"
 
 namespace utils {
 
@@ -11,21 +11,9 @@ class ActivityState : public Identified {
     typedef ActivityUpdateEvent::Listener ActivityUpdateListener;
 
    public:
-    ActivityState(bool active = true, Handle<ActivityState> parent_activity_state = Handle<ActivityState>())
-        : _is_active(true),
-          _is_self_active(true),
-          _is_parent_active(true),
-          utils::Identified(this) {
-        log_trace(this, __PRETTY_FUNCTION__);
+    ActivityState(bool active = true, Handle<ActivityState> parent_activity_state = Handle<ActivityState>());
 
-        if (!parent_activity_state.is_null()) {
-            this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
-                utils::Handle<ActivityState>(this->get_id()));
-            this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
-        }
-    }
-
-    ActivityState(ActivityState &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
+    ActivityState(ActivityState &&other) noexcept : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     ~ActivityState() override { log_trace(this, __PRETTY_FUNCTION__); }
 
@@ -42,44 +30,18 @@ class ActivityState : public Identified {
         this->_update_activity();
     }
 
-    inline bool is_active() { return this->_is_active; }
+    inline bool is_active() const { return this->_is_active; }
 
     inline utils::Handle<ActivityUpdateEvent> get_activity_update_event() {
         return utils::Handle<ActivityUpdateEvent>(this->_on_update_event.get_id());
     }
 
-    void set_parent_activity_state(Handle<ActivityState> parent_activity_state) {
-        if (this->_parent_update_listener.is_subscribed()) {
-            this->_parent_update_listener.unsubscribe_all();
-        }
-
-        if (!parent_activity_state.is_null()) {
-            this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
-                utils::Handle<ActivityState>(this->get_id()));
-            this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
-
-            this->_update_parent_activity(parent_activity_state->is_active());
-        } else {
-            this->_update_parent_activity(true);
-        }
-    }
+    void set_parent_activity_state(Handle<ActivityState> parent_activity_state);
 
    private:
-    void _move(ActivityState &&other) {
-        if (this == &other) {
-            return;
-        }
+    void _move(ActivityState &&other);
 
-        this->update_reference(this);
-
-        this->_is_active = std::move(other._is_active);
-        this->_is_self_active = std::move(other._is_self_active);
-        this->_is_parent_active = std::move(other._is_parent_active);
-        this->_on_update_event = std::move(other._on_update_event);
-        this->_parent_update_listener = std::move(other._parent_update_listener);
-    }
-
-    void _update_parent_activity(bool is_parent_active) {
+    inline void _update_parent_activity(bool is_parent_active) {
         this->_is_parent_active = is_parent_active;
         this->_update_activity();
     }

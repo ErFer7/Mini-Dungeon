@@ -61,6 +61,21 @@ void TextComponent::set_color(Color color) {
     this->_update_texture();
 }
 
+void TextComponent::_move(TextComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_content = std::move(other._content);
+    this->_font = std::move(other._font);
+    this->_font_size = std::move(other._font_size);
+    this->_spacing = std::move(other._spacing);
+    this->_color = std::move(other._color);
+    this->_graphics_component = std::move(other._graphics_component);
+    this->_text_image = std::move(other._text_image);
+    this->_text_texture = std::move(other._text_texture);
+}
+
 void TextComponent::_update_texture() {
     if (IsImageValid(this->_text_image)) {
         UnloadImage(this->_text_image);

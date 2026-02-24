@@ -6,7 +6,7 @@
 #include "definitions.hpp"
 #include "entities/entity2D.hpp"
 #include "entities/static_physical_entity2D.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -33,8 +33,6 @@ struct DynamicPhysicalEntity2DArgs {
     }
 
     operator PhysicsComponentArgs() const { return PhysicsComponentArgs{initial_velocity, initial_acceleration, drag}; }
-
-    operator ColliderComponentArgs() const { return ColliderComponentArgs{collider_rectangle}; }
 };
 
 class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
@@ -45,9 +43,6 @@ class DynamicPhysicalEntity2D : public StaticPhysicalEntity2D {
 
     inline Handle<PhysicsComponent> get_physics_component() { return this->_physics_component; }
 
-    inline Handle<ColliderComponent> get_collider_component() { return this->_collider_component; }
-
    private:
     Handle<PhysicsComponent> _physics_component;
-    Handle<ColliderComponent> _collider_component;
 };

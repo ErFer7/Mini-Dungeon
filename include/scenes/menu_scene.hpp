@@ -2,11 +2,11 @@
 
 #include "components/behavior_components/button_component.hpp"
 #include "scene.hpp"
-#include "utils/id.hpp"
+#include "utils/id/handle.hpp"
 
 using utils::Handle;
 
-class MenuScene : public Scene {
+class MenuScene final : public Scene {
    public:
     MenuScene() = default;
 

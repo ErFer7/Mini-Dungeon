@@ -4,7 +4,7 @@
 #include "components/graphics_component.hpp"
 #include "components/physics_component.hpp"
 #include "entities/entity.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
@@ -41,12 +41,46 @@ ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderCompon
     }
 }
 
+bool ColliderComponent::check_collision(Handle<ColliderComponent> &other) {
+    // TODO: Handle collisions with rotated colliders
+
+    Vector2Df top_left = Vector2Df(this->_rectangle.x - this->_rectangle.width / 2.0f,
+                                   this->_rectangle.y + this->_rectangle.height / 2.0f);
+    Vector2Df bottom_right = Vector2Df(this->_rectangle.x + this->_rectangle.width / 2.0f,
+                                       this->_rectangle.y - this->_rectangle.height / 2.0f);
+
+    Vector2Df other_top_left = Vector2Df(other->_rectangle.x - other->_rectangle.width / 2.0f,
+                                         other->_rectangle.y + other->_rectangle.height / 2.0f);
+    Vector2Df other_bottom_right = Vector2Df(other->_rectangle.x + other->_rectangle.width / 2.0f,
+                                             other->_rectangle.y - other->_rectangle.height / 2.0f);
+
+    if (top_left.x > other_bottom_right.x || other_top_left.x > bottom_right.x) {
+        return false;
+    }
+
+    if (bottom_right.y > other_top_left.y || other_bottom_right.y > top_left.y) {
+        return false;
+    }
+
+    return true;
+}
+
 void ColliderComponent::debug_draw() {
     DrawRectangleLines(this->_rectangle.x - this->_rectangle.width / 2.0f,
                        -(this->_rectangle.y + this->_rectangle.height / 2.0f),
                        this->_rectangle.width,
                        this->_rectangle.height,
                        RED);
+}
+
+void ColliderComponent::_move(ColliderComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_rectangle = std::move(other._rectangle);
+    this->_transform_component = std::move(other._transform_component);
+    this->_transform_update_listener = std::move(other._transform_update_listener);
 }
 
 // TODO: Add support for rotation

@@ -5,7 +5,7 @@
 #include "components/physics_component.hpp"
 #include "definitions.hpp"
 #include "entities/entity2D.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 

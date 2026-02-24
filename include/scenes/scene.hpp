@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.hpp"
-#include "utils/id.hpp"
+#include "utils/id/identifiable.hpp"
 
 using utils::Identified;
 

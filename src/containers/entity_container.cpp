@@ -5,15 +5,14 @@
 
 #include "entities/entity.hpp"
 #include "utils/debug.hpp"
-#include "utils/id.hpp"
 
 using utils::log_warn;
 
 void EntityContainer::destroy_entity(unsigned int index) {
     log_trace(this, __PRETTY_FUNCTION__, index);
-    Entity *entity = this->get_ref(index)->get();
+    Handle<Entity> entity = static_cast<Identified *>(this->get(index).get())->make_handle<Entity>();
 
-    entity->get_on_destroy_event().invoke(utils::Handle<Entity>(static_cast<utils::Identified *>(entity)->get_id()));
+    entity->get_on_destroy_event().invoke(entity);
     this->remove(index);
 }
 

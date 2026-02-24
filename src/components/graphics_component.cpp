@@ -4,7 +4,7 @@
 
 #include "entities/entity.hpp"
 #include "game_core.hpp"
-#include "managers/graphics_manager.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "utils/vector.hpp"
 
 // TODO: Register this component in the right space
@@ -60,6 +60,25 @@ void GraphicsComponent::draw() {
                    this->_origin,
                    this->_rotation,
                    this->_color);
+}
+
+void GraphicsComponent::_move(GraphicsComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_texture = std::move(other._texture);
+    this->_transform_component = std::move(other._transform_component);
+    this->_source_rectangle = std::move(other._source_rectangle);
+    this->_destination_rectangle = std::move(other._destination_rectangle);
+    this->_origin = std::move(other._origin);
+    this->_rotation = std::move(other._rotation);
+    this->_texture_scale = std::move(other._texture_scale);
+    this->_color = std::move(other._color);
+    this->_rendering_mode = std::move(other._rendering_mode);
+    this->_layer = std::move(other._layer);
+    this->_transform_update_listener = std::move(other._transform_update_listener);
+    this->_on_destroy_listener = std::move(other._on_destroy_listener);
 }
 
 void GraphicsComponent::_update_drawing_transform() {

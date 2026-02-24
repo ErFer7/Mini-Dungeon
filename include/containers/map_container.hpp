@@ -26,10 +26,6 @@ class MapContainer : public Container<std::unordered_map<LocalIdentifier, Object
 
     inline Object &get(LocalIdentifier local_identifier) const override { return (*this->_map)[local_identifier]; };
 
-    inline Object *get_ref(LocalIdentifier local_identifier) const override {
-        return &(*this->_map)[local_identifier];
-    };
-
     inline bool contains(LocalIdentifier local_identifier) const { return this->_map->contains(local_identifier); }
 
     void remove(LocalIdentifier local_identifier) override { (*this->_map).erase(local_identifier); }

@@ -4,7 +4,7 @@
 #include "containers/component_containers/heap_allocated_component_container.hpp"
 #include "managers/manager.hpp"
 
-class BehaviorManager : public Manager {
+class BehaviorManager final : public Manager {
     friend class BehaviorComponent;
 
    public:

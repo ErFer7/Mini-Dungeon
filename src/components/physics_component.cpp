@@ -67,3 +67,18 @@ void PhysicsComponent::debug_draw() {
     DrawLineV(position, position + (velocity * 0.1f), WHITE);
     DrawLineV(position, position + (acceleration * 0.1f), BLUE);
 }
+
+void PhysicsComponent::_move(PhysicsComponent &&other) {
+    if (this == &other) {
+        return;
+    }
+
+    this->_velocity = std::move(other._velocity);
+    this->_acceleration = std::move(other._acceleration);
+    this->_drag = std::move(other._drag);
+    this->_time = std::move(other._time);
+    this->_is_statically_stable = std::move(other._is_statically_stable);
+    this->_is_colliding = std::move(other._is_colliding);
+    this->_transform_component = std::move(other._transform_component);
+    this->_collider_component = std::move(other._collider_component);
+}

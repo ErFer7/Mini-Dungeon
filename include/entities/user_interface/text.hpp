@@ -42,7 +42,7 @@ struct TextArgs {
     operator TextComponentArgs() const { return TextComponentArgs{content, font, font_size, spacing, color}; }
 };
 
-class Text : public UIEntity {
+class Text final : public UIEntity {
    public:
     Text(const TextArgs &args);
 

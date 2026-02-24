@@ -26,3 +26,13 @@ void PlayerComponent::update() {
         this->_physics_component->set_velocity_x(-PLAYER_SPEED);
     }
 }
+
+void PlayerComponent::_move(PlayerComponent &&other) {
+    log_trace(this, __PRETTY_FUNCTION__, &other);
+
+    if (this == &other) {
+        return;
+    }
+
+    this->_physics_component = std::move(other._physics_component);
+}

@@ -17,11 +17,13 @@ class ButtonComponent : public BehaviorComponent {
    public:
     ButtonComponent(Handle<Entity> entity);
 
-    ButtonComponent(ButtonComponent &&other) : BehaviorComponent(std::move(other)) { this->_move(std::move(other)); }
+    ButtonComponent(ButtonComponent &&other) noexcept : BehaviorComponent(std::move(other)) {
+        this->_move(std::move(other));
+    }
 
     ~ButtonComponent() override { log_trace(this, __PRETTY_FUNCTION__); }
 
-    ButtonComponent &operator=(ButtonComponent &&other) {
+    inline ButtonComponent &operator=(ButtonComponent &&other) noexcept {
         BehaviorComponent::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -33,21 +35,10 @@ class ButtonComponent : public BehaviorComponent {
         return Handle<ButtonClickEvent>(this->_on_click_event.get_id());
     }
 
-    inline void start() override {}
-
     void update() override;
 
    private:
-    void _move(ButtonComponent &&other) {
-        log_trace(this, __PRETTY_FUNCTION__, &other);
-
-        if (this == &other) {
-            return;
-        }
-
-        this->_on_click_event = std::move(other._on_click_event);
-        this->_graphics_component = std::move(other._graphics_component);
-    }
+    void _move(ButtonComponent &&other);
 
    private:
     ButtonClickEvent _on_click_event;

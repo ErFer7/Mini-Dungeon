@@ -2,7 +2,7 @@
 
 #include "managers/manager.hpp"
 
-class AudioManager : public Manager {
+class AudioManager final : public Manager {
     friend class AudioComponent;
 
    public:

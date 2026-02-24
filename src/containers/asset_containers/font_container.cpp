@@ -14,7 +14,7 @@ Font FontContainer::load_font(std::string name,
     return this->get(path);
 }
 
-void FontContainer::unload_all_fonts() {
+void FontContainer::unload_fonts() {
     for (auto [_, font] : *this->get_data_structure()) {
         if (IsFontValid(font)) {
             UnloadFont(font);

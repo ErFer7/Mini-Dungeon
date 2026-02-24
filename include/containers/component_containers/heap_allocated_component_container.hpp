@@ -4,7 +4,6 @@
 
 #include "components/component.hpp"
 #include "containers/vector_container.hpp"
-#include "utils/id.hpp"
 
 using utils::Handle;
 using utils::Identified;

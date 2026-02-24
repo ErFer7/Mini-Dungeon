@@ -10,7 +10,6 @@
 #include "types.hpp"
 #include "utils/activity_state.hpp"
 #include "utils/event.hpp"
-#include "utils/id.hpp"
 
 // TODO: Implement name with a hash map
 // TODO: Event listeners
@@ -29,11 +28,11 @@ class Entity : public Identified {
    public:
     Entity();
 
-    Entity(Entity &&other) : Identified(std::move(other)) { this->_move(std::move(other)); }
+    Entity(Entity &&other) noexcept : Identified(std::move(other)) { this->_move(std::move(other)); }
 
     virtual ~Entity() override;
 
-    Entity &operator=(Entity &&other) {
+    Entity &operator=(Entity &&other) noexcept {
         Identified::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -75,7 +74,7 @@ class Entity : public Identified {
 
     inline void set_active(bool is_active) { this->_activity_state.set_active(is_active); }
 
-    inline bool is_active() { return this->_activity_state.is_active(); }
+    inline bool is_active() const { return this->_activity_state.is_active(); }
 
    protected:
     inline void set_activity_state_parent(Handle<ActivityState> activity_state) {
@@ -83,17 +82,7 @@ class Entity : public Identified {
     }
 
    private:
-    void _move(Entity &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->update_reference(this);
-
-        this->_components = std::move(other._components);
-        this->_on_destroy_event = std::move(other._on_destroy_event);
-        this->_activity_state = std::move(other._activity_state);
-    }
+    void _move(Entity &&other);
 
     Handle<Component> _get_component(const std::type_info &type_info) const;
 

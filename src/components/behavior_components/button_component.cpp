@@ -38,3 +38,14 @@ void ButtonComponent::update() {
         }
     }
 }
+
+void ButtonComponent::_move(ButtonComponent &&other) {
+    log_trace(this, __PRETTY_FUNCTION__, &other);
+
+    if (this == &other) {
+        return;
+    }
+
+    this->_on_click_event = std::move(other._on_click_event);
+    this->_graphics_component = std::move(other._graphics_component);
+}

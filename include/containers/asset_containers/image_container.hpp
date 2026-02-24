@@ -14,5 +14,5 @@ class ImageContainer final : public MapContainer<std::string, Image> {
     Image load_image(std::string path);
 
     // TODO: Remove the usage of "all" from places like this
-    void unload_all_images();
+    void unload_images();
 };

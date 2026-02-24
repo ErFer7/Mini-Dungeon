@@ -10,11 +10,13 @@ class PlayerComponent : public BehaviorComponent {
    public:
     PlayerComponent(Handle<Entity> entity);
 
-    PlayerComponent(PlayerComponent &&other) : BehaviorComponent(std::move(other)) { this->_move(std::move(other)); }
+    PlayerComponent(PlayerComponent &&other) noexcept : BehaviorComponent(std::move(other)) {
+        this->_move(std::move(other));
+    }
 
     ~PlayerComponent() override {}
 
-    PlayerComponent &operator=(PlayerComponent &&other) {
+    inline PlayerComponent &operator=(PlayerComponent &&other) noexcept {
         BehaviorComponent::operator=(std::move(other));
 
         this->_move(std::move(other));
@@ -22,18 +24,10 @@ class PlayerComponent : public BehaviorComponent {
         return *this;
     }
 
-    inline void start() override {}
-
     void update() override;
 
    private:
-    void _move(PlayerComponent &&other) {
-        if (this == &other) {
-            return;
-        }
-
-        this->_physics_component = std::move(other._physics_component);
-    }
+    void _move(PlayerComponent &&other);
 
    private:
     Handle<PhysicsComponent> _physics_component;
