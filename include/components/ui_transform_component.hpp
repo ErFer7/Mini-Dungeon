@@ -5,6 +5,7 @@
 #include "components/component.hpp"
 #include "components/graphics_component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/graphics/graphics_manager.hpp"
 #include "utils/vector.hpp"
 
 using utils::Handle;
@@ -22,6 +23,8 @@ struct UITransformComponentArgs {
 
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent final : public Component {
+    typedef GraphicsManager::ScreenResizeListener ScreenResizeListener;
+
    public:
     UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args);
 
@@ -75,11 +78,15 @@ class UITransformComponent final : public Component {
 
     Vector2Df _rect_point_by_ui_origin(Rectangle rectangle) const;
 
+    void _screen_resize_listener_call(int width, int height);
+
    private:
     UIOrigin _ui_origin;
+    Rectangle _base_rectangle;
     Handle<UITransformComponent> _parent_ui_transform;
     Handle<TransformComponent> _parent_transform_component;
     Handle<GraphicsComponent> _parent_graphics_component;
     Handle<TransformComponent> _transform_component;
     Handle<GraphicsComponent> _graphics_component;
+    ScreenResizeListener _screen_resize_listener;
 };

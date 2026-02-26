@@ -11,8 +11,7 @@ GameCore::GameCore(int screen_width,
                    bool resizable,
                    bool fullscreen,
                    bool show_fps)
-    : _id_references(),
-      _entity_container(std::make_unique<EntityContainer>()),
+    : _entity_container(std::make_unique<EntityContainer>()),
       _texture_container(),
       _image_container(),
       _font_container(),
@@ -58,4 +57,7 @@ void GameCore::init_main_loop() {
     _instance->_behavior_manager.exit();
     _instance->_physics_manager.exit();
     _instance->_game_manager.exit();
+
+    delete _instance;
+    delete _id_references;
 }

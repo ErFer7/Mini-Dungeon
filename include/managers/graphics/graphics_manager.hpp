@@ -9,12 +9,17 @@
 #include "managers/graphics/graphics_enums.hpp"
 #include "managers/graphics/space.hpp"
 #include "managers/manager.hpp"
+#include "utils/event.hpp"
 #include "utils/id/handle.hpp"
 
 using utils::Handle;
 
 class GraphicsManager final : public Manager {
     friend class GraphicsComponent;
+
+   public:
+    typedef Event<int, int> ScreenResizeEvent;
+    typedef ScreenResizeEvent::Listener ScreenResizeListener;
 
    public:
     GraphicsManager() = default;
@@ -63,6 +68,10 @@ class GraphicsManager final : public Manager {
         this->_screen_space.set_sorting_mode(sorting_mode);
     }
 
+    inline Handle<ScreenResizeEvent> get_on_screen_resize_event() {
+        return this->_on_screen_resize.make_handle<ScreenResizeEvent>();
+    }
+
     void register_component_on_space(Handle<GraphicsComponent> graphics_component);
 
     void unregister_component_on_space(Handle<GraphicsComponent> graphics_component);
@@ -79,5 +88,6 @@ class GraphicsManager final : public Manager {
     Camera2D _camera2D;  // TODO: Fix pixel perfect camera
     Space _screen_space;
     Space _world_space2D;
+    ScreenResizeEvent _on_screen_resize;
     GraphicalDebuggingManager _graphical_debugging_manager;  // Submanager
 };

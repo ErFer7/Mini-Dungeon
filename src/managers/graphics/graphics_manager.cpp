@@ -46,6 +46,7 @@ void GraphicsManager::update() {
         this->_screen_width = GetScreenWidth();
         this->_screen_height = GetScreenHeight();
         this->_camera2D.offset = {(float)this->_screen_width / 2.0f, (float)this->_screen_height / 2.0f};
+        this->_on_screen_resize.invoke(this->_screen_width, this->_screen_height);
     }
 
     this->_world_space2D.sort();

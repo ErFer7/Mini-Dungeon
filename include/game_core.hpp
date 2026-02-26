@@ -14,6 +14,8 @@
 #include "managers/physics_manager.hpp"
 #include "types.hpp"
 
+using utils::IdReferences;
+
 class GameCore {
    public:
     GameCore() = default;
@@ -44,10 +46,11 @@ class GameCore {
                          resizable,
                          fullscreen,
                          show_fps);
+        _id_references = new IdReferences();
         _instance = new GameCore(screen_height, screen_height, title, target_fps, resizable, fullscreen, show_fps);
     }
 
-    static inline utils::IdReferences *get_id_references() { return &_instance->_id_references; }
+    static inline utils::IdReferences *get_id_references() { return _id_references; }
 
     static inline EntityContainer *get_entity_container() { return _instance->_entity_container.get(); }
 
@@ -134,7 +137,9 @@ class GameCore {
    private:
     static inline GameCore *_instance;
 
-    utils::IdReferences _id_references;
+    // TODO: It would be better if this wasn't static
+    static inline IdReferences *_id_references;
+
     std::unique_ptr<EntityContainer> _entity_container;
     ImageContainer _image_container;
     TextureContainer _texture_container;

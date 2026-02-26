@@ -19,7 +19,10 @@ class IdReferences : public Uncopiable {
     typedef std::unordered_map<Id, void *> IdReferenceMap;
 
    public:
+    // TODO: Check if inplace creation can lead to memory leaks here
     IdReferences() { this->_id_reference_map = std::make_unique<IdReferenceMap>(); }
+
+    ~IdReferences() = default;
 
     inline void *get_pointer(Id id) { return this->_id_reference_map->at(id); }
 

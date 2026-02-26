@@ -3,7 +3,11 @@
 #include <raylib.h>
 
 #include "entities/entity.hpp"
+#include "game_core.hpp"
+#include "utils/debug.hpp"
 #include "utils/vector.hpp"
+
+using utils::log_info;
 
 UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args)
     : Component(entity),
@@ -14,9 +18,18 @@ UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransf
     log_trace(this, __PRETTY_FUNCTION__, entity);
 
     if (!this->_parent_ui_transform.is_null()) {
+        log_info(this, "UITransformComponent: Using ", this->_parent_ui_transform, " as parent");
+
         Handle<Entity> parent = this->_parent_ui_transform->get_entity();
         this->_parent_transform_component = parent->get_component<TransformComponent>();
         this->_parent_graphics_component = parent->get_component<GraphicsComponent>();
+    } else {
+        log_info(this, "UITransformComponent: Using screen as parent");
+
+        this->_screen_resize_listener
+            .bind_callable<UITransformComponent, &UITransformComponent::_screen_resize_listener_call>(
+                this->make_handle<UITransformComponent>());
+        this->_screen_resize_listener.subscribe(GameCore::get_graphics_manager()->get_on_screen_resize_event());
     }
 
     this->_transform_component = entity->get_component<TransformComponent>();
@@ -24,6 +37,10 @@ UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransf
 
     if (!this->_parent_graphics_component.is_null()) {
         this->_graphics_component->set_layer(this->_parent_graphics_component->get_layer() + 1);
+        this->_base_rectangle = this->_graphics_component->get_rectangle();
+    } else {
+        this->_base_rectangle =
+            Rectangle{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
     }
 
     // TODO: Improve the "clean code"
@@ -78,7 +95,7 @@ void UITransformComponent::set_rotation(float rotation) {
     Vector2Df origin;
     float origin_rotation;
 
-    if (!this->_parent_graphics_component.is_null()) {
+    if (!this->_parent_transform_component.is_null()) {
         origin = this->_parent_transform_component->get_position();
         origin_rotation = this->_parent_transform_component->get_rotation();
     } else {
@@ -93,7 +110,7 @@ void UITransformComponent::set_scale(Vector2Df scale) {
     Vector2Df origin;
     Vector2Df origin_scale;
 
-    if (!this->_parent_graphics_component.is_null()) {
+    if (!this->_parent_transform_component.is_null()) {
         origin = this->_parent_transform_component->get_position();
         origin_scale = this->_parent_transform_component->get_scale();
     } else {
@@ -116,24 +133,16 @@ void UITransformComponent::_move(UITransformComponent &&other) {
     }
 
     this->_ui_origin = std::move(other._ui_origin);
+    this->_base_rectangle = std::move(other._base_rectangle);
     this->_parent_ui_transform = std::move(other._parent_ui_transform);
     this->_parent_transform_component = std::move(other._parent_transform_component);
     this->_parent_graphics_component = std::move(other._parent_graphics_component);
     this->_transform_component = std::move(other._transform_component);
     this->_graphics_component = std::move(other._graphics_component);
+    this->_screen_resize_listener = std::move(other._screen_resize_listener);
 }
 
-Vector2Df UITransformComponent::_get_origin() const {
-    Rectangle base_rect;
-
-    if (!this->_parent_graphics_component.is_null()) {
-        base_rect = this->_parent_graphics_component->get_rectangle();
-    } else {
-        base_rect = Rectangle{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
-    }
-
-    return this->_rect_point_by_ui_origin(base_rect);
-}
+Vector2Df UITransformComponent::_get_origin() const { return this->_rect_point_by_ui_origin(this->_base_rectangle); }
 
 Vector2Df UITransformComponent::_get_anchor_point() const {
     return this->_rect_point_by_ui_origin(this->_graphics_component->get_rectangle());
@@ -162,4 +171,14 @@ Vector2Df UITransformComponent::_rect_point_by_ui_origin(Rectangle rectangle) co
     }
 
     return Vector2Df();
+}
+
+void UITransformComponent::_screen_resize_listener_call(int width, int height) {
+    log_trace(this, __PRETTY_FUNCTION__, width, height);
+
+    Vector2Df relative_position = this->get_position();
+
+    this->_base_rectangle = Rectangle{0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)};
+
+    this->set_position(relative_position);
 }
