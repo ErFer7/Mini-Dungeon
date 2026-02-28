@@ -4,6 +4,7 @@
 
 namespace utils {
 
+// TODO: Move this to the transform
 struct TransformData {
     TransformData() : position(Vector2Df()), rotation(0), scale(Vector2Df(1.0f)) {}
 

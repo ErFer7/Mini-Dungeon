@@ -65,11 +65,11 @@ class Event final : public Identified {
 
         inline void subscribe(Handle<Event<Args...>> event) {
             this->_events->push_back(event);
-            event->_add_listener(Handle<Listener>(this->get_id()));
+            event->_add_listener(this->make_handle<Listener>());
         }
 
         inline void unsubscribe(Handle<Event<Args...>> event) {
-            event->_remove_listener(Handle<Listener>(this->get_id()));
+            event->_remove_listener(this->make_handle<Listener>());
             this->_events->erase(std::remove(this->_events->begin(), this->_events->end(), event),
                                  this->_events->end());
         }
@@ -78,7 +78,9 @@ class Event final : public Identified {
             log_trace(this, __PRETTY_FUNCTION__);
 
             for (auto &event : *this->_events) {
-                event->_remove_listener(Handle<Listener>(this->get_id()));
+                if (!event.is_null()) {
+                    event->_remove_listener(this->make_handle<Listener>());
+                }
             }
 
             this->_events->clear();
@@ -133,7 +135,9 @@ class Event final : public Identified {
         }
 
         for (const auto &listener : *this->_listeners) {
-            listener->unsubscribe(Handle<Event<Args...>>(this->get_id()));
+            if (!listener.is_null()) {
+                listener->unsubscribe(this->make_handle<Event>());
+            }
         }
     };
 

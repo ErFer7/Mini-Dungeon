@@ -24,6 +24,7 @@ struct UITransformComponentArgs {
 // TODO: Rethink the name for this component, it is more like an adapter than a component actually
 class UITransformComponent final : public Component {
     typedef GraphicsManager::ScreenResizeListener ScreenResizeListener;
+    typedef TransformComponent::TransformUpdateListener TransformUpdateListener;
 
    public:
     UITransformComponent(Handle<Entity> entity, const UITransformComponentArgs &args);
@@ -80,6 +81,8 @@ class UITransformComponent final : public Component {
 
     void _screen_resize_listener_call(int width, int height);
 
+    void _transform_update_listener_call(const Vector2Df &origin, const TransformData &diff);
+
    private:
     UIOrigin _ui_origin;
     Rectangle _base_rectangle;
@@ -89,4 +92,5 @@ class UITransformComponent final : public Component {
     Handle<TransformComponent> _transform_component;
     Handle<GraphicsComponent> _graphics_component;
     ScreenResizeListener _screen_resize_listener;
+    TransformUpdateListener _transform_update_listener;
 };

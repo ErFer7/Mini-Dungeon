@@ -2,9 +2,9 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "managers/graphics/graphics_enums.hpp"
 #include "managers/graphics/graphics_manager.hpp"
 #include "managers/graphics/space.hpp"
+#include "managers/graphics/graphics_enums.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -67,7 +67,7 @@ class GraphicsComponent final : public Component {
     void _move(GraphicsComponent &&other);
 
     // TODO: Replace with _get_transform()
-    inline Vector2Df _get_position() const { return this->_transform_component->get_position(); }
+    inline Vector2Df _get_position() const { return Vector2Df(this->_destination_rectangle.x, this->_destination_rectangle.y); }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();
@@ -82,7 +82,6 @@ class GraphicsComponent final : public Component {
 
    private:
     Texture2D _texture;
-    Handle<TransformComponent> _transform_component;
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
     Vector2Df _origin;

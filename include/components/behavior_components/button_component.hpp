@@ -2,6 +2,7 @@
 
 #include "components/behavior_components/behavior_component.hpp"
 #include "components/graphics_component.hpp"
+#include "types.hpp"
 #include "utils/debug.hpp"
 #include "utils/event.hpp"
 
@@ -32,7 +33,7 @@ class ButtonComponent : public BehaviorComponent {
     }
 
     inline Handle<ButtonClickEvent> get_on_click_event() {
-        return Handle<ButtonClickEvent>(this->_on_click_event.get_id());
+        return this->_on_click_event.make_handle<ButtonClickEvent>();
     }
 
     void update() override;

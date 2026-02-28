@@ -24,7 +24,7 @@ class IdReferences : public Uncopiable {
 
     ~IdReferences() = default;
 
-    inline void *get_pointer(Id id) { return this->_id_reference_map->at(id); }
+    inline void *get_pointer(Id id) { return (*this->_id_reference_map)[id]; }
 
    private:
     inline void _set_pointer(Id id, void *pointer) {

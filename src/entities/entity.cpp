@@ -4,47 +4,38 @@
 
 #include <cassert>
 #include <memory>
-#include <vector>
+#include <typeindex>
 
 #include "components/component.hpp"
 #include "game_core.hpp"
 
 Entity::Entity() : utils::Identified(static_cast<void *>(this)) {
-    this->_components = std::make_unique<ComponentsVector>();
+    this->_components = std::make_unique<ComponentsMap>();
 }
 
 Entity::~Entity() { this->destroy_all_components(); }
 
 template <typename ComponentType>
 void Entity::destroy_component() {
-    int index = this->_get_component_index<ComponentType>();
-    Handle<Component> component = this->_components->at(index);
+    std::type_index type_index = static_cast<std::type_index>(typeid(ComponentType));
+    Handle<Component> component = this->_components->at(type_index);
 
     component->get_on_destroy_event()->invoke(component);
 
     auto *component_container = GameCore::get_component_container<ComponentType>();
 
     component_container->template destroy_component<ComponentType>(component);
-    this->_components->erase(this->_components->begin() + index);
+    this->_components->erase(type_index);
 }
 
 void Entity::destroy_all_components() {
-    for (auto &component : *this->_components) {
-        component->get_on_destroy_event()->invoke(component);
-    }
-
-    this->_components->clear();
-}
-
-template <typename ComponentType>
-inline bool Entity::has_component() const {
-    for (auto &component : *this->_components) {
-        if (typeid(*component) == typeid(ComponentType)) {
-            return true;
+    for (auto &[_, component] : *this->_components) {
+        if (!component.is_null()) {
+            component->get_on_destroy_event()->invoke(component);
         }
     }
 
-    return false;
+    this->_components->clear();
 }
 
 void Entity::_move(Entity &&other) {
@@ -57,29 +48,4 @@ void Entity::_move(Entity &&other) {
     this->_components = std::move(other._components);
     this->_on_destroy_event = std::move(other._on_destroy_event);
     this->_activity_state = std::move(other._activity_state);
-}
-
-Handle<Component> Entity::_get_component(const std::type_info &type_info) const {
-    for (auto &component : *this->_components) {
-        if (typeid(*component) == type_info) {
-            return component;
-        }
-    }
-
-    return utils::Handle<Component>();
-}
-
-template <typename ComponentType>
-int Entity::_get_component_index() const {
-    unsigned int index = 0;
-
-    for (auto &component : *this->_components) {
-        if (typeid(*component) == typeid(ComponentType)) {
-            return index;
-        }
-
-        index++;
-    }
-
-    return -1;
 }

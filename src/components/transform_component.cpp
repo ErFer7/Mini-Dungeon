@@ -128,10 +128,19 @@ void TransformComponent::scale(Vector2Df scale) {
 
 void TransformComponent::debug_draw() {
     Vector2Df position = this->_transform.get_position();
+    float rotation = this->_transform.get_rotation();
     position.y *= -1.0f;
 
-    DrawLineV(position, position + Vector2Df(10.0f, 0.0f), RED);
-    DrawLineV(position, position + Vector2Df(0.0f, -10.0f), GREEN);
+    Vector2Df x_axis = position + Vector2Df(10.0f, 0.0f);
+    Vector2Df y_axis = position + Vector2Df(0.0f, -10.0f);
+
+    x_axis.rotate(position, rotation);
+    y_axis.rotate(position, rotation);
+
+    DrawLineV(position,x_axis, RED);
+    DrawLineV(position, y_axis, GREEN);
+
+    Vector2Df original_position = this->_transform.get_position();
 }
 
 void TransformComponent::_move(TransformComponent &&other) {

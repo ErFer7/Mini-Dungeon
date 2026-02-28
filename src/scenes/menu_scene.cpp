@@ -11,6 +11,8 @@
 #include "entities/user_interface/text_button.hpp"
 #include "game_core.hpp"
 
+using utils::Handle;
+
 void MenuScene::init() {
     EntityContainer *entity_container = GameCore::get_entity_container();
     FontContainer *font_container = GameCore::get_font_container();
@@ -58,11 +60,10 @@ void MenuScene::init() {
                                                                                     .position = Vector2Df(0.0f, 200.0f),
                                                                                     .text_color = golden});
 
-    this->_play_listener.bind_callable<MenuScene, &MenuScene::_transition_to_gameplay>(
-        utils::Handle<MenuScene>(this->get_id()));
+    this->_play_listener.bind_callable<MenuScene, &MenuScene::_transition_to_gameplay>(this->make_handle<MenuScene>());
     this->_play_listener.subscribe(this->_play_button->get_button_component()->get_on_click_event());
 
-    this->_exit_listener.bind_callable<MenuScene, &MenuScene::_exit>(utils::Handle<MenuScene>(this->get_id()));
+    this->_exit_listener.bind_callable<MenuScene, &MenuScene::_exit>(this->make_handle<MenuScene>());
     this->_exit_listener.subscribe(this->_exit_button->get_button_component()->get_on_click_event());
 
     this->_was_initialized = true;

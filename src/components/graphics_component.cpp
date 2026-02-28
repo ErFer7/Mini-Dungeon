@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "components/transform_component.hpp"
 #include "entities/entity.hpp"
 #include "game_core.hpp"
 #include "managers/graphics/graphics_manager.hpp"
@@ -15,13 +16,13 @@ GraphicsComponent::GraphicsComponent(Handle<Entity> entity, const GraphicsCompon
       _color(args.color),
       _layer(args.layer) {
     log_trace(this, __PRETTY_FUNCTION__, entity);
-    this->_transform_component = this->get_entity()->get_component<TransformComponent>();
+    Handle<TransformComponent> transform_component = this->get_entity()->get_component<TransformComponent>();
 
     Handle<GraphicsComponent> handle = this->make_handle<GraphicsComponent>();
 
     this->_transform_update_listener
         .bind_callable<GraphicsComponent, &GraphicsComponent::_update_drawing_transform_listener_call>(handle);
-    this->_transform_update_listener.subscribe(this->_transform_component->get_on_update_event());
+    this->_transform_update_listener.subscribe(transform_component->get_on_update_event());
 
     this->set_texture(args.texture);
 
@@ -68,7 +69,6 @@ void GraphicsComponent::_move(GraphicsComponent &&other) {
     }
 
     this->_texture = std::move(other._texture);
-    this->_transform_component = std::move(other._transform_component);
     this->_source_rectangle = std::move(other._source_rectangle);
     this->_destination_rectangle = std::move(other._destination_rectangle);
     this->_origin = std::move(other._origin);
@@ -87,15 +87,18 @@ void GraphicsComponent::_update_drawing_transform() {
 
     float y_axis_orientation = this->_rendering_mode == RenderingMode::WORLD_SPACE_2D ? -1.0f : 1.0f;
 
-    Vector2Df scale = this->_transform_component->get_scale();
+    // OPTIMIZE: Use diff transformations from the event and avoid getting the transform from the entity
+    Handle<TransformComponent> transform_component = this->get_entity()->get_component<TransformComponent>();
+
+    Vector2Df scale = transform_component->get_scale();
 
     float scaled_width = width * scale.x * this->_texture_scale;
     float scaled_height = height * scale.y * this->_texture_scale;
 
     this->_origin = Vector2Df(scaled_width, scaled_height) / 2.0f;
-    this->_rotation = this->_transform_component->get_rotation();
+    this->_rotation = transform_component->get_rotation();
 
-    Vector2Df position = this->_transform_component->get_position();
+    Vector2Df position = transform_component->get_position();
 
     this->_destination_rectangle.x = position.x;
     this->_destination_rectangle.y = position.y * y_axis_orientation;

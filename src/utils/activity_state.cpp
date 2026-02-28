@@ -1,17 +1,21 @@
 #include "utils/activity_state.hpp"
 
+#include "utils/id/identifiable.hpp"
+
 using utils::ActivityState;
+using utils::Handle;
+using utils::Identified;
 
 ActivityState::ActivityState(bool active, Handle<ActivityState> parent_activity_state)
     : _is_active(true),
       _is_self_active(true),
       _is_parent_active(true),
-      utils::Identified(this) {
+      Identified(this) {
     log_trace(this, __PRETTY_FUNCTION__);
 
     if (!parent_activity_state.is_null()) {
         this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
-            utils::Handle<ActivityState>(this->get_id()));
+            this->make_handle<ActivityState>());
         this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
     }
 }
@@ -23,7 +27,7 @@ void ActivityState::set_parent_activity_state(Handle<ActivityState> parent_activ
 
     if (!parent_activity_state.is_null()) {
         this->_parent_update_listener.bind_callable<ActivityState, &ActivityState::_update_parent_activity>(
-            utils::Handle<ActivityState>(this->get_id()));
+            this->make_handle<ActivityState>());
         this->_parent_update_listener.subscribe(parent_activity_state->get_activity_update_event());
 
         this->_update_parent_activity(parent_activity_state->is_active());

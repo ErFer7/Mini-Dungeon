@@ -190,12 +190,32 @@ struct Vector2D {
         return Vector2D(x * cos - y * sin, x * sin + y * cos);
     }
 
+    Vector2D rotated(Vector2D origin, float angle) const {
+        Vector2D vector = this - origin;
+
+        vector.rotate(origin, angle);
+
+        return vector;
+    }
+
     void rotate(float angle) {
         T cos = std::cos(angle);
         T sin = std::sin(angle);
 
         x = x * cos - y * sin;
         y = x * sin + y * cos;
+    }
+
+    void rotate(Vector2D origin, float angle) {
+        *this -= origin;
+
+        T cos = std::cos(angle);
+        T sin = std::sin(angle);
+
+        x = x * cos - y * sin;
+        y = x * sin + y * cos;
+
+        *this += origin;
     }
 
     T x;

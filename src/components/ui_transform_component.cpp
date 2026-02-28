@@ -23,6 +23,11 @@ UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransf
         Handle<Entity> parent = this->_parent_ui_transform->get_entity();
         this->_parent_transform_component = parent->get_component<TransformComponent>();
         this->_parent_graphics_component = parent->get_component<GraphicsComponent>();
+
+        this->_transform_update_listener
+            .bind_callable<UITransformComponent, &UITransformComponent::_transform_update_listener_call>(
+                this->make_handle<UITransformComponent>());
+        this->_transform_update_listener.subscribe(this->_parent_transform_component->get_on_update_event());
     } else {
         log_info(this, "UITransformComponent: Using screen as parent");
 
@@ -37,7 +42,7 @@ UITransformComponent::UITransformComponent(Handle<Entity> entity, const UITransf
 
     if (!this->_parent_graphics_component.is_null()) {
         this->_graphics_component->set_layer(this->_parent_graphics_component->get_layer() + 1);
-        this->_base_rectangle = this->_graphics_component->get_rectangle();
+        this->_base_rectangle = this->_parent_graphics_component->get_rectangle();
     } else {
         this->_base_rectangle =
             Rectangle{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
@@ -140,6 +145,7 @@ void UITransformComponent::_move(UITransformComponent &&other) {
     this->_transform_component = std::move(other._transform_component);
     this->_graphics_component = std::move(other._graphics_component);
     this->_screen_resize_listener = std::move(other._screen_resize_listener);
+    this->_transform_update_listener = std::move(other._transform_update_listener);
 }
 
 Vector2Df UITransformComponent::_get_origin() const { return this->_rect_point_by_ui_origin(this->_base_rectangle); }
@@ -181,4 +187,13 @@ void UITransformComponent::_screen_resize_listener_call(int width, int height) {
     this->_base_rectangle = Rectangle{0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)};
 
     this->set_position(relative_position);
+}
+
+void UITransformComponent::_transform_update_listener_call(const Vector2Df &origin, const TransformData &diff) {
+    log_trace(this, __PRETTY_FUNCTION__, origin, diff);
+
+    // TODO: Allow relative rotation and scale
+    this->translate(diff.position);
+    this->rotate(diff.rotation);
+    this->scale(diff.scale);
 }

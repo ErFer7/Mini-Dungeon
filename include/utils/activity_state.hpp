@@ -18,7 +18,7 @@ class ActivityState : public Identified {
     ~ActivityState() override { log_trace(this, __PRETTY_FUNCTION__); }
 
     ActivityState &operator=(ActivityState &&other) noexcept {
-        utils::Identified::operator=(std::move(other));
+        Identified::operator=(std::move(other));
 
         this->_move(std::move(other));
 
@@ -32,8 +32,8 @@ class ActivityState : public Identified {
 
     inline bool is_active() const { return this->_is_active; }
 
-    inline utils::Handle<ActivityUpdateEvent> get_activity_update_event() {
-        return utils::Handle<ActivityUpdateEvent>(this->_on_update_event.get_id());
+    inline Handle<ActivityUpdateEvent> get_activity_update_event() {
+        return this->_on_update_event.make_handle<ActivityUpdateEvent>();
     }
 
     void set_parent_activity_state(Handle<ActivityState> parent_activity_state);

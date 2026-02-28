@@ -5,13 +5,13 @@ Font FontContainer::load_font(std::string name,
                               int font_size,
                               int *code_points,
                               int code_point_count) {
-    if (this->contains(path)) {
-        return this->get(path);
+    if (this->contains(name)) {
+        return this->get(name);
     }
 
-    this->insert(path.c_str(), LoadFontEx(path.c_str(), font_size, code_points, code_point_count));
+    this->insert(name.c_str(), LoadFontEx(path.c_str(), font_size, code_points, code_point_count));
 
-    return this->get(path);
+    return this->get(name);
 }
 
 void FontContainer::unload_fonts() {
