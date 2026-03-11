@@ -5,4 +5,5 @@
 
 typedef StaticPhysicalEntity2D Wall;
 typedef StaticPhysicalEntity2D Box;
+typedef Entity2D BackgroundWall;
 typedef Entity2D Floor;

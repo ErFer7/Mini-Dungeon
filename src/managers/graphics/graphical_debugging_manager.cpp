@@ -13,15 +13,21 @@ void GraphicalDebuggingManager::update() {
     BeginMode2D(GameCore::get_graphics_manager()->get_camera2D());
 
     for (auto &component : *this->_transform_component_container->get_data_structure()) {
-        component.debug_draw();
+        if (component.is_active()) {
+            component.debug_draw();
+        }
     }
 
     for (auto &component : *this->_physics_component_container->get_data_structure()) {
-        component.debug_draw();
+        if (component.is_active()) {
+            component.debug_draw();
+        }
     }
 
     for (auto &component : *this->_collider_component_container->get_data_structure()) {
-        component.debug_draw();
+        if (component.is_active()) {
+            component.debug_draw();
+        }
     }
 
     EndMode2D();

@@ -17,15 +17,17 @@ class Dungeon {
        public:
         typedef std::vector<Handle<Entity2D>> TileVector;
 
+       private:
+        // TODO: Define something more generic with this
+        enum Direction { NONE, TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
+
        public:
         Room(std::string room_path, bool top_door, bool bottom_door, bool left_door, bool right_door);
 
         ~Room() = default;
 
        private:
-        void _create_wall(std::string sprite_path, Vector2Df position, float rotation = 0.0f);
-
-        void _create_floor(std::string sprite_path, Vector2Df position, float rotation = 0.0f);
+        void _create_tile(std::string sprite_path, Vector2Df position, bool wall_level, bool has_collider = false, Direction collider_direction = NONE);
 
        private:
         std::unique_ptr<TileVector> _tiles;
@@ -39,7 +41,7 @@ class Dungeon {
     ~Dungeon() = default;
 
     void generate() {
-        this->_rooms->push_back(std::make_unique<Room>("assets/rooms/room_0.room", false, false, false, false));
+        this->_rooms->push_back(std::make_unique<Room>("assets/rooms/room_10.room", false, false, false, false));
     }
 
    private:

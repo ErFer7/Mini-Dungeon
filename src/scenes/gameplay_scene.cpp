@@ -1,6 +1,7 @@
 #include "scenes/gameplay_scene.hpp"
 
 #include "containers/entity_container.hpp"
+#include "definitions.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
 #include "entities/gameplay/player.hpp"
 #include "entities/static_physical_entity2D.hpp"
@@ -16,8 +17,11 @@ using utils::Vector2Df;
 void GameplayScene::init() {
     Texture2D player_texture = GameCore::get_texture_container()->load_texture("assets/sprites/characters/Char_0.png");
 
-    this->_player = GameCore::get_entity_container()->create_entity<Player>(
-        DynamicPhysicalEntity2DArgs{.texture = player_texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D});
+    this->_player = GameCore::get_entity_container()->create_entity<Player>(DynamicPhysicalEntity2DArgs{
+        .texture = player_texture,
+        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+        .position = Vector2Df(0.0, 120.0f),
+        .collider_rectangle = Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
 
     this->_player->set_active(false);
 

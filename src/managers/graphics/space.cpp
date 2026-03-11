@@ -9,6 +9,7 @@ void Space::remove_component(Handle<GraphicsComponent> component) {
                              this->_components->end());
 }
 
+// OPTIMIZE: Change the allocation for layers and modes
 void Space::sort() {
     switch (this->_sorting_mode) {
         case SortingMode::NONE:
@@ -35,7 +36,7 @@ void Space::sort() {
                           }
 
                           if (comp_a->get_layer() == comp_b->get_layer()) {
-                              return comp_a->_get_position().y > comp_b->_get_position().y;
+                              return comp_a->_get_position().y < comp_b->_get_position().y;
                           }
 
                           return comp_a->get_layer() < comp_b->get_layer();

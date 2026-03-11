@@ -30,5 +30,6 @@ class PlayerComponent : public BehaviorComponent {
     void _move(PlayerComponent &&other);
 
    private:
+    Handle<TransformComponent> _transform_component;
     Handle<PhysicsComponent> _physics_component;
 };

@@ -4,16 +4,20 @@
 
 #include "components/behavior_components/behavior_component.hpp"
 #include "components/physics_component.hpp"
+#include "components/transform_component.hpp"
 #include "definitions.hpp"
 #include "entities/entity.hpp"
 
 PlayerComponent::PlayerComponent(Handle<Entity> entity) : BehaviorComponent(entity) {
     log_trace(this, __PRETTY_FUNCTION__, entity);
 
+    this->_transform_component = entity->get_component<TransformComponent>();
     this->_physics_component = entity->get_component<PhysicsComponent>();
 }
 
 void PlayerComponent::update() {
+    GameCore::get_graphics_manager()->set_camera_position(this->_transform_component->get_position());
+
     if (IsKeyDown(KEY_UP)) {
         this->_physics_component->set_velocity_y(PLAYER_SPEED);
     } else if (IsKeyDown(KEY_DOWN)) {

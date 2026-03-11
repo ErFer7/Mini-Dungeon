@@ -56,6 +56,8 @@ class GraphicsManager final : public Manager {
 
     inline Camera2D get_camera2D() const { return this->_camera2D; }
 
+    inline void set_camera_position(Vector2Df position) { this->_camera2D.target = Vector2{position.x, -position.y}; }
+
     inline SortingMode get_world_space2D_sorting_mode() const { return this->_world_space2D.get_sorting_mode(); }
 
     inline void set_world_space2D_sorting_mode(SortingMode sorting_mode) {
