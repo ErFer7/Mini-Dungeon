@@ -43,6 +43,13 @@ void PhysicsManager::update() {
                 continue;
             }
 
+            collider_i->_trigger_event();
+            collider_j->_trigger_event();
+
+            if (collider_i->is_trigger() || collider_j->is_trigger()) {
+                continue;
+            }
+
             it_i->_get_transform_component()->translate(-it_i->get_velocity() * it_i->_get_time_diff());
 
             it_i->set_acceleration(Vector2Df());

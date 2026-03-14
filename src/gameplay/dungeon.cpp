@@ -6,13 +6,14 @@
 
 #include "containers/entity_container.hpp"
 #include "definitions.hpp"
+#include "entities/gameplay/door.hpp"
 #include "entities/gameplay/tiles.hpp"
 #include "entities/static_physical_entity2D.hpp"
 #include "game_core.hpp"
 #include "raylib.h"
-#include "utils/vector.hpp"
+#include "utils/debug.hpp"
 
-Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool left_door, bool right_door) {
+Dungeon::Room::Room(std::string room_path, Dungeon::DoorMap door_map) {
     this->_tiles = std::make_unique<TileVector>();
 
     const float tile_size = BASE_SIZE * VIRTUAL_SCALE;
@@ -39,11 +40,13 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
 
         if (width == 0) {
             width = std::atoi(token.c_str());
+            continue;
         }
 
         if (height == 0) {
             height = std::atoi(token.c_str());
             reading_room = true;
+            continue;
         }
 
         column = 0;
@@ -54,81 +57,116 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
 
             switch (character) {
                 case '@':
-                    this->_create_tile("assets/sprites/walls/wall_top_left.png", position, true, true, TOP_LEFT);
+                    this->_create_tile("assets/sprites/walls/wall_top_left.png", position, OBSTACLE, TOP_LEFT);
                     break;
                 case '_':
-                    this->_create_tile("assets/sprites/walls/wall_top.png", position, true, true, TOP);
+                    this->_create_tile("assets/sprites/walls/wall_top.png", position, OBSTACLE, TOP);
                     break;
                 case '&':
-                    this->_create_tile("assets/sprites/walls/wall_top_right.png", position, true, true, TOP_RIGHT);
+                    this->_create_tile("assets/sprites/walls/wall_top_right.png", position, OBSTACLE, TOP_RIGHT);
                     break;
                 case '$':
-                    this->_create_tile("assets/sprites/walls/wall_left.png", position, true, true, LEFT);
+                    this->_create_tile("assets/sprites/walls/wall_left.png", position, OBSTACLE, LEFT);
                     break;
                 case '#': {
                     int index = distribution(generator);
-                    this->_create_tile(std::format("assets/sprites/walls/wall_{}.png", index), position, true);
+                    this->_create_tile(std::format("assets/sprites/walls/wall_{}.png", index), position, BACKGROUND);
                     break;
                 }
                 case '%':
-                    this->_create_tile("assets/sprites/walls/wall_right.png", position, true, true, RIGHT);
+                    this->_create_tile("assets/sprites/walls/wall_right.png", position, OBSTACLE, RIGHT);
                     break;
                 case '+':
                     this->_create_tile(
-                        "assets/sprites/walls/wall_bottom_left_new.png", position, true, true, BOTTOM_LEFT);
+                        "assets/sprites/walls/wall_bottom_left_new.png", position, OBSTACLE, BOTTOM_LEFT);
                     break;
                 case '=':
-                    this->_create_tile("assets/sprites/walls/wall_bottom_new.png", position, true);
+                    this->_create_tile("assets/sprites/walls/wall_bottom_new.png", position, BACKGROUND);
                     break;
                 case '-':
                     this->_create_tile(
-                        "assets/sprites/walls/wall_bottom_right_new.png", position, true, true, BOTTOM_RIGHT);
+                        "assets/sprites/walls/wall_bottom_right_new.png", position, OBSTACLE, BOTTOM_RIGHT);
                     break;
                 case '.':
-                    this->_create_tile("", position, true, true, BOTTOM);
+                    this->_create_tile("", position, OBSTACLE, BOTTOM);
                     break;
                 case 'q':
-                    this->_create_tile("assets/sprites/floors/floor_top_left.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_top_left.png", position, FLOOR);
                     break;
                 case '^':
-                    this->_create_tile("assets/sprites/floors/floor_top.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_top.png", position, FLOOR);
                     break;
                 case 'w':
-                    this->_create_tile("assets/sprites/floors/floor_top_right.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_top_right.png", position, FLOOR);
                     break;
                 case '<':
-                    this->_create_tile("assets/sprites/floors/floor_left.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_left.png", position, FLOOR);
                     break;
                 case '\'':
-                    this->_create_tile("assets/sprites/floors/floor.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor.png", position, FLOOR);
                     break;
                 case '>':
-                    this->_create_tile("assets/sprites/floors/floor_right.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_right.png", position, FLOOR);
                     break;
                 case 'e':
-                    this->_create_tile("assets/sprites/floors/floor_bottom_left.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_bottom_left.png", position, FLOOR);
                     break;
                 case 'v':
-                    this->_create_tile("assets/sprites/floors/floor_bottom.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_bottom.png", position, FLOOR);
                     break;
                 case 'r':
-                    this->_create_tile("assets/sprites/floors/floor_bottom_right.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_bottom_right.png", position, FLOOR);
                     break;
                 case 't':
-                    this->_create_tile("assets/sprites/floors/floor_detailed_top.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_detailed_top.png", position, FLOOR);
                     break;
                 case 'i':
-                    this->_create_tile("assets/sprites/floors/floor_detailed_left.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_detailed_left.png", position, FLOOR);
                     break;
                 case 'y':
-                    this->_create_tile("assets/sprites/floors/floor_detailed_right.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_detailed_right.png", position, FLOOR);
                     break;
                 case 'u':
-                    this->_create_tile("assets/sprites/floors/floor_detailed_bottom.png", position, false);
+                    this->_create_tile("assets/sprites/floors/floor_detailed_bottom.png", position, FLOOR);
                     break;
                 case ';':
-                    this->_create_tile("assets/sprites/obstacles/box.png", position, true, true, CENTER);
+                    this->_create_tile("assets/sprites/obstacles/box.png", position, OBSTACLE, CENTER);
                     break;
+                case '0': {
+                    if (door_map.top) {
+                        this->_create_tile("assets/sprites/doors/door_top.png", position, DOOR, TOP);
+                    } else {
+                        int index = distribution(generator);
+                        this->_create_tile(
+                            std::format("assets/sprites/walls/wall_{}.png", index), position, BACKGROUND);
+                    }
+                    break;
+                }
+                case '1': {
+                    if (door_map.bottom) {
+                        this->_create_tile("assets/sprites/floors/floor_dark.png", position, FLOOR);
+                        this->_create_tile("assets/sprites/doors/door_bottom.png", position, DOOR, BOTTOM);
+                    } else {
+                        this->_create_tile("assets/sprites/walls/wall_bottom_new.png", position, BACKGROUND);
+                    }
+                    break;
+                }
+                case '2': {
+                    if (door_map.right) {
+                        this->_create_tile("assets/sprites/doors/door_right.png", position, DOOR, RIGHT);
+                    } else {
+                        this->_create_tile("assets/sprites/walls/wall_right.png", position, OBSTACLE, RIGHT);
+                    }
+                    break;
+                }
+                case '3': {
+                    if (door_map.left) {
+                        this->_create_tile("assets/sprites/doors/door_left.png", position, DOOR, LEFT);
+                    } else {
+                        this->_create_tile("assets/sprites/walls/wall_left.png", position, OBSTACLE, LEFT);
+                    }
+                    break;
+                }
                 default:
                     log_warn(this, "Room: Invalid tile: ", character);
                     break;
@@ -143,28 +181,40 @@ Dungeon::Room::Room(std::string room_path, bool top_door, bool bottom_door, bool
     }
 }
 
+void Dungeon::Room::set_active(bool active) {
+    for (auto &tile : *this->_tiles) {
+        tile->set_active(active);
+    }
+}
+
+void Dungeon::Room::connect_to_room(Room *other) {}
+
 void Dungeon::Room::_create_tile(std::string sprite_path,
                                  Vector2Df position,
-                                 bool wall_level,
-                                 bool has_collider,
-                                 Direction collider_direction) {
+                                 TileType tile_type,
+                                 TileColliderDirection tile_collider_direction) {
     Texture2D texture =
         sprite_path.empty() ? Texture2D() : GameCore::get_texture_container()->load_texture(sprite_path);
 
     Handle<Entity2D> tile;
 
-    if (!wall_level) {
+    if (tile_type == FLOOR) {
         tile = static_cast<Handle<Floor>>(GameCore::get_entity_container()->create_entity<Floor>(Entity2DArgs{
             .texture = texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D, .position = position, .layer = -1}));
+
+        // TODO: Allow entities to be created inactive
+        tile->set_active(false);
 
         this->_tiles->push_back(tile);
 
         return;
     }
 
-    if (!has_collider) {
+    if (tile_type == BACKGROUND) {
         tile = static_cast<Handle<BackgroundWall>>(GameCore::get_entity_container()->create_entity<BackgroundWall>(
             Entity2DArgs{.texture = texture, .rendering_mode = RenderingMode::WORLD_SPACE_2D, .position = position}));
+
+        tile->set_active(false);
 
         this->_tiles->push_back(tile);
 
@@ -174,7 +224,7 @@ void Dungeon::Room::_create_tile(std::string sprite_path,
     Rectangle collider_rectangle;
     const float size = BASE_SIZE * VIRTUAL_SCALE;
 
-    switch (collider_direction) {
+    switch (tile_collider_direction) {
         case TOP_LEFT:
             collider_rectangle = Rectangle{size / 4.0f, -size / 4.0f, size / 2.0f, size / 2.0f};
             break;
@@ -206,11 +256,22 @@ void Dungeon::Room::_create_tile(std::string sprite_path,
             break;
     }
 
-    tile = static_cast<Handle<Wall>>(GameCore::get_entity_container()->create_entity<Wall>(
-        StaticPhysicalEntity2DArgs{.texture = texture,
-                                   .rendering_mode = RenderingMode::WORLD_SPACE_2D,
-                                   .position = position,
-                                   .collider_rectangle = collider_rectangle}));
+    if (tile_type == OBSTACLE) {
+        tile = static_cast<Handle<Obstacle>>(GameCore::get_entity_container()->create_entity<Obstacle>(
+            StaticPhysicalEntity2DArgs{.texture = texture,
+                                       .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+                                       .position = position,
+                                       .collider_rectangle = collider_rectangle}));
+    } else {
+        utils::log_info(this, "Door created");
+        tile = static_cast<Handle<Door>>(GameCore::get_entity_container()->create_entity<Door>(
+            DoorArgs{.texture = texture,
+                     .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+                     .position = position,
+                     .collider_rectangle = collider_rectangle}));
+    }
+
+    tile->set_active(false);
 
     this->_tiles->push_back(tile);
 }
