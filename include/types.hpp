@@ -1,31 +1,42 @@
 #pragma once
 
 #include <concepts>
+#include <cstdint>
 #include <memory>
 
 // TODO: Clean this file
 
+// Core
 class GameCore;
 
+// Utilities
 namespace utils {
 
 class ActivityState;
+enum class Direction : uint8_t;
+
+template <typename... Args>
+class Event;
+
+class Listener;
+
+class Transform;
+class TransformData;
+class Uncopiable;
+
+template <typename T>
+concept Numeric = std::same_as<T, float> || std::same_as<T, double> || std::same_as<T, int>;
+
+template <Numeric T = float>
+struct Vector2D;
+
 class IdReferences;
 class Identified;
+
 template <typename Type>
 class Handle;
 
 }  // namespace utils
-
-template <typename T>
-struct IsUniquePtr : std::false_type {};
-template <typename T, typename D>
-struct IsUniquePtr<std::unique_ptr<T, D>> : std::true_type {};
-
-template <typename T>
-concept IdentifiedCompatible =
-    std::derived_from<T, utils::Identified> ||
-    (IsUniquePtr<T>::value && std::derived_from<typename T::element_type, utils::Identified>);
 
 // Components
 class Component;
@@ -38,7 +49,15 @@ class ButtonComponent;
 class ButtonClickEvent;
 class ButtonClickListener;
 
+class DoorComponent;
+struct DoorComponentArgs;
+
 class PlayerComponent;
+
+class ColliderComponent;
+class CollisionEvent;
+class CollisionListener;
+struct ColliderComponentArgs;
 
 class GraphicsComponent;
 struct GraphicsComponentArgs;
@@ -46,52 +65,71 @@ struct GraphicsComponentArgs;
 class PhysicsComponent;
 struct PhysicsComponentArgs;
 
-class ColliderComponentContainer;
-
 class TextComponent;
 struct TextComponentArgs;
 
 class TransformComponent;
-struct TransformComponentArgs;
 class TransformUpdateEvent;
 class TransformUpdateListener;
+struct TransformComponentArgs;
 
 class UITransformComponent;
 struct UITransformComponentArgs;
-enum class UIOrigin;
 
 // Containers
 template <typename DataStructure, typename LocalIdentifier, typename Object>
 class Container;
 
+template <typename T>
+struct IsUniquePtr : std::false_type {};
+template <typename T, typename D>
+struct IsUniquePtr<std::unique_ptr<T, D>> : std::true_type {};
+
+template <typename T>
+concept IdentifiedCompatible =
+    std::derived_from<T, utils::Identified> ||
+    (IsUniquePtr<T>::value && std::derived_from<typename T::element_type, utils::Identified>);
+
 template <typename Object>
     requires IdentifiedCompatible<Object>
 class VectorContainer;
 
+template <typename LocalIdentifier, typename Object>
+class MapContainer;
+
+class FontContainer;
+class ImageContainer;
+class TextureContianer;
+
+template <typename ComponentType>
+class StackAllocatedComponentContainer;
+
 class PhysicsComponentContainer;
+class ColliderComponentContainer;
 class TransformComponentContainer;
-class AssetContainer;
-class ImageMap;
-class TextureMap;
-class FontMap;
+
+class HeapAllocatedComponentContainer;
+class BehaviorComponentContainer;
 
 class EntityContainer;
-class EntityVector;
 
 // Entities
 class Entity;
-class ComponentsVector;
+class ComponentsMap;
 
 class Entity2D;
 struct Entity2DArgs;
 
 class StaticPhysicalEntity2D;
+struct StaticPhysicalEntity2DArgs;
+
+class DynamicPhysicalEntity2D;
+struct DynamicPhysicalEntity2DArgs;
+
+class Door;
+struct DoorArgs;
 
 class Player;
-typedef StaticPhysicalEntity2D Wall;
-class Background;
-class Text;
-class TextButton;
 
 class UIEntity;
 struct UIEntityArgs;
@@ -107,37 +145,36 @@ struct TextArgs;
 class TextButton;
 struct TextButtonArgs;
 
+// Gameplay
+class Dungeon;
+class Room;
+struct DoorMap;
+
 // Managers
 class Manager;
 
-template <typename ComponentType>
-class ComponentManager;
-class ComponentVector;
-
-class AudioComponentManager;
-
-class BehaviorManager;
-
-class GraphicsManager;
-enum class RenderingMode;
-class Space;
-
 class GraphicalDebuggingManager;
 
-class MainBehaviourManager;
+enum class RenderingMode;
+enum class SortingMode;
+
+class GraphicsManager;
+class ScreenResizeEvent;
+class ScreenResizeListener;
+
+class Space;
+class GraphicsComponentVector;
+
+class AudioManager;
+
+class BehaviorManager;
+class BehaviorComponentVector;
+
+class GameManager;
+
+class PhysicsManager;
 
 // Scenes
 class Scene;
 class MenuScene;
 class GameplayScene;
-
-class Dungeon;
-class Room;
-
-// Enums
-enum class SortingMode;
-
-// structs
-struct Layer;
-
-// Utilities are not included here

@@ -4,14 +4,16 @@
 #include "components/ui_transform_component.hpp"
 #include "entities/entity2D.hpp"
 #include "utils/activity_state.hpp"
+#include "utils/direction.hpp"
 #include "utils/vector.hpp"
 
 using utils::ActivityState;
 using utils::Vector2Df;
+using utils::Direction;
 
 struct UIEntityArgs {
     Texture2D texture;
-    UIOrigin ui_origin;
+    Direction ui_origin;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);

@@ -7,14 +7,16 @@
 #include "components/text_component.hpp"
 #include "components/ui_transform_component.hpp"
 #include "entities/user_interface/ui_entity.hpp"
+#include "utils/direction.hpp"
 
 using utils::Handle;
 using utils::Vector2Df;
+using utils::Direction;
 
 struct TextArgs {
     std::string content;
     Font font;
-    UIOrigin ui_origin;
+    Direction ui_origin;
     int font_size = 0;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;

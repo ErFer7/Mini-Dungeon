@@ -5,24 +5,28 @@
 #include <random>
 #include <vector>
 
+#include "entities/entity2D.hpp"
 #include "types.hpp"
 #include "utils/debug.hpp"
+#include "utils/direction.hpp"
 #include "utils/vector.hpp"
 
+using utils::Direction;
+using utils::direction_count;
 using utils::Handle;
 using utils::log_info;
 using utils::log_warn;
+using utils::random_directions;
 using utils::Vector2Df;
 using utils::Vector2Di;
 
 class Dungeon {
    private:
     struct DoorMap {
-        bool processed;
-        bool top;
-        bool bottom;
-        bool left;
-        bool right;
+        DoorMap *connections[4];  // Top, Bottom, Left, Right
+        unsigned int remaining_rooms;
+
+        DoorMap() : remaining_rooms(0) {}
     };
 
    public:
@@ -31,24 +35,12 @@ class Dungeon {
         typedef std::vector<Handle<Entity2D>> TileVector;
 
        private:
-        // TODO: Define something more generic with this
-        enum TileColliderDirection {
-            NONE,
-            TOP_LEFT,
-            TOP,
-            TOP_RIGHT,
-            LEFT,
-            CENTER,
-            RIGHT,
-            BOTTOM_LEFT,
-            BOTTOM,
-            BOTTOM_RIGHT
-        };
-
         enum TileType { FLOOR, OBSTACLE, BACKGROUND, DOOR };
 
        public:
-        Room(std::string room_path, DoorMap door_map);
+        Room(std::string room_path, DoorMap *door_map);
+
+        Room() = default;
 
         ~Room() = default;
 
@@ -60,7 +52,7 @@ class Dungeon {
         void _create_tile(std::string sprite_path,
                           Vector2Df position,
                           TileType tile_type,
-                          TileColliderDirection tile_collider_direction = NONE);
+                          Direction tile_collider_direction = Direction::CENTER);
 
        private:
         std::unique_ptr<TileVector> _tiles;
@@ -73,6 +65,13 @@ class Dungeon {
 
     ~Dungeon() = default;
 
+    // TODO: Change player position
+    void change_room(Room *room) {
+        this->_current_room->set_active(false);
+        this->_current_room = room;
+        this->_current_room->set_active(true);
+    }
+
     // OPTIMIZE: This isn't so fast
     void generate(unsigned int room_count) {
         const unsigned int max_room_index = 11;
@@ -84,95 +83,91 @@ class Dungeon {
         std::uniform_int_distribution<unsigned int> room_position_distribution(0, room_count - 1);
         std::uniform_int_distribution<unsigned int> room_distribution(0, max_room_index);
 
-        DoorMap door_maps[room_count][room_count];
+        // TODO: Rename to node
+        std::queue<DoorMap *> unprocessed_door_maps;
+        std::vector<DoorMap *> processed_door_maps;
 
-        for (unsigned int i = 0; i < room_count; i++) {
-            for (unsigned int j = 0; j < room_count; j++) {
-                door_maps[i][j].processed = false;
-                door_maps[i][j].top = false;
-                door_maps[i][j].bottom = false;
-                door_maps[i][j].right = false;
-                door_maps[i][j].left = false;
-            }
-        }
+        DoorMap initial_node = DoorMap();
+        initial_node.remaining_rooms = room_count;
 
-        std::queue<Vector2Di> unprocessed_door_maps;
-        std::vector<Vector2Di> processed_door_maps;
+        unprocessed_door_maps.push(&initial_node);
 
-        unprocessed_door_maps.push(
-            Vector2Di(room_position_distribution(generator), room_position_distribution(generator)));
-
-        unsigned int remaining_door_maps = room_count;
-
-        // FIX: This can still fail. For some reason the queue is consumed before all door maps are generated
-        // FIX: It's possible to generate doors to nowhere
         do {
-            Vector2Di position = unprocessed_door_maps.front();
+            DoorMap *node = unprocessed_door_maps.front();
             unprocessed_door_maps.pop();
-            DoorMap *door_map = &door_maps[position.y][position.x];
 
-            if (room_count > 1) {
-                unsigned int tries = 0;
+            node->remaining_rooms--;
 
-                do {
-                    if (position.y > 0 && !door_maps[position.y - 1][position.x].processed) {
-                        door_map->top = door_distribution(generator);
-                    }
+            if (node->remaining_rooms == 0) {
+                processed_door_maps.push_back(node);
 
-                    if (position.y < room_count - 1 && !door_maps[position.y + 1][position.x].processed) {
-                        door_map->bottom = door_distribution(generator);
-                    }
-
-                    if (position.x > 0 && !door_maps[position.y][position.x - 1].processed) {
-                        door_map->left = door_distribution(generator);
-                    }
-
-                    if (position.x < room_count - 1 && !door_maps[position.y][position.x + 1].processed) {
-                        door_map->right = door_distribution(generator);
-                    }
-
-                    tries++;
-                } while (!(door_map->top || door_map->bottom || door_map->left || door_map->right));
-
-                if (tries > 10) {
-                    log_warn(this, "Dungeon: it took ", tries, " tries to generate a door map!");
-                }
+                continue;
             }
 
-            door_map->processed = true;
-            remaining_door_maps--;
-            processed_door_maps.push_back(position);
+            Direction chosen_directions;
+            unsigned int directions = 0;
 
-            if (door_map->top && !door_maps[position.y - 1][position.x].processed) {
-                door_maps[position.y - 1][position.x].bottom = true;
-                unprocessed_door_maps.push(Vector2Di(position.y - 1, position.x));
+            while (directions == 0 || directions > node->remaining_rooms) {
+                chosen_directions = random_directions(generator);
+                directions = direction_count(chosen_directions);
             }
 
-            if (door_map->bottom && !door_maps[position.y + 1][position.x].processed) {
-                door_maps[position.y + 1][position.x].top = true;
-                unprocessed_door_maps.push(Vector2Di(position.y + 1, position.x));
+            unsigned int remaining_rooms_per_direction = node->remaining_rooms / directions;
+            unsigned int remainder = node->remaining_rooms % directions;
+
+            if ((chosen_directions & Direction::TOP) != Direction::NONE) {
+                DoorMap top_node = DoorMap();
+
+                node->connections[0] = &top_node;
+                top_node.connections[1] = node;
+                top_node.remaining_rooms = remaining_rooms_per_direction + (remainder-- > 0 ? 1 : 0);
+                node->remaining_rooms -= top_node.remaining_rooms;
+
+                unprocessed_door_maps.push(&top_node);
             }
 
-            if (door_map->left && !door_maps[position.y][position.x - 1].processed) {
-                door_maps[position.y][position.x - 1].right = true;
-                unprocessed_door_maps.push(Vector2Di(position.y, position.x - 1));
+            if ((chosen_directions & Direction::BOTTOM) != Direction::NONE) {
+                DoorMap bottom_node = DoorMap();
+
+                node->connections[1] = &bottom_node;
+                bottom_node.connections[0] = node;
+                bottom_node.remaining_rooms = remaining_rooms_per_direction + (remainder-- > 0 ? 1 : 0);
+                node->remaining_rooms -= bottom_node.remaining_rooms;
+
+                unprocessed_door_maps.push(&bottom_node);
             }
 
-            if (door_map->right && !door_maps[position.y][position.x + 1].processed) {
-                door_maps[position.y][position.x + 1].left = true;
-                unprocessed_door_maps.push(Vector2Di(position.y, position.x + 1));
+            if ((chosen_directions & Direction::LEFT) != Direction::NONE) {
+                DoorMap left_node = DoorMap();
+
+                node->connections[2] = &left_node;
+                left_node.connections[3] = node;
+                left_node.remaining_rooms = remaining_rooms_per_direction + (remainder-- > 0 ? 1 : 0);
+                node->remaining_rooms -= left_node.remaining_rooms;
+
+                unprocessed_door_maps.push(&left_node);
             }
-        } while (remaining_door_maps > 0);
+
+            if ((chosen_directions & Direction::RIGHT) != Direction::NONE) {
+                DoorMap right_node = DoorMap();
+
+                node->connections[3] = &right_node;
+                right_node.connections[2] = node;
+                right_node.remaining_rooms = remaining_rooms_per_direction + (remainder-- > 0 ? 1 : 0);
+                node->remaining_rooms -= right_node.remaining_rooms;
+
+                unprocessed_door_maps.push(&right_node);
+            }
+
+            processed_door_maps.push_back(node);
+        } while (!unprocessed_door_maps.empty());
 
         Room *rooms[room_count][room_count];
 
-        for (auto position : processed_door_maps) {
+        for (auto node : processed_door_maps) {
             unsigned int index = room_distribution(generator);
 
-            this->_rooms->push_back(std::make_unique<Room>(std::format("assets/rooms/room_{}.room", index),
-                                                           door_maps[position.y][position.x]));
-
-            rooms[position.y][position.x] = this->_rooms->back().get();
+            this->_rooms->push_back(std::make_unique<Room>(std::format("assets/rooms/room_{}.room", index), node));
         }
 
         this->_current_room = (*this->_rooms.get())[0].get();

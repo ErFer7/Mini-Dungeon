@@ -6,15 +6,15 @@
 #include "components/graphics_component.hpp"
 #include "components/transform_component.hpp"
 #include "managers/graphics/graphics_manager.hpp"
+#include "utils/direction.hpp"
 #include "utils/vector.hpp"
 
 using utils::Handle;
 using utils::Vector2Df;
-
-enum class UIOrigin { TOP_LEFT, TOP, TOP_RIGHT, LEFT, CENTER, RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
+using utils::Direction;
 
 struct UITransformComponentArgs {
-    UIOrigin ui_origin;
+    Direction ui_origin;
     Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
@@ -84,7 +84,7 @@ class UITransformComponent final : public Component {
     void _transform_update_listener_call(const Vector2Df &origin, const TransformData &diff);
 
    private:
-    UIOrigin _ui_origin;
+    Direction _ui_origin;
     Rectangle _base_rectangle;
     Handle<UITransformComponent> _parent_ui_transform;
     Handle<TransformComponent> _parent_transform_component;
