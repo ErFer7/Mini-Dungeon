@@ -32,12 +32,12 @@ void GameplayScene::init() {
     GameCore::get_graphics_manager()->set_world_space2D_sorting_mode(SortingMode::TOP_TO_DOWN);
 
     // TODO: Maybe it would be better to generate on instantiation (on enter() of course)
-    this->_dungeon = std::make_unique<Dungeon>();
+    this->_dungeon = std::make_unique<Dungeon>(this->_player);
 
     this->_was_initialized = true;
 }
 
 void GameplayScene::enter() {
     this->_player->set_active(true);
-    this->_dungeon->generate(2);
+    this->_dungeon->generate(8);
 }

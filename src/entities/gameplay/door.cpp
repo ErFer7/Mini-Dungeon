@@ -6,5 +6,6 @@
 #include "entities/static_physical_entity2D.hpp"
 
 Door::Door(const DoorArgs &args) : StaticPhysicalEntity2D(args) {
-    this->_door_component = this->create_component<DoorComponent>(DoorComponentArgs{args.target_room, args.exit_position});
+    this->_door_component =
+        this->create_component<DoorComponent>(DoorComponentArgs{args.target_room, args.exit_position, args.dungeon});
 }

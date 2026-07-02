@@ -13,7 +13,7 @@
 #include "raylib.h"
 #include "utils/debug.hpp"
 
-Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
+Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door_connections, Dungeon *dungeon) {
     this->_tiles = std::make_unique<TileVector>();
 
     const float tile_size = BASE_SIZE * VIRTUAL_SCALE;
@@ -57,13 +57,15 @@ Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
 
             switch (character) {
                 case '@':
-                    this->_create_tile("assets/sprites/walls/wall_top_left.png", position, OBSTACLE, Direction::TOP_LEFT);
+                    this->_create_tile(
+                        "assets/sprites/walls/wall_top_left.png", position, OBSTACLE, Direction::TOP_LEFT);
                     break;
                 case '_':
                     this->_create_tile("assets/sprites/walls/wall_top.png", position, OBSTACLE, Direction::TOP);
                     break;
                 case '&':
-                    this->_create_tile("assets/sprites/walls/wall_top_right.png", position, OBSTACLE, Direction::TOP_RIGHT);
+                    this->_create_tile(
+                        "assets/sprites/walls/wall_top_right.png", position, OBSTACLE, Direction::TOP_RIGHT);
                     break;
                 case '$':
                     this->_create_tile("assets/sprites/walls/wall_left.png", position, OBSTACLE, Direction::LEFT);
@@ -133,8 +135,12 @@ Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
                     this->_create_tile("assets/sprites/obstacles/box.png", position, OBSTACLE);
                     break;
                 case '0': {
-                    if (door_map->connections[0] != nullptr) {
-                        this->_create_tile("assets/sprites/doors/door_top.png", position, DOOR, Direction::TOP);
+                    if (std::get<DirectionIndex::TOP>(door_connections)) {
+                        this->_doors[DirectionIndex::TOP] = static_cast<Handle<Door>>(this->_create_tile(
+                            "assets/sprites/doors/door_top.png", position, DOOR, Direction::TOP, dungeon));
+
+                        this->_entrance_positions[DirectionIndex::TOP] =
+                            Vector2Df(position.x, position.y - tile_size * ENTRANCE_OFFSET);
                     } else {
                         int index = distribution(generator);
                         this->_create_tile(
@@ -143,9 +149,13 @@ Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
                     break;
                 }
                 case '1': {
-                    if (door_map->connections[1] != nullptr) {
+                    if (std::get<DirectionIndex::BOTTOM>(door_connections)) {
                         this->_create_tile("assets/sprites/floors/floor_dark.png", position, FLOOR);
-                        this->_create_tile("assets/sprites/doors/door_bottom.png", position, DOOR, Direction::BOTTOM);
+                        this->_doors[DirectionIndex::BOTTOM] = static_cast<Handle<Door>>(this->_create_tile(
+                            "assets/sprites/doors/door_bottom.png", position, DOOR, Direction::BOTTOM, dungeon));
+
+                        this->_entrance_positions[DirectionIndex::BOTTOM] =
+                            Vector2Df(position.x, position.y + tile_size * ENTRANCE_OFFSET);
                     } else {
                         this->_create_tile("assets/sprites/walls/wall_bottom_new.png", position, BACKGROUND);
                     }
@@ -153,16 +163,24 @@ Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
                 }
                 // FIX: The numbers don't match
                 case '2': {
-                    if (door_map->connections[3] != nullptr) {
-                        this->_create_tile("assets/sprites/doors/door_right.png", position, DOOR, Direction::RIGHT);
+                    if (std::get<DirectionIndex::RIGHT>(door_connections)) {
+                        this->_doors[DirectionIndex::RIGHT] = static_cast<Handle<Door>>(this->_create_tile(
+                            "assets/sprites/doors/door_right.png", position, DOOR, Direction::RIGHT, dungeon));
+
+                        this->_entrance_positions[DirectionIndex::RIGHT] =
+                            Vector2Df(position.x - tile_size * ENTRANCE_OFFSET, position.y);
                     } else {
                         this->_create_tile("assets/sprites/walls/wall_right.png", position, OBSTACLE, Direction::RIGHT);
                     }
                     break;
                 }
                 case '3': {
-                    if (door_map->connections[2] != nullptr) {
-                        this->_create_tile("assets/sprites/doors/door_left.png", position, DOOR, Direction::LEFT);
+                    if (std::get<DirectionIndex::LEFT>(door_connections)) {
+                        this->_doors[DirectionIndex::LEFT] = static_cast<Handle<Door>>(this->_create_tile(
+                            "assets/sprites/doors/door_left.png", position, DOOR, Direction::LEFT, dungeon));
+
+                        this->_entrance_positions[DirectionIndex::LEFT] =
+                            Vector2Df(position.x + tile_size * ENTRANCE_OFFSET, position.y);
                     } else {
                         this->_create_tile("assets/sprites/walls/wall_left.png", position, OBSTACLE, Direction::LEFT);
                     }
@@ -182,18 +200,22 @@ Dungeon::Room::Room(std::string room_path, DoorMap *door_map) {
     }
 }
 
-void Dungeon::Room::set_active(bool active) {
+void Room::set_active(bool active) {
     for (auto &tile : *this->_tiles) {
         tile->set_active(active);
     }
 }
 
-void Dungeon::Room::connect_to_room(Room *other) {}
+void Room::connect_to_room(Room *other, const DirectionIndex &direction_index) {
+    this->_doors[direction_index]->get_door_component()->set_exit(
+        other, other->entrance_positions(direct_opposite(direction_index)));
+}
 
-void Dungeon::Room::_create_tile(std::string sprite_path,
-                                 Vector2Df position,
-                                 TileType tile_type,
-                                 Direction tile_collider_direction) {
+Handle<Entity2D> Room::_create_tile(std::string sprite_path,
+                                    Vector2Df position,
+                                    TileType tile_type,
+                                    Direction tile_collider_direction,
+                                    Dungeon *dungeon) {
     Texture2D texture =
         sprite_path.empty() ? Texture2D() : GameCore::get_texture_container()->load_texture(sprite_path);
 
@@ -208,7 +230,7 @@ void Dungeon::Room::_create_tile(std::string sprite_path,
 
         this->_tiles->push_back(tile);
 
-        return;
+        return tile;
     }
 
     if (tile_type == BACKGROUND) {
@@ -219,7 +241,7 @@ void Dungeon::Room::_create_tile(std::string sprite_path,
 
         this->_tiles->push_back(tile);
 
-        return;
+        return tile;
     }
 
     Rectangle collider_rectangle;
@@ -269,10 +291,13 @@ void Dungeon::Room::_create_tile(std::string sprite_path,
             DoorArgs{.texture = texture,
                      .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                      .position = position,
-                     .collider_rectangle = collider_rectangle}));
+                     .collider_rectangle = collider_rectangle,
+                     .dungeon = dungeon}));
     }
 
     tile->set_active(false);
 
     this->_tiles->push_back(tile);
+
+    return tile;
 }

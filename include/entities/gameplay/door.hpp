@@ -20,15 +20,14 @@ struct DoorArgs {
     float texture_scale = VIRTUAL_SCALE;
     Room *target_room = nullptr;
     Vector2Df exit_position = Vector2Df();
+    Dungeon *dungeon = nullptr;
 
     operator StaticPhysicalEntity2DArgs() const {
         return StaticPhysicalEntity2DArgs{
             texture, rendering_mode, position, rotation, scale, color, layer, texture_scale, true, collider_rectangle};
     }
 
-    operator DoorComponentArgs() const {
-        return DoorComponentArgs{target_room, exit_position};
-    }
+    operator DoorComponentArgs() const { return DoorComponentArgs{target_room, exit_position, dungeon}; }
 };
 
 class Door final : public StaticPhysicalEntity2D {
