@@ -2,19 +2,48 @@
 
 #include "components/graphics_component.hpp"
 
-void Space::add_component(Handle<GraphicsComponent> component) { this->_components->push_back(component); }
+void Space::add_component(Handle<GraphicsComponent> component) {
+    if (component->is_active()) {
+        this->_active_components->push_back(component);
+    } else {
+        this->_inactive_components->push_back(component);
+    }
+}
 
 void Space::remove_component(Handle<GraphicsComponent> component) {
-    this->_components->erase(std::remove(this->_components->begin(), this->_components->end(), component),
-                             this->_components->end());
+    if (component->is_active()) {
+        this->_active_components->erase(
+            std::remove(this->_active_components->begin(), this->_active_components->end(), component),
+            this->_active_components->end());
+    } else {
+        this->_inactive_components->erase(
+            std::remove(this->_inactive_components->begin(), this->_inactive_components->end(), component),
+            this->_inactive_components->end());
+    }
+}
+
+void Space::handle_activity_update(Handle<GraphicsComponent> component) {
+    if (component->is_active()) {
+        this->_inactive_components->erase(
+            std::remove(this->_inactive_components->begin(), this->_inactive_components->end(), component),
+            this->_inactive_components->end());
+
+        this->_active_components->push_back(component);
+    } else {
+        this->_active_components->erase(
+            std::remove(this->_active_components->begin(), this->_active_components->end(), component),
+            this->_active_components->end());
+
+        this->_inactive_components->push_back(component);
+    }
 }
 
 // OPTIMIZE: Change the allocation for layers and modes
 void Space::sort() {
     switch (this->_sorting_mode) {
         case SortingMode::NONE:
-            std::sort(this->_components->begin(),
-                      this->_components->end(),
+            std::sort(this->_active_components->begin(),
+                      this->_active_components->end(),
                       [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
@@ -26,8 +55,8 @@ void Space::sort() {
                       });
             break;
         case SortingMode::TOP_TO_DOWN:
-            std::sort(this->_components->begin(),
-                      this->_components->end(),
+            std::sort(this->_active_components->begin(),
+                      this->_active_components->end(),
                       [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
@@ -43,8 +72,8 @@ void Space::sort() {
                       });
             break;
         case SortingMode::ISOMETRIC:
-            std::sort(this->_components->begin(),
-                      this->_components->end(),
+            std::sort(this->_active_components->begin(),
+                      this->_active_components->end(),
                       [](Handle<GraphicsComponent> comp_a, Handle<GraphicsComponent> comp_b) -> bool {
                           if (comp_a.is_null()) {
                               return true;
@@ -66,9 +95,7 @@ void Space::sort() {
 }
 
 void Space::draw() {
-    for (auto component : *this->_components) {
-        if (component->is_active()) {
-            component->draw();
-        }
+    for (auto component : *this->_active_components) {
+        component->draw();
     }
 }

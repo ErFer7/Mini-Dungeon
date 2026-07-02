@@ -105,3 +105,16 @@ void GraphicsManager::unregister_component_on_space(Handle<GraphicsComponent> gr
             break;
     }
 }
+
+void GraphicsManager::handle_activity_update(Handle<GraphicsComponent> graphics_component) {
+    switch (graphics_component->get_rendering_mode()) {
+        case RenderingMode::SCREEN_SPACE:
+            this->_screen_space.handle_activity_update(graphics_component);
+            break;
+        case RenderingMode::WORLD_SPACE_2D:
+            this->_world_space2D.handle_activity_update(graphics_component);
+            break;
+        default:
+            break;
+    }
+}

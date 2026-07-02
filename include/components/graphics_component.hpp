@@ -2,10 +2,12 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/graphics/graphics_enums.hpp"
 #include "managers/graphics/graphics_manager.hpp"
 #include "managers/graphics/space.hpp"
-#include "managers/graphics/graphics_enums.hpp"
 #include "raylib.h"
+#include "utils/activity_state.hpp"
+#include "utils/id/handle.hpp"
 #include "utils/vector.hpp"
 
 using utils::Handle;
@@ -23,6 +25,9 @@ struct GraphicsComponentArgs {
 class GraphicsComponent final : public Component {
     friend class Space;
     friend class GraphicsManager;
+
+   private:
+    typedef ActivityState::ActivityUpdateListener ActivityUpdateListener;
 
    public:
     GraphicsComponent(Handle<Entity> entity, const GraphicsComponentArgs &args);
@@ -67,7 +72,9 @@ class GraphicsComponent final : public Component {
     void _move(GraphicsComponent &&other);
 
     // TODO: Replace with _get_transform()
-    inline Vector2Df _get_position() const { return Vector2Df(this->_destination_rectangle.x, this->_destination_rectangle.y); }
+    inline Vector2Df _get_position() const {
+        return Vector2Df(this->_destination_rectangle.x, this->_destination_rectangle.y);
+    }
 
     // TODO: Check the way that methods are divided
     void _update_drawing_transform();
@@ -79,6 +86,8 @@ class GraphicsComponent final : public Component {
     void _unregister_on_space();
 
     void _unregister_on_space_listener_call(Handle<Component>) { this->_unregister_on_space(); }
+
+    void _handle_activity_update(Handle<Component> component);
 
    private:
     Texture2D _texture;
@@ -92,4 +101,5 @@ class GraphicsComponent final : public Component {
     int _layer;
     TransformComponent::TransformUpdateListener _transform_update_listener;
     OnDestroyListener _on_destroy_listener;
+    ActivityUpdateListener _on_activity_update_listener;
 };

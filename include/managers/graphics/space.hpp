@@ -17,7 +17,10 @@ class Space final {
     typedef std::vector<Handle<GraphicsComponent>> GraphicsComponentVector;
 
    public:
-    Space() : _sorting_mode(SortingMode::NONE) { this->_components = std::make_unique<GraphicsComponentVector>(); }
+    Space() : _sorting_mode(SortingMode::NONE) {
+        this->_active_components = std::make_unique<GraphicsComponentVector>();
+        this->_inactive_components = std::make_unique<GraphicsComponentVector>();
+    }
 
     // TODO: Check if this is necessary
     Space(const Space &other) { this->_copy(other); }
@@ -49,6 +52,8 @@ class Space final {
 
     void remove_component(Handle<GraphicsComponent> component);
 
+    void handle_activity_update(Handle<GraphicsComponent> component);
+
     void sort();
 
     void draw();
@@ -56,17 +61,24 @@ class Space final {
    private:
     // TODO: Check if this is necessary
     inline void _move(Space &&other) {
-        this->_components.reset();
-        this->_components = std::move(other._components);
+        this->_active_components.reset();
+        this->_active_components = std::move(other._active_components);
+
+        this->_inactive_components.reset();
+        this->_inactive_components = std::move(other._inactive_components);
     }
 
     // TODO: Check if this is necessary
     inline void _copy(const Space &other) {
-        this->_components.reset();
-        this->_components = std::make_unique<GraphicsComponentVector>(*other._components);
+        this->_active_components.reset();
+        this->_active_components = std::make_unique<GraphicsComponentVector>(*other._active_components);
+
+        this->_inactive_components.reset();
+        this->_inactive_components = std::make_unique<GraphicsComponentVector>(*other._inactive_components);
     }
 
    private:
     SortingMode _sorting_mode;
-    std::unique_ptr<GraphicsComponentVector> _components;
+    std::unique_ptr<GraphicsComponentVector> _active_components;
+    std::unique_ptr<GraphicsComponentVector> _inactive_components;
 };

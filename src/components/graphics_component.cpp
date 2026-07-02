@@ -31,6 +31,10 @@ GraphicsComponent::GraphicsComponent(Handle<Entity> entity, const GraphicsCompon
     this->_on_destroy_listener.bind_callable<GraphicsComponent, &GraphicsComponent::_unregister_on_space_listener_call>(
         handle);
     this->_on_destroy_listener.subscribe(this->get_on_destroy_event());
+
+    this->_on_activity_update_listener.bind_callable<GraphicsComponent, &GraphicsComponent::_handle_activity_update>(
+        handle);
+    this->_on_activity_update_listener.subscribe(this->get_activity_state()->get_activity_update_event());
 }
 
 void GraphicsComponent::set_texture(const Texture2D texture) {
@@ -79,6 +83,7 @@ void GraphicsComponent::_move(GraphicsComponent &&other) {
     this->_layer = std::move(other._layer);
     this->_transform_update_listener = std::move(other._transform_update_listener);
     this->_on_destroy_listener = std::move(other._on_destroy_listener);
+    this->_on_activity_update_listener = std::move(other._on_activity_update_listener);
 }
 
 void GraphicsComponent::_update_drawing_transform() {
@@ -108,4 +113,9 @@ void GraphicsComponent::_update_drawing_transform() {
 
 void GraphicsComponent::_unregister_on_space() {
     GameCore::get_graphics_manager()->unregister_component_on_space(this->make_handle<GraphicsComponent>());
+}
+
+// TODO: Cache this handlers
+void GraphicsComponent::_handle_activity_update(Handle<Component> component) {
+    GameCore::get_graphics_manager()->handle_activity_update(this->make_handle<GraphicsComponent>());
 }

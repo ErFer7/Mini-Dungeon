@@ -78,6 +78,8 @@ class GraphicsManager final : public Manager {
 
     void unregister_component_on_space(Handle<GraphicsComponent> graphics_component);
 
+    void handle_activity_update(Handle<GraphicsComponent> graphics_component);
+
    private:
     // TODO: Implement set methods for all of these
     int _screen_width;

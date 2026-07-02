@@ -7,6 +7,7 @@ namespace utils {
 
 class ActivityState : public Identified {
    public:
+    // TODO: Change these names
     typedef Event<bool> ActivityUpdateEvent;
     typedef ActivityUpdateEvent::Listener ActivityUpdateListener;
 

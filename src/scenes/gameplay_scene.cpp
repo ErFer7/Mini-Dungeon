@@ -39,5 +39,5 @@ void GameplayScene::init() {
 
 void GameplayScene::enter() {
     this->_player->set_active(true);
-    this->_dungeon->generate(8);
+    this->_dungeon->generate(16);
 }
