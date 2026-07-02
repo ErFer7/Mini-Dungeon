@@ -64,32 +64,34 @@ void UITransformComponent::set_position(Vector2Df position) {
     Vector2Df calculated_position;
 
     switch (this->_ui_origin) {
-        case UIOrigin::TOP_LEFT:
+        case Direction::TOP_LEFT:
             calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y + rect.height / 2.0f);
             break;
-        case UIOrigin::TOP:
+        case Direction::TOP:
             calculated_position = Vector2Df(diff.x, diff.y + rect.height / 2.0f);
             break;
-        case UIOrigin::TOP_RIGHT:
+        case Direction::TOP_RIGHT:
             calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y + rect.height / 2.0f);
             break;
-        case UIOrigin::LEFT:
+        case Direction::LEFT:
             calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y);
             break;
-        case UIOrigin::CENTER:
+        case Direction::CENTER:
             calculated_position = diff;
             break;
-        case UIOrigin::RIGHT:
+        case Direction::RIGHT:
             calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y);
             break;
-        case UIOrigin::BOTTOM_LEFT:
+        case Direction::BOTTOM_LEFT:
             calculated_position = Vector2Df(diff.x + rect.width / 2.0f, diff.y - rect.height / 2.0f);
             break;
-        case UIOrigin::BOTTOM:
+        case Direction::BOTTOM:
             calculated_position = Vector2Df(diff.x, diff.y - rect.height / 2.0f);
             break;
-        case UIOrigin::BOTTOM_RIGHT:
+        case Direction::BOTTOM_RIGHT:
             calculated_position = Vector2Df(diff.x - rect.width / 2.0f, diff.y - rect.height / 2.0f);
+            break;
+        default:
             break;
     }
 
@@ -156,23 +158,23 @@ Vector2Df UITransformComponent::_get_anchor_point() const {
 
 Vector2Df UITransformComponent::_rect_point_by_ui_origin(Rectangle rectangle) const {
     switch (this->_ui_origin) {
-        case UIOrigin::TOP_LEFT:
+        case Direction::TOP_LEFT:
             return Vector2Df(rectangle.x, rectangle.y);
-        case UIOrigin::TOP:
+        case Direction::TOP:
             return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y);
-        case UIOrigin::TOP_RIGHT:
+        case Direction::TOP_RIGHT:
             return Vector2Df(rectangle.x + rectangle.width, rectangle.y);
-        case UIOrigin::LEFT:
+        case Direction::LEFT:
             return Vector2Df(rectangle.x, rectangle.y + rectangle.height / 2.0f);
-        case UIOrigin::CENTER:
+        case Direction::CENTER:
             return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height / 2.0f);
-        case UIOrigin::RIGHT:
+        case Direction::RIGHT:
             return Vector2Df(rectangle.x + rectangle.width, rectangle.y + rectangle.height / 2.0f);
-        case UIOrigin::BOTTOM_LEFT:
+        case Direction::BOTTOM_LEFT:
             return Vector2Df(rectangle.x, rectangle.y + rectangle.height);
-        case UIOrigin::BOTTOM:
+        case Direction::BOTTOM:
             return Vector2Df(rectangle.x + rectangle.width / 2.0f, rectangle.y + rectangle.height);
-        case UIOrigin::BOTTOM_RIGHT:
+        case Direction::BOTTOM_RIGHT:
             return Vector2Df(rectangle.x + rectangle.width, rectangle.y + rectangle.height);
     }
 

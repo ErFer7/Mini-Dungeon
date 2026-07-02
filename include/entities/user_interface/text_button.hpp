@@ -4,13 +4,15 @@
 #include "components/ui_transform_component.hpp"
 #include "entities/user_interface/button.hpp"
 #include "entities/user_interface/text.hpp"
+#include "utils/direction.hpp"
 
 using utils::Handle;
 using utils::Vector2Df;
+using utils::Direction;
 
 struct TextButtonArgs {
     Texture2D texture;
-    UIOrigin ui_origin;
+    Direction ui_origin;
     std::string content;
     Font font;
     Vector2Df position = Vector2Df();
@@ -19,7 +21,7 @@ struct TextButtonArgs {
     Color color = WHITE;
     int layer = 0;
     Handle<UITransformComponent> parent_ui_transform = Handle<UITransformComponent>();
-    UIOrigin text_ui_origin = UIOrigin::CENTER;
+    Direction text_ui_origin = Direction::CENTER;
     int font_size = 0;
     Vector2Df text_position = Vector2Df();
     float text_rotation = 0.0f;

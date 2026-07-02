@@ -8,7 +8,8 @@
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
-    : _rectangle(args.rectangle),
+    : _is_trigger(args.is_trigger),
+      _rectangle(args.rectangle),
       Component(entity) {
     // FIX: Args
     log_trace(this, __PRETTY_FUNCTION__);
@@ -70,7 +71,7 @@ void ColliderComponent::debug_draw() {
                        -(this->_rectangle.y + this->_rectangle.height / 2.0f),
                        this->_rectangle.width,
                        this->_rectangle.height,
-                       RED);
+                       this->_is_trigger ? GREEN : RED);
 }
 
 void ColliderComponent::_move(ColliderComponent &&other) {
@@ -78,9 +79,11 @@ void ColliderComponent::_move(ColliderComponent &&other) {
         return;
     }
 
+    this->_is_trigger = std::move(other._is_trigger);
     this->_rectangle = std::move(other._rectangle);
     this->_transform_component = std::move(other._transform_component);
     this->_transform_update_listener = std::move(other._transform_update_listener);
+    this->_collision_event = std::move(other._collision_event);
 }
 
 // TODO: Add support for rotation

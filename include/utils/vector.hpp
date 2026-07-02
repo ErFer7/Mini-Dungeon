@@ -8,13 +8,11 @@
 #include <string>
 
 #include "definitions.hpp"
+#include "types.hpp"
 
 namespace utils {
 
-template <typename T>
-concept Numeric = std::same_as<T, float> || std::same_as<T, double> || std::same_as<T, int>;
-
-template <Numeric T = float>
+template <Numeric T>
 struct Vector2D {
     Vector2D() : x(0), y(0) {}
 

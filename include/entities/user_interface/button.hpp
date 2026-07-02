@@ -3,13 +3,15 @@
 #include "components/behavior_components/button_component.hpp"
 #include "components/ui_transform_component.hpp"
 #include "entities/user_interface/ui_entity.hpp"
+#include "utils/direction.hpp"
 
 using utils::Handle;
 using utils::Vector2Df;
+using utils::Direction;
 
 struct ButtonArgs {
     Texture2D texture;
-    UIOrigin ui_origin;
+    Direction ui_origin;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);

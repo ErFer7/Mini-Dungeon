@@ -10,8 +10,10 @@
 #include "entities/user_interface/text.hpp"
 #include "entities/user_interface/text_button.hpp"
 #include "game_core.hpp"
+#include "utils/direction.hpp"
 
 using utils::Handle;
+using utils::Direction;
 
 void MenuScene::init() {
     EntityContainer *entity_container = GameCore::get_entity_container();
@@ -39,22 +41,22 @@ void MenuScene::init() {
 
     this->_title = entity_container->create_entity<Text>(TextArgs{.content = "Mini Dungeon",
                                                                   .font = title_font,
-                                                                  .ui_origin = UIOrigin::CENTER,
+                                                                  .ui_origin = Direction::CENTER,
                                                                   .position = Vector2Df(0.0f, -200.0f),
                                                                   .color = golden});
     this->_version = entity_container->create_entity<Text>(TextArgs{
         .content = "v2.0",
         .font = small_font,
-        .ui_origin = UIOrigin::TOP_LEFT,
+        .ui_origin = Direction::TOP_LEFT,
         .position = Vector2Df(35.0f, 15.0f)  // TODO: Fix the position
     });
     this->_play_button = entity_container->create_entity<TextButton>(TextButtonArgs{.texture = this->_button_texture,
-                                                                                    .ui_origin = UIOrigin::CENTER,
+                                                                                    .ui_origin = Direction::CENTER,
                                                                                     .content = "PLAY",
                                                                                     .font = button_font,
                                                                                     .text_color = golden});
     this->_exit_button = entity_container->create_entity<TextButton>(TextButtonArgs{.texture = this->_button_texture,
-                                                                                    .ui_origin = UIOrigin::CENTER,
+                                                                                    .ui_origin = Direction::CENTER,
                                                                                     .content = "QUIT",
                                                                                     .font = button_font,
                                                                                     .position = Vector2Df(0.0f, 200.0f),
