@@ -2,6 +2,8 @@
 
 #include <raylib.h>
 
+#include <cmath>
+
 #include "components/behavior_components/behavior_component.hpp"
 #include "components/physics_component.hpp"
 #include "components/transform_component.hpp"
@@ -24,10 +26,23 @@ void PlayerComponent::update() {
         this->_physics_component->set_velocity_y(-PLAYER_SPEED);
     }
 
+    // TODO: Implement the animation system
     if (IsKeyDown(KEY_RIGHT)) {
         this->_physics_component->set_velocity_x(PLAYER_SPEED);
+        if (this->get_entity()->get_component<GraphicsComponent>()->is_flipped_horizontally()) {
+            this->get_entity()->get_component<GraphicsComponent>()->flip_horizontally();
+        }
     } else if (IsKeyDown(KEY_LEFT)) {
         this->_physics_component->set_velocity_x(-PLAYER_SPEED);
+
+        if (!this->get_entity()->get_component<GraphicsComponent>()->is_flipped_horizontally()) {
+            this->get_entity()->get_component<GraphicsComponent>()->flip_horizontally();
+        }
+    }
+
+    if (!this->_physics_component->get_velocity().is_approximately_zero()) {
+        this->get_entity()->get_component<GraphicsComponent>()->set_offset(Vector2Df(
+            0.0f, std::sin(GetTime() * 50.0f) * this->_physics_component->get_velocity().magnitude() * 0.025f));
     }
 }
 
