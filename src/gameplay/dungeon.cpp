@@ -13,6 +13,7 @@
 #include "raylib.h"
 #include "utils/debug.hpp"
 
+// FIX: This is terrible. The room file needs to be redesigned
 Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door_connections, Dungeon *dungeon) {
     this->_tiles = std::make_unique<TileVector>();
 
@@ -27,6 +28,10 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
     unsigned int row = 0;
     unsigned int column = 0;
     bool reading_room = false;
+    bool reading_info = false;
+    char info_char = ' ';
+    int player_row = 0;
+    int player_column = 0;
 
     std::random_device random_device;
     std::mt19937 generator(random_device());
@@ -35,7 +40,34 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
     // TODO: Use a finite state machine
     while (file >> token) {
         if (token == "!") {
-            break;
+            if (reading_info) {
+                this->_player_spawn = Vector2Df((player_column - width / 2.0f) * tile_size - tile_size / 2.0f,
+                                                (player_row - height / 2.0f) * tile_size - tile_size / 2.0f);
+
+                break;
+            }
+
+            reading_info = true;
+            continue;
+        }
+
+        if (reading_info) {
+            if (token == "P") {
+                info_char = 'P';
+                continue;
+            }
+
+            if (info_char == 'P') {
+                if (player_column == 0) {
+                    player_column = std::atoi(token.c_str());
+                    continue;
+                }
+
+                if (player_row == 0) {
+                    player_row = std::atoi(token.c_str());
+                    continue;
+                }
+            }
         }
 
         if (width == 0) {

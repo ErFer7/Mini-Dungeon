@@ -45,6 +45,8 @@ class Room {
 
     void set_active(bool ative);
 
+    inline Vector2Df player_spawn() { return this->_player_spawn; }
+
    private:
     Handle<Entity2D> _create_tile(std::string sprite_path,
                                   Vector2Df position,
@@ -62,6 +64,7 @@ class Room {
     // Top, Bottom, Left, Right
     Handle<Door> _doors[4];
     Vector2Df _entrance_positions[4];
+    Vector2Df _player_spawn;
 };
 
 class Dungeon {
@@ -234,6 +237,7 @@ class Dungeon {
 
         this->_current_room = (*this->_rooms.get())[0].get();
         this->_current_room->set_active(true);
+        this->_player->get_transform_component()->set_position(this->_current_room->player_spawn());
     }
 
    private:
