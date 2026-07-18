@@ -3,6 +3,7 @@
 #include <raylib.h>
 
 #include "components/behavior_components/behavior_component.hpp"
+#include "components/behavior_components/player_animation_component.hpp"
 #include "components/physics_component.hpp"
 #include "components/transform_component.hpp"
 #include "definitions.hpp"
@@ -13,6 +14,7 @@ PlayerComponent::PlayerComponent(Handle<Entity> entity) : BehaviorComponent(enti
 
     this->_transform_component = entity->get_component<TransformComponent>();
     this->_physics_component = entity->get_component<PhysicsComponent>();
+    this->_player_animation_component = entity->get_component<PlayerAnimationComponent>();
 }
 
 void PlayerComponent::update() {
@@ -24,10 +26,13 @@ void PlayerComponent::update() {
         this->_physics_component->set_velocity_y(-PLAYER_SPEED);
     }
 
+    // TODO: Implement the animation system
     if (IsKeyDown(KEY_RIGHT)) {
         this->_physics_component->set_velocity_x(PLAYER_SPEED);
+        this->_player_animation_component->run_instantaneous_animation(PlayerAnimationComponent::FLIP_RIGHT);
     } else if (IsKeyDown(KEY_LEFT)) {
         this->_physics_component->set_velocity_x(-PLAYER_SPEED);
+        this->_player_animation_component->run_instantaneous_animation(PlayerAnimationComponent::FLIP_LEFT);
     }
 }
 

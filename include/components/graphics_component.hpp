@@ -56,9 +56,25 @@ class GraphicsComponent final : public Component {
 
     inline RenderingMode get_rendering_mode() const { return this->_rendering_mode; }
 
+    // TODO: Remove the get and set from method names
     inline int get_layer() const { return this->_layer; }
 
     inline void set_layer(int layer) { this->_layer = layer; }
+
+    inline bool is_flipped_vertically() { return this->_source_rectangle.height < 0; }
+
+    inline bool is_flipped_horizontally() { return this->_source_rectangle.width < 0; }
+
+    inline void flip_vertically() { this->_source_rectangle.height *= -1; }
+
+    inline void flip_horizontally() { this->_source_rectangle.width *= -1; }
+
+    inline Vector2Df get_offset() { return this->_offset; }
+
+    inline void set_offset(const Vector2Df &offset) {
+        this->_offset = offset;
+        this->_update_drawing_transform();
+    }
 
     Rectangle get_rectangle() const;
 
@@ -94,6 +110,7 @@ class GraphicsComponent final : public Component {
     Rectangle _source_rectangle;
     Rectangle _destination_rectangle;
     Vector2Df _origin;
+    Vector2Df _offset;
     float _rotation;
     float _texture_scale;
     Color _color;

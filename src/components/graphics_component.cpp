@@ -76,6 +76,7 @@ void GraphicsComponent::_move(GraphicsComponent &&other) {
     this->_source_rectangle = std::move(other._source_rectangle);
     this->_destination_rectangle = std::move(other._destination_rectangle);
     this->_origin = std::move(other._origin);
+    this->_offset = std::move(other._offset);
     this->_rotation = std::move(other._rotation);
     this->_texture_scale = std::move(other._texture_scale);
     this->_color = std::move(other._color);
@@ -103,7 +104,7 @@ void GraphicsComponent::_update_drawing_transform() {
     this->_origin = Vector2Df(scaled_width, scaled_height) / 2.0f;
     this->_rotation = transform_component->get_rotation();
 
-    Vector2Df position = transform_component->get_position();
+    Vector2Df position = transform_component->get_position() + this->_offset;
 
     this->_destination_rectangle.x = position.x;
     this->_destination_rectangle.y = position.y * y_axis_orientation;

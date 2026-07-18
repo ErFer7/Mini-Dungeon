@@ -20,7 +20,7 @@ void EntityContainer::destroy_entity(utils::Handle<Entity> entity) {
     utils::log_trace(this, __PRETTY_FUNCTION__, entity);
 
     if (entity.is_null()) {
-        log_warn(this, "EntityContainer: Atempt to destroy already destroyed entity");
+        log_warn(this, "EntityContainer: Attempt to destroy already destroyed entity");
         return;
     }
 
