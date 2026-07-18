@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/behavior_components/behavior_component.hpp"
+#include "components/behavior_components/player_animation_component.hpp"
 #include "components/physics_component.hpp"
 #include "types.hpp"
 
@@ -32,4 +33,5 @@ class PlayerComponent : public BehaviorComponent {
    private:
     Handle<TransformComponent> _transform_component;
     Handle<PhysicsComponent> _physics_component;
+    Handle<PlayerAnimationComponent> _player_animation_component;
 };

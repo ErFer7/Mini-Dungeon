@@ -2,9 +2,8 @@
 
 #include <raylib.h>
 
-#include <cmath>
-
 #include "components/behavior_components/behavior_component.hpp"
+#include "components/behavior_components/player_animation_component.hpp"
 #include "components/physics_component.hpp"
 #include "components/transform_component.hpp"
 #include "definitions.hpp"
@@ -15,6 +14,7 @@ PlayerComponent::PlayerComponent(Handle<Entity> entity) : BehaviorComponent(enti
 
     this->_transform_component = entity->get_component<TransformComponent>();
     this->_physics_component = entity->get_component<PhysicsComponent>();
+    this->_player_animation_component = entity->get_component<PlayerAnimationComponent>();
 }
 
 void PlayerComponent::update() {
@@ -29,20 +29,10 @@ void PlayerComponent::update() {
     // TODO: Implement the animation system
     if (IsKeyDown(KEY_RIGHT)) {
         this->_physics_component->set_velocity_x(PLAYER_SPEED);
-        if (this->get_entity()->get_component<GraphicsComponent>()->is_flipped_horizontally()) {
-            this->get_entity()->get_component<GraphicsComponent>()->flip_horizontally();
-        }
+        this->_player_animation_component->run_instantaneous_animation(PlayerAnimationComponent::FLIP_RIGHT);
     } else if (IsKeyDown(KEY_LEFT)) {
         this->_physics_component->set_velocity_x(-PLAYER_SPEED);
-
-        if (!this->get_entity()->get_component<GraphicsComponent>()->is_flipped_horizontally()) {
-            this->get_entity()->get_component<GraphicsComponent>()->flip_horizontally();
-        }
-    }
-
-    if (!this->_physics_component->get_velocity().is_approximately_zero()) {
-        this->get_entity()->get_component<GraphicsComponent>()->set_offset(Vector2Df(
-            0.0f, std::sin(GetTime() * 50.0f) * this->_physics_component->get_velocity().magnitude() * 0.025f));
+        this->_player_animation_component->run_instantaneous_animation(PlayerAnimationComponent::FLIP_LEFT);
     }
 }
 
