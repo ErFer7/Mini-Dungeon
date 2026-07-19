@@ -14,7 +14,7 @@ static const bool DEBUG_ERROR = true;
 static const bool DEBUG_WARN = true;
 static const bool DEBUG_TRACE = false;
 static const bool DEBUG_INFO = false;
-static const bool VISUALLY_DEBUGGED = true;
+static const bool VISUALLY_DEBUGGED = false;
 
 // Game specific
 static const unsigned int BASE_SIZE = 16;

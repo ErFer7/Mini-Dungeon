@@ -109,6 +109,9 @@ Room::Room(std::string room_path,
 
                     enemy->set_active(false);
 
+                    enemy_column = 0;
+                    enemy_row = 0;
+
                     continue;
                 }
             }

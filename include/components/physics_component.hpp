@@ -4,6 +4,7 @@
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
 #include "managers/physics_manager.hpp"
+#include "raylib.h"
 #include "utils/vector.hpp"
 
 using utils::Handle;
@@ -18,6 +19,9 @@ struct PhysicsComponentArgs {
 class PhysicsComponent final : public Component {
     friend class ColliderComponent;
     friend class PhysicsManager;
+
+   private:
+    typedef ActivityState::ActivityUpdateListener ActivityUpdateListener;
 
    public:
     PhysicsComponent(Handle<Entity> entity, const PhysicsComponentArgs &args = PhysicsComponentArgs());
@@ -100,6 +104,12 @@ class PhysicsComponent final : public Component {
 
     inline double _get_time_diff() const { return this->_time_diff; }
 
+    inline void _handle_activity_update(bool activity) {
+        if (activity) {  // OPTIMIZE: This check is kind of useless
+            this->_time = GetTime();
+        }
+    }
+
    private:
     // TODO: Model force and mass
     Vector2Df _velocity;
@@ -112,4 +122,5 @@ class PhysicsComponent final : public Component {
     bool _is_colliding;
     utils::Handle<TransformComponent> _transform_component;
     utils::Handle<ColliderComponent> _collider_component;
+    ActivityUpdateListener _on_activity_update_listener;
 };

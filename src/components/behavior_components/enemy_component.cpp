@@ -28,7 +28,7 @@ void EnemyComponent::update() {
     if (diff.magnitude() > 500.0f) {
         return;
     }
- 
+
     this->_physics_component->set_velocity(diff.normalized() * ENEMY_SPEED);
 
     if (diff.x > 0.0f) {

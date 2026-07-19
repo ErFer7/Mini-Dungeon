@@ -137,7 +137,7 @@ void TransformComponent::debug_draw() {
     x_axis.rotate(position, rotation);
     y_axis.rotate(position, rotation);
 
-    DrawLineV(position,x_axis, RED);
+    DrawLineV(position, x_axis, RED);
     DrawLineV(position, y_axis, GREEN);
 
     Vector2Df original_position = this->_transform.get_position();

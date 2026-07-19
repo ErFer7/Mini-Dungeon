@@ -29,7 +29,9 @@ void DoorComponent::_move(DoorComponent &&other) {
     }
 
     this->_target_room = std::move(other._target_room);
+    this->_dungeon = std::move(other._dungeon);
     this->_exit_position = std::move(other._exit_position);
+    this->_on_collision_listener = std::move(other._on_collision_listener);
 }
 
 void DoorComponent::_handle_pass(Handle<ColliderComponent> &) {
