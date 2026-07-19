@@ -22,6 +22,10 @@ PhysicsComponent::PhysicsComponent(Handle<Entity> entity, const PhysicsComponent
     this->_collider_component = this->get_entity()->get_component<ColliderComponent>();
 
     this->_collider_component->set_physics_component(this->make_handle<PhysicsComponent>());
+
+    this->_on_activity_update_listener.bind_callable<PhysicsComponent, &PhysicsComponent::_handle_activity_update>(
+        this->make_handle<PhysicsComponent>());
+    this->_on_activity_update_listener.subscribe(this->get_activity_state()->get_activity_update_event());
 }
 
 void PhysicsComponent::update() {
@@ -77,8 +81,10 @@ void PhysicsComponent::_move(PhysicsComponent &&other) {
     this->_acceleration = std::move(other._acceleration);
     this->_drag = std::move(other._drag);
     this->_time = std::move(other._time);
+    this->_time_diff = std::move(other._time_diff);
     this->_is_statically_stable = std::move(other._is_statically_stable);
     this->_is_colliding = std::move(other._is_colliding);
     this->_transform_component = std::move(other._transform_component);
     this->_collider_component = std::move(other._collider_component);
+    this->_on_activity_update_listener = std::move(other._on_activity_update_listener);
 }

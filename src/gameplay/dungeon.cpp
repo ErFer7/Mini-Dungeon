@@ -14,11 +14,16 @@
 #include "utils/debug.hpp"
 
 // FIX: This is terrible. The room file needs to be redesigned
-Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door_connections, Dungeon *dungeon) {
+Room::Room(std::string room_path,
+           const std::tuple<bool, bool, bool, bool> &door_connections,
+           Dungeon *dungeon,
+           Handle<Player> player) {
     this->_tiles = std::make_unique<TileVector>();
+    this->_enemies = std::make_unique<EnemyVector>();
 
     const float tile_size = BASE_SIZE * VIRTUAL_SCALE;
     const int max_index = 11;
+    const int max_enemy_index = 24;
 
     std::ifstream file(room_path);
 
@@ -32,10 +37,13 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
     char info_char = ' ';
     int player_row = 0;
     int player_column = 0;
+    int enemy_row = 0;
+    int enemy_column = 0;
 
     std::random_device random_device;
     std::mt19937 generator(random_device());
     std::uniform_int_distribution<int> distribution(0, max_index);
+    std::uniform_int_distribution<int> enemy_distribution(0, max_enemy_index);
 
     // TODO: Use a finite state machine
     while (file >> token) {
@@ -57,6 +65,11 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
                 continue;
             }
 
+            if (token == "E") {
+                info_char = 'E';
+                continue;
+            }
+
             if (info_char == 'P') {
                 if (player_column == 0) {
                     player_column = std::atoi(token.c_str());
@@ -68,6 +81,42 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
                     continue;
                 }
             }
+
+            if (info_char == 'E') {
+                if (enemy_column == 0) {
+                    enemy_column = std::atoi(token.c_str());
+                    continue;
+                }
+
+                if (enemy_row == 0) {
+                    enemy_row = std::atoi(token.c_str());
+
+                    int index = enemy_distribution(generator);
+
+                    Texture2D enemy_texture = GameCore::get_texture_container()->load_texture(
+                        std::format("assets/sprites/monsters/Monster_{}.png", index));
+
+                    Handle<Enemy> enemy = GameCore::get_entity_container()->create_entity<Enemy>(EnemyArgs{
+                        .texture = enemy_texture,
+                        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+                        .player = player,
+                        .position = Vector2Df((enemy_column - width / 2.0f) * tile_size - tile_size / 2.0f,
+                                              (enemy_row - height / 2.0f) * tile_size - tile_size / 2.0f),
+                        .collider_rectangle =
+                            Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
+
+                    this->_enemies->push_back(enemy);
+
+                    enemy->set_active(false);
+
+                    enemy_column = 0;
+                    enemy_row = 0;
+
+                    continue;
+                }
+            }
+
+            continue;
         }
 
         if (width == 0) {
@@ -235,6 +284,10 @@ Room::Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door
 void Room::set_active(bool active) {
     for (auto &tile : *this->_tiles) {
         tile->set_active(active);
+    }
+
+    for (auto &enemy : *this->_enemies) {
+        enemy->set_active(active);
     }
 }
 

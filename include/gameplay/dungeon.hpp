@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "entities/entity2D.hpp"
+#include "entities/gameplay/enemy.hpp"
 #include "entities/gameplay/player.hpp"
 #include "types.hpp"
 #include "utils/debug.hpp"
@@ -29,13 +30,17 @@ using utils::Vector2Di;
 class Room {
    public:
     typedef std::vector<Handle<Entity2D>> TileVector;
+    typedef std::vector<Handle<Enemy>> EnemyVector;
 
    private:
     enum TileType { FLOOR, OBSTACLE, BACKGROUND, DOOR };
     const float ENTRANCE_OFFSET = 1.25f;
 
    public:
-    Room(std::string room_path, const std::tuple<bool, bool, bool, bool> &door_connections, Dungeon *dungeon);
+    Room(std::string room_path,
+         const std::tuple<bool, bool, bool, bool> &door_connections,
+         Dungeon *dungeon,
+         Handle<Player> player);
 
     Room() = default;
 
@@ -60,6 +65,7 @@ class Room {
 
    private:
     std::unique_ptr<TileVector> _tiles;
+    std::unique_ptr<EnemyVector> _enemies;
 
     // Top, Bottom, Left, Right
     Handle<Door> _doors[4];
@@ -217,7 +223,7 @@ class Dungeon {
             unsigned int index = room_distribution(generator);
 
             this->_rooms->push_back(std::make_unique<Room>(
-                std::format("assets/rooms/room_{}.room", index), node->valid_connections(), this));
+                std::format("assets/rooms/room_{}.room", index), node->valid_connections(), this, this->_player));
             node->room = this->_rooms->back().get();
         }
 

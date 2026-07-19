@@ -81,7 +81,9 @@ void ColliderComponent::_move(ColliderComponent &&other) {
 
     this->_is_trigger = std::move(other._is_trigger);
     this->_rectangle = std::move(other._rectangle);
+    this->_offset = std::move(other._offset);
     this->_transform_component = std::move(other._transform_component);
+    this->_physics_component = std::move(other._physics_component);
     this->_transform_update_listener = std::move(other._transform_update_listener);
     this->_collision_event = std::move(other._collision_event);
 }
