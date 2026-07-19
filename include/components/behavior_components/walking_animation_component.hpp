@@ -8,26 +8,26 @@
 using utils::Handle;
 using utils::log_warn;
 
-class PlayerAnimationComponent : public AnimationComponent {
+class WalkingAnimationComponent : public AnimationComponent {
    public:
     enum PlayerAnimation { IDLE, FLIP_LEFT, FLIP_RIGHT };
 
-    PlayerAnimationComponent(Handle<Entity> entity);
+    WalkingAnimationComponent(Handle<Entity> entity);
 
-    PlayerAnimationComponent(PlayerAnimationComponent &&other) noexcept : AnimationComponent(std::move(other)) {
+    WalkingAnimationComponent(WalkingAnimationComponent &&other) noexcept : AnimationComponent(std::move(other)) {
         this->_move(std::move(other));
     }
 
-    ~PlayerAnimationComponent() override = default;
+    ~WalkingAnimationComponent() override = default;
 
-    inline PlayerAnimationComponent &operator=(PlayerAnimationComponent &&other) noexcept {
+    inline WalkingAnimationComponent &operator=(WalkingAnimationComponent &&other) noexcept {
         AnimationComponent::operator=(std::move(other));
         this->_move(std::move(other));
         return *this;
     }
 
    private:
-    void _move(PlayerAnimationComponent &&other) {
+    void _move(WalkingAnimationComponent &&other) {
         log_trace(this, __PRETTY_FUNCTION__, &other);
 
         if (this == &other) {

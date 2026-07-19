@@ -7,18 +7,22 @@
 
 using utils::Handle;
 
-class PlayerComponent : public BehaviorComponent {
-   public:
-    PlayerComponent(Handle<Entity> entity);
+struct EnemyComponentArgs {
+    Handle<Player> player;
+};
 
-    PlayerComponent(PlayerComponent &&other) noexcept : BehaviorComponent(std::move(other)) {
+class EnemyComponent : public BehaviorComponent {
+   public:
+    EnemyComponent(Handle<Entity> entity, const EnemyComponentArgs &args = EnemyComponentArgs());
+
+    EnemyComponent(EnemyComponent &&other) noexcept : BehaviorComponent(std::move(other)) {
         this->_move(std::move(other));
     }
 
-    ~PlayerComponent() override {}
+    ~EnemyComponent() override {}
 
-    inline PlayerComponent &operator=(PlayerComponent &&other) noexcept {
-        BehaviorComponent::operator=(std::move(other));
+    inline EnemyComponent &operator=(EnemyComponent &&other) noexcept {
+        EnemyComponent::operator=(std::move(other));
 
         this->_move(std::move(other));
 
@@ -28,10 +32,11 @@ class PlayerComponent : public BehaviorComponent {
     void update() override;
 
    private:
-    void _move(PlayerComponent &&other);
+    void _move(EnemyComponent &&other);
 
    private:
     Handle<TransformComponent> _transform_component;
     Handle<PhysicsComponent> _physics_component;
     Handle<WalkingAnimationComponent> _walking_animation_component;
+    Handle<Player> _player;
 };
