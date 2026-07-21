@@ -9,40 +9,25 @@
 #include "definitions.hpp"
 #include "entities/entity.hpp"
 
-PlayerComponent::PlayerComponent(Handle<Entity> entity) : BehaviorComponent(entity) {
+PlayerComponent::PlayerComponent(Handle<Entity> entity, const PlayerComponentArgs &args)
+    : CharacterComponent(entity, args) {
     log_trace(this, __PRETTY_FUNCTION__, entity);
-
-    this->_transform_component = entity->get_component<TransformComponent>();
-    this->_physics_component = entity->get_component<PhysicsComponent>();
-    this->_walking_animation_component = entity->get_component<WalkingAnimationComponent>();
 }
 
 void PlayerComponent::update() {
-    GameCore::get_graphics_manager()->set_camera_position(this->_transform_component->get_position());
+    GameCore::get_graphics_manager()->set_camera_position(this->transform_component()->get_position());
 
     if (IsKeyDown(KEY_UP)) {
-        this->_physics_component->set_velocity_y(PLAYER_SPEED);
+        this->physics_component()->set_velocity_y(PLAYER_SPEED);
     } else if (IsKeyDown(KEY_DOWN)) {
-        this->_physics_component->set_velocity_y(-PLAYER_SPEED);
+        this->physics_component()->set_velocity_y(-PLAYER_SPEED);
     }
 
     if (IsKeyDown(KEY_RIGHT)) {
-        this->_physics_component->set_velocity_x(PLAYER_SPEED);
-        this->_walking_animation_component->run_instantaneous_animation(WalkingAnimationComponent::FLIP_RIGHT);
+        this->physics_component()->set_velocity_x(PLAYER_SPEED);
+        this->walking_animation_component()->run_instantaneous_animation(WalkingAnimationComponent::FLIP_RIGHT);
     } else if (IsKeyDown(KEY_LEFT)) {
-        this->_physics_component->set_velocity_x(-PLAYER_SPEED);
-        this->_walking_animation_component->run_instantaneous_animation(WalkingAnimationComponent::FLIP_LEFT);
+        this->physics_component()->set_velocity_x(-PLAYER_SPEED);
+        this->walking_animation_component()->run_instantaneous_animation(WalkingAnimationComponent::FLIP_LEFT);
     }
-}
-
-void PlayerComponent::_move(PlayerComponent &&other) {
-    log_trace(this, __PRETTY_FUNCTION__, &other);
-
-    if (this == &other) {
-        return;
-    }
-
-    this->_transform_component = std::move(other._transform_component);
-    this->_physics_component = std::move(other._physics_component);
-    this->_walking_animation_component = std::move(other._walking_animation_component);
 }

@@ -21,9 +21,10 @@ GameplayScene::~GameplayScene() = default;
 void GameplayScene::init() {
     Texture2D player_texture = GameCore::get_texture_container()->load_texture("assets/sprites/characters/Char_0.png");
 
-    this->_player = GameCore::get_entity_container()->create_entity<Player>(DynamicPhysicalEntity2DArgs{
+    this->_player = GameCore::get_entity_container()->create_entity<Player>(PlayerArgs{
         .texture = player_texture,
         .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+        .max_health = 100,
         .position = Vector2Df(0.0, 120.0f),
         .collider_rectangle = Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
 

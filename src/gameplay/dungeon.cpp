@@ -100,6 +100,7 @@ Room::Room(std::string room_path,
                         .texture = enemy_texture,
                         .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                         .player = player,
+                        .max_health = 75,
                         .position = Vector2Df((enemy_column - width / 2.0f) * tile_size - tile_size / 2.0f,
                                               (enemy_row - height / 2.0f) * tile_size - tile_size / 2.0f),
                         .collider_rectangle =

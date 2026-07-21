@@ -13,6 +13,8 @@ struct EnemyArgs {
     Texture2D texture;
     RenderingMode rendering_mode;
     Handle<Player> player;
+    int max_health;
+    int initial_health = -1;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);
@@ -41,7 +43,7 @@ struct EnemyArgs {
                                            texture_scale};
     }
 
-    operator EnemyComponentArgs() const { return EnemyComponentArgs{player}; }
+    operator EnemyComponentArgs() const { return EnemyComponentArgs{player, max_health, initial_health}; }
 };
 
 class Enemy final : public DynamicPhysicalEntity2D {
