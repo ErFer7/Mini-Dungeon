@@ -8,6 +8,9 @@
 using utils::Handle;
 using utils::log_info;
 
+// TODO: Reorganize this kind of definition in separate files
+typedef int CollisionGroup;
+
 struct ColliderComponentArgs {
     bool is_trigger = false;
     Rectangle rectangle = Rectangle();
@@ -66,6 +69,7 @@ class ColliderComponent final : public Component {
     inline Handle<TransformComponent> _get_transform_component() { return this->_transform_component; }
 
    private:
+    CollisionGroup _collision_group;
     bool _is_trigger;
     Rectangle _rectangle;
     Vector2Df _offset;
