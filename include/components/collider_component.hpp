@@ -71,7 +71,7 @@ class ColliderComponent final : public Component {
 
    private:
     CollisionGroup _collision_group;
-    bool _is_trigger;
+    bool _is_trigger;  // TODO: Maybe remove? The group system already covers this behavior
     Rectangle _rectangle;
     Vector2Df _offset;
     Handle<TransformComponent> _transform_component;

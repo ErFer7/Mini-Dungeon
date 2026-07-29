@@ -3,6 +3,7 @@
 #include "components/behavior_components/player_component.hpp"
 #include "components/behavior_components/walking_animation_component.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
+#include "entities/gameplay/sword.hpp"
 #include "types.hpp"
 #include "utils/vector.hpp"
 
@@ -13,6 +14,7 @@ struct PlayerArgs {
     Texture2D texture;
     RenderingMode rendering_mode;
     int max_health;
+    Handle<Sword> sword;
     int initial_health = -1;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
@@ -43,7 +45,7 @@ struct PlayerArgs {
                                            texture_scale};
     }
 
-    operator PlayerComponentArgs() const { return PlayerComponentArgs{max_health, initial_health}; }
+    operator PlayerComponentArgs() const { return PlayerComponentArgs{sword, max_health, initial_health}; }
 };
 
 class Player final : public DynamicPhysicalEntity2D {
@@ -61,4 +63,5 @@ class Player final : public DynamicPhysicalEntity2D {
    private:
     Handle<PlayerComponent> _player_component;
     Handle<WalkingAnimationComponent> _walking_animation_component;
+    Handle<Sword> _sword;
 };

@@ -131,6 +131,8 @@ struct DoorArgs;
 
 class Player;
 
+class Sword;
+
 class UIEntity;
 struct UIEntityArgs;
 

@@ -38,7 +38,7 @@ class PhysicsManager final : public Manager {
         return collision_rule != UNDEFINED ? collision_rule : COLLIDE;
     }
 
-    inline void add_collision_rule(CollisionGroup group_a, CollisionGroup group_b, CollisionRule collision_rule) {
+    inline void set_collision_rule(CollisionGroup group_a, CollisionGroup group_b, CollisionRule collision_rule) {
         (*this->_collision_rules)[this->_get_collison_group_pair(group_a, group_b)] = collision_rule;
     }
 

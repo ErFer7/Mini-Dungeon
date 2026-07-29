@@ -8,7 +8,13 @@
 
 using utils::Handle;
 
-typedef CharacterComponentArgs PlayerComponentArgs;
+struct PlayerComponentArgs {
+    Handle<Sword> sword;
+    int max_health;
+    int initial_health = -1;
+
+    operator CharacterComponentArgs() const { return CharacterComponentArgs{max_health, initial_health}; }
+};
 
 class PlayerComponent : public CharacterComponent {
    public:
@@ -31,5 +37,16 @@ class PlayerComponent : public CharacterComponent {
     void update() override;
 
    private:
-    inline void _move(PlayerComponent &&other) { log_trace(this, __PRETTY_FUNCTION__, &other); }
+    inline void _move(PlayerComponent &&other) {
+        log_trace(this, __PRETTY_FUNCTION__, &other);
+
+        if (this == &other) {
+            return;
+        }
+
+        this->_sword = std::move(other._sword);
+    }
+
+   private:
+    Handle<Sword> _sword;
 };

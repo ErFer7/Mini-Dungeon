@@ -8,10 +8,14 @@
 #include "components/transform_component.hpp"
 #include "definitions.hpp"
 #include "entities/entity.hpp"
+#include "entities/gameplay/sword.hpp"
 
 PlayerComponent::PlayerComponent(Handle<Entity> entity, const PlayerComponentArgs &args)
-    : CharacterComponent(entity, args) {
+    : CharacterComponent(entity, args),
+      _sword(args.sword) {
     log_trace(this, __PRETTY_FUNCTION__, entity);
+
+    this->_sword->set_active(false);
 }
 
 void PlayerComponent::update() {
@@ -29,5 +33,9 @@ void PlayerComponent::update() {
     } else if (IsKeyDown(KEY_LEFT)) {
         this->physics_component()->set_velocity_x(-PLAYER_SPEED);
         this->walking_animation_component()->run_instantaneous_animation(WalkingAnimationComponent::FLIP_LEFT);
+    }
+
+    if (IsKeyDown(KEY_K)) {
+        this->_sword->set_active(true);
     }
 }
