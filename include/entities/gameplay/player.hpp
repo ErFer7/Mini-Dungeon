@@ -24,7 +24,6 @@ struct PlayerArgs {
     Vector2Df initial_velocity = Vector2Df();
     Vector2Df initial_acceleration = Vector2Df();
     float drag = 5.0f;
-    bool is_collider_trigger = false;
     Rectangle collider_rectangle = Rectangle();
     float texture_scale = VIRTUAL_SCALE;
 
@@ -40,7 +39,6 @@ struct PlayerArgs {
                                            initial_acceleration,
                                            drag,
                                            PLAYER,
-                                           is_collider_trigger,
                                            collider_rectangle,
                                            texture_scale};
     }

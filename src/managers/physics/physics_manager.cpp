@@ -54,15 +54,9 @@ void PhysicsManager::update() {
                 continue;
             }
 
-            // TODO: Refactor this logic
             if (collision_rule & TRIGGER) {
                 collider_i->_trigger_event();
                 collider_j->_trigger_event();
-            }
-
-            if ((collision_rule & TRIGGER && !(collision_rule & COLLIDE)) || collider_i->is_trigger() ||
-                collider_j->is_trigger()) {
-                continue;
             }
 
             if (collision_rule & COLLIDE) {

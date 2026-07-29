@@ -26,7 +26,6 @@ struct DynamicPhysicalEntity2DArgs {
     Vector2Df initial_acceleration = Vector2Df();
     float drag = 5.0f;
     CollisionGroup collision_group = NONE;
-    bool is_collider_trigger = false;
     Rectangle collider_rectangle = Rectangle();
     float texture_scale = VIRTUAL_SCALE;
 
@@ -40,7 +39,6 @@ struct DynamicPhysicalEntity2DArgs {
                                           layer,
                                           texture_scale,
                                           collision_group,
-                                          is_collider_trigger,
                                           collider_rectangle};
     }
 

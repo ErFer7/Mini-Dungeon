@@ -23,16 +23,13 @@ struct StaticPhysicalEntity2DArgs {
     int layer = 0;
     float texture_scale = VIRTUAL_SCALE;
     CollisionGroup collision_group = NONE;
-    bool is_collider_trigger = false;
     Rectangle collider_rectangle = Rectangle();
 
     operator Entity2DArgs() const {
         return Entity2DArgs{texture, rendering_mode, position, rotation, scale, color, layer, texture_scale};
     }
 
-    operator ColliderComponentArgs() const {
-        return ColliderComponentArgs{collision_group, is_collider_trigger, collider_rectangle};
-    }
+    operator ColliderComponentArgs() const { return ColliderComponentArgs{collision_group, collider_rectangle}; }
 };
 
 class StaticPhysicalEntity2D : public Entity2D {

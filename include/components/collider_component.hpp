@@ -11,7 +11,6 @@ using utils::log_info;
 
 struct ColliderComponentArgs {
     CollisionGroup collision_group = NONE;
-    bool is_trigger = false;
     Rectangle rectangle = Rectangle();
 };
 
@@ -46,8 +45,6 @@ class ColliderComponent final : public Component {
         this->_physics_component = physics_component;
     }
 
-    inline bool is_trigger() const { return this->_is_trigger; }
-
     inline CollisionGroup get_collision_group() const { return this->_collision_group; }
 
     bool check_collision(Handle<ColliderComponent> &other);
@@ -71,7 +68,6 @@ class ColliderComponent final : public Component {
 
    private:
     CollisionGroup _collision_group;
-    bool _is_trigger;  // TODO: Maybe remove? The group system already covers this behavior
     Rectangle _rectangle;
     Vector2Df _offset;
     Handle<TransformComponent> _transform_component;

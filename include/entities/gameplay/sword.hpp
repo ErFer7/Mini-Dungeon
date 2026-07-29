@@ -20,17 +20,18 @@ struct SwordArgs {
     float texture_scale = VIRTUAL_SCALE;
 
     operator StaticPhysicalEntity2DArgs() const {
-        return StaticPhysicalEntity2DArgs{texture,
-                                          rendering_mode,
-                                          position,
-                                          rotation,
-                                          scale,
-                                          color,
-                                          layer,
-                                          texture_scale,
-                                          PLAYER_ITEMS,
-                                          true,
-                                          collider_rectangle};
+        return StaticPhysicalEntity2DArgs{
+            texture,
+            rendering_mode,
+            position,
+            rotation,
+            scale,
+            color,
+            layer,
+            texture_scale,
+            PLAYER_ITEMS,
+            true,
+        };
     }
 };
 

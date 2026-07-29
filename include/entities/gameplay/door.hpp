@@ -23,17 +23,8 @@ struct DoorArgs {
     Dungeon *dungeon = nullptr;
 
     operator StaticPhysicalEntity2DArgs() const {
-        return StaticPhysicalEntity2DArgs{texture,
-                                          rendering_mode,
-                                          position,
-                                          rotation,
-                                          scale,
-                                          color,
-                                          layer,
-                                          texture_scale,
-                                          DOORS,
-                                          true,
-                                          collider_rectangle};
+        return StaticPhysicalEntity2DArgs{
+            texture, rendering_mode, position, rotation, scale, color, layer, texture_scale, DOORS, collider_rectangle};
     }
 
     operator DoorComponentArgs() const { return DoorComponentArgs{target_room, exit_position, dungeon}; }
