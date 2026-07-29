@@ -370,6 +370,7 @@ Handle<Entity2D> Room::_create_tile(std::string sprite_path,
             StaticPhysicalEntity2DArgs{.texture = texture,
                                        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                                        .position = position,
+                                       .collision_group = OBSTACLE,
                                        .collider_rectangle = collider_rectangle}));
     } else {
         utils::log_info(this, "Door created");

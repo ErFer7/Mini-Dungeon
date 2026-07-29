@@ -37,6 +37,7 @@ struct PlayerArgs {
                                            initial_velocity,
                                            initial_acceleration,
                                            drag,
+                                           PLAYER,
                                            is_collider_trigger,
                                            collider_rectangle,
                                            texture_scale};

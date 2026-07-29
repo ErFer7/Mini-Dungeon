@@ -6,6 +6,7 @@
 #include "definitions.hpp"
 #include "entities/entity2D.hpp"
 #include "managers/graphics/graphics_manager.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -21,6 +22,7 @@ struct StaticPhysicalEntity2DArgs {
     Color color = WHITE;
     int layer = 0;
     float texture_scale = VIRTUAL_SCALE;
+    CollisionGroup collision_group = NONE;
     bool is_collider_trigger = false;
     Rectangle collider_rectangle = Rectangle();
 
@@ -28,7 +30,9 @@ struct StaticPhysicalEntity2DArgs {
         return Entity2DArgs{texture, rendering_mode, position, rotation, scale, color, layer, texture_scale};
     }
 
-    operator ColliderComponentArgs() const { return ColliderComponentArgs{is_collider_trigger, collider_rectangle}; }
+    operator ColliderComponentArgs() const {
+        return ColliderComponentArgs{collision_group, is_collider_trigger, collider_rectangle};
+    }
 };
 
 class StaticPhysicalEntity2D : public Entity2D {

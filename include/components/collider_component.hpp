@@ -2,16 +2,15 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "utils/debug.hpp"
 
 using utils::Handle;
 using utils::log_info;
 
-// TODO: Reorganize this kind of definition in separate files
-typedef int CollisionGroup;
-
 struct ColliderComponentArgs {
+    CollisionGroup collision_group = NONE;
     bool is_trigger = false;
     Rectangle rectangle = Rectangle();
 };
@@ -48,6 +47,8 @@ class ColliderComponent final : public Component {
     }
 
     inline bool is_trigger() const { return this->_is_trigger; }
+
+    inline CollisionGroup get_collision_group() const { return this->_collision_group; }
 
     bool check_collision(Handle<ColliderComponent> &other);
 

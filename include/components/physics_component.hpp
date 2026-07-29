@@ -3,7 +3,7 @@
 #include "components/collider_component.hpp"
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
-#include "managers/physics_manager.hpp"
+#include "managers/physics/physics_manager.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 

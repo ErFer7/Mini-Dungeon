@@ -8,6 +8,7 @@
 #include "game_core.hpp"
 #include "gameplay/dungeon.hpp"
 #include "managers/graphics/graphics_manager.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "types.hpp"
 #include "utils/vector.hpp"
@@ -29,6 +30,10 @@ void GameplayScene::init() {
         .collider_rectangle = Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
 
     this->_player->set_active(false);
+
+    GameCore::get_physics_manager()->add_collision_rule(PLAYER, ENEMIES, TRIGGER);
+    GameCore::get_physics_manager()->add_collision_rule(ENEMIES, ENEMIES, IGNORE);
+    GameCore::get_physics_manager()->add_collision_rule(PLAYER, DOORS, TRIGGER);
 
     GameCore::get_graphics_manager()->set_world_space2D_sorting_mode(SortingMode::TOP_TO_DOWN);
 

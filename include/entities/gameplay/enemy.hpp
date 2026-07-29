@@ -3,6 +3,7 @@
 #include "components/behavior_components/enemy_component.hpp"
 #include "components/behavior_components/walking_animation_component.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "types.hpp"
 #include "utils/vector.hpp"
 
@@ -38,6 +39,7 @@ struct EnemyArgs {
                                            initial_velocity,
                                            initial_acceleration,
                                            drag,
+                                           ENEMIES,
                                            is_collider_trigger,
                                            collider_rectangle,
                                            texture_scale};
