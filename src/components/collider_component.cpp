@@ -8,7 +8,7 @@
 #include "raylib.h"
 
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
-    : _is_trigger(args.is_trigger),
+    : _collision_group(args.collision_group),
       _rectangle(args.rectangle),
       Component(entity) {
     // FIX: Args
@@ -71,7 +71,7 @@ void ColliderComponent::debug_draw() {
                        -(this->_rectangle.y + this->_rectangle.height / 2.0f),
                        this->_rectangle.width,
                        this->_rectangle.height,
-                       this->_is_trigger ? GREEN : RED);
+                       RED);
 }
 
 void ColliderComponent::_move(ColliderComponent &&other) {
@@ -79,7 +79,7 @@ void ColliderComponent::_move(ColliderComponent &&other) {
         return;
     }
 
-    this->_is_trigger = std::move(other._is_trigger);
+    this->_collision_group = std::move(other._collision_group);
     this->_rectangle = std::move(other._rectangle);
     this->_offset = std::move(other._offset);
     this->_transform_component = std::move(other._transform_component);

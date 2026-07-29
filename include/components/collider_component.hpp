@@ -2,6 +2,7 @@
 
 #include "components/component.hpp"
 #include "components/transform_component.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "utils/debug.hpp"
 
@@ -9,7 +10,7 @@ using utils::Handle;
 using utils::log_info;
 
 struct ColliderComponentArgs {
-    bool is_trigger = false;
+    CollisionGroup collision_group = NONE;
     Rectangle rectangle = Rectangle();
 };
 
@@ -44,7 +45,7 @@ class ColliderComponent final : public Component {
         this->_physics_component = physics_component;
     }
 
-    inline bool is_trigger() const { return this->_is_trigger; }
+    inline CollisionGroup get_collision_group() const { return this->_collision_group; }
 
     bool check_collision(Handle<ColliderComponent> &other);
 
@@ -66,7 +67,7 @@ class ColliderComponent final : public Component {
     inline Handle<TransformComponent> _get_transform_component() { return this->_transform_component; }
 
    private:
-    bool _is_trigger;
+    CollisionGroup _collision_group;
     Rectangle _rectangle;
     Vector2Df _offset;
     Handle<TransformComponent> _transform_component;

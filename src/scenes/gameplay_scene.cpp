@@ -8,6 +8,7 @@
 #include "game_core.hpp"
 #include "gameplay/dungeon.hpp"
 #include "managers/graphics/graphics_manager.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "types.hpp"
 #include "utils/vector.hpp"
@@ -20,14 +21,31 @@ GameplayScene::~GameplayScene() = default;
 
 void GameplayScene::init() {
     Texture2D player_texture = GameCore::get_texture_container()->load_texture("assets/sprites/characters/Char_0.png");
+    Texture2D sword_texture = GameCore::get_texture_container()->load_texture("assets/sprites/items/sword.png");
 
-    this->_player = GameCore::get_entity_container()->create_entity<Player>(DynamicPhysicalEntity2DArgs{
-        .texture = player_texture,
+    Handle<Sword> sword = GameCore::get_entity_container()->create_entity<Sword>(SwordArgs{
+        .texture = sword_texture,
         .rendering_mode = RenderingMode::WORLD_SPACE_2D,
         .position = Vector2Df(0.0, 120.0f),
         .collider_rectangle = Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
 
+    this->_player = GameCore::get_entity_container()->create_entity<Player>(PlayerArgs{
+        .texture = player_texture,
+        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
+        .max_health = 100,
+        .sword = sword,
+        .position = Vector2Df(0.0, 120.0f),
+        .collider_rectangle = Rectangle{0.0f, 0.0f, BASE_SIZE * VIRTUAL_SCALE * 0.6f, BASE_SIZE * VIRTUAL_SCALE}});
+
     this->_player->set_active(false);
+
+    GameCore::get_physics_manager()->set_collision_rule(PLAYER, ENEMIES, TRIGGER);
+    GameCore::get_physics_manager()->set_collision_rule(PLAYER, DOORS, TRIGGER);
+    GameCore::get_physics_manager()->set_collision_rule(PLAYER, PLAYER_ITEMS, IGNORE);
+    GameCore::get_physics_manager()->set_collision_rule(ENEMIES, ENEMIES, IGNORE);
+    GameCore::get_physics_manager()->set_collision_rule(ENEMIES, PLAYER_ITEMS, TRIGGER);
+    GameCore::get_physics_manager()->set_collision_rule(OBSTACLES, PLAYER_ITEMS, IGNORE);
+    GameCore::get_physics_manager()->set_collision_rule(DOORS, PLAYER_ITEMS, IGNORE);
 
     GameCore::get_graphics_manager()->set_world_space2D_sorting_mode(SortingMode::TOP_TO_DOWN);
 

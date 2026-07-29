@@ -11,7 +11,7 @@
 #include "managers/behavior_manager.hpp"
 #include "managers/game_manager.hpp"
 #include "managers/graphics/graphics_manager.hpp"
-#include "managers/physics_manager.hpp"
+#include "managers/physics/physics_manager.hpp"
 #include "types.hpp"
 
 using utils::IdReferences;

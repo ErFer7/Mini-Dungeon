@@ -3,6 +3,7 @@
 #include "components/behavior_components/enemy_component.hpp"
 #include "components/behavior_components/walking_animation_component.hpp"
 #include "entities/dynamic_physical_entity2D.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "types.hpp"
 #include "utils/vector.hpp"
 
@@ -13,6 +14,8 @@ struct EnemyArgs {
     Texture2D texture;
     RenderingMode rendering_mode;
     Handle<Player> player;
+    int max_health;
+    int initial_health = -1;
     Vector2Df position = Vector2Df();
     float rotation = 0.0f;
     Vector2Df scale = Vector2Df(1.0f);
@@ -21,7 +24,6 @@ struct EnemyArgs {
     Vector2Df initial_velocity = Vector2Df();
     Vector2Df initial_acceleration = Vector2Df();
     float drag = 5.0f;
-    bool is_collider_trigger = false;
     Rectangle collider_rectangle = Rectangle();
     float texture_scale = VIRTUAL_SCALE;
 
@@ -36,12 +38,12 @@ struct EnemyArgs {
                                            initial_velocity,
                                            initial_acceleration,
                                            drag,
-                                           is_collider_trigger,
+                                           ENEMIES,
                                            collider_rectangle,
                                            texture_scale};
     }
 
-    operator EnemyComponentArgs() const { return EnemyComponentArgs{player}; }
+    operator EnemyComponentArgs() const { return EnemyComponentArgs{player, max_health, initial_health}; }
 };
 
 class Enemy final : public DynamicPhysicalEntity2D {

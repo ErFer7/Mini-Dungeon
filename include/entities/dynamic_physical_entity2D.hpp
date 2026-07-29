@@ -7,6 +7,7 @@
 #include "entities/entity2D.hpp"
 #include "entities/static_physical_entity2D.hpp"
 #include "managers/graphics/graphics_manager.hpp"
+#include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "utils/vector.hpp"
 
@@ -24,13 +25,21 @@ struct DynamicPhysicalEntity2DArgs {
     Vector2Df initial_velocity = Vector2Df();
     Vector2Df initial_acceleration = Vector2Df();
     float drag = 5.0f;
-    bool is_collider_trigger = false;
+    CollisionGroup collision_group = NONE;
     Rectangle collider_rectangle = Rectangle();
     float texture_scale = VIRTUAL_SCALE;
 
     operator StaticPhysicalEntity2DArgs() const {
-        return StaticPhysicalEntity2DArgs{
-            texture, rendering_mode, position, rotation, scale, color, layer, texture_scale, is_collider_trigger, collider_rectangle};
+        return StaticPhysicalEntity2DArgs{texture,
+                                          rendering_mode,
+                                          position,
+                                          rotation,
+                                          scale,
+                                          color,
+                                          layer,
+                                          texture_scale,
+                                          collision_group,
+                                          collider_rectangle};
     }
 
     operator PhysicsComponentArgs() const { return PhysicsComponentArgs{initial_velocity, initial_acceleration, drag}; }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/behavior_components/behavior_component.hpp"
+#include "components/behavior_components/character_component.hpp"
 #include "components/behavior_components/walking_animation_component.hpp"
 #include "components/physics_component.hpp"
 #include "types.hpp"
@@ -9,13 +10,17 @@ using utils::Handle;
 
 struct EnemyComponentArgs {
     Handle<Player> player;
+    int max_health;
+    int initial_health = -1;
+
+    operator CharacterComponentArgs() const { return CharacterComponentArgs{max_health, initial_health}; }
 };
 
-class EnemyComponent : public BehaviorComponent {
+class EnemyComponent : public CharacterComponent {
    public:
     EnemyComponent(Handle<Entity> entity, const EnemyComponentArgs &args = EnemyComponentArgs());
 
-    EnemyComponent(EnemyComponent &&other) noexcept : BehaviorComponent(std::move(other)) {
+    EnemyComponent(EnemyComponent &&other) noexcept : CharacterComponent(std::move(other)) {
         this->_move(std::move(other));
     }
 
@@ -35,8 +40,5 @@ class EnemyComponent : public BehaviorComponent {
     void _move(EnemyComponent &&other);
 
    private:
-    Handle<TransformComponent> _transform_component;
-    Handle<PhysicsComponent> _physics_component;
-    Handle<WalkingAnimationComponent> _walking_animation_component;
     Handle<Player> _player;
 };

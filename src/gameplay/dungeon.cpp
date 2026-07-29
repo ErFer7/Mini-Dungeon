@@ -100,6 +100,7 @@ Room::Room(std::string room_path,
                         .texture = enemy_texture,
                         .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                         .player = player,
+                        .max_health = 75,
                         .position = Vector2Df((enemy_column - width / 2.0f) * tile_size - tile_size / 2.0f,
                                               (enemy_row - height / 2.0f) * tile_size - tile_size / 2.0f),
                         .collider_rectangle =
@@ -369,6 +370,7 @@ Handle<Entity2D> Room::_create_tile(std::string sprite_path,
             StaticPhysicalEntity2DArgs{.texture = texture,
                                        .rendering_mode = RenderingMode::WORLD_SPACE_2D,
                                        .position = position,
+                                       .collision_group = OBSTACLE,
                                        .collider_rectangle = collider_rectangle}));
     } else {
         utils::log_info(this, "Door created");
