@@ -10,7 +10,8 @@
 ColliderComponent::ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args)
     : _collision_group(args.collision_group),
       _rectangle(args.rectangle),
-      Component(entity) {
+      Component(entity),
+      QuadObject() {
     // FIX: Args
     log_trace(this, __PRETTY_FUNCTION__);
 

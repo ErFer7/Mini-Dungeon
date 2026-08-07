@@ -5,9 +5,11 @@
 #include "managers/physics/collision_group.hpp"
 #include "raylib.h"
 #include "utils/debug.hpp"
+#include "utils/quadtree/quad_object.hpp"
 
 using utils::Handle;
 using utils::log_info;
+using utils::QuadObject;
 
 struct ColliderComponentArgs {
     CollisionGroup collision_group = NONE;
@@ -15,7 +17,7 @@ struct ColliderComponentArgs {
 };
 
 // For now this is only a rect collider
-class ColliderComponent final : public Component {
+class ColliderComponent final : public Component, QuadObject {
     friend class PhysicsManager;
 
    public:
@@ -25,7 +27,7 @@ class ColliderComponent final : public Component {
    public:
     ColliderComponent(Handle<Entity> entity, const ColliderComponentArgs &args = ColliderComponentArgs());
 
-    ColliderComponent(ColliderComponent &&other) noexcept : Component(std::move(other)) {
+    ColliderComponent(ColliderComponent &&other) noexcept : Component(std::move(other)), QuadObject(std::move(other)) {
         this->_move(std::move(other));
     }
 
@@ -33,6 +35,7 @@ class ColliderComponent final : public Component {
 
     inline ColliderComponent &operator=(ColliderComponent &&other) noexcept {
         Component::operator=(std::move(other));
+        QuadObject::operator=(std::move(other));
 
         this->_move(std::move(other));
 

@@ -38,6 +38,8 @@ class Handle;
 
 }  // namespace utils
 
+class Quadtree;
+
 // Components
 class Component;
 
