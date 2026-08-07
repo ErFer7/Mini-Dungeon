@@ -8,6 +8,7 @@ namespace utils {
 
 enum CheckResult { OUTSIDE, CLIPPING, INSIDE };
 
+// TODO: Finish this
 template <Numeric T>
 CheckResult check_collision_point_line(const Point<T> &point, const Line<T> &line) {
     // cross = (B.x - A.x) * (P.y - A.y) - (B.y - A.y) * (P.x - A.x)
@@ -15,8 +16,6 @@ CheckResult check_collision_point_line(const Point<T> &point, const Line<T> &lin
     Vector2D<T> point_position = point.position();
     Vector2D<T> line_start = line.start();
     Vector2D<T> line_end = line.end();
-
-    T cross_product = (line.end())
 
     if constexpr (std::same_as<T, int>) {
 
