@@ -2,12 +2,14 @@
 
 #include <utility>
 
+#include "types.hpp"
 #include "utils/wireframe/wireframe2D.hpp"
 
 namespace utils {
 
+template <Numeric T>
 class QuadObject {
-    friend class Quadtree;
+    friend class Quadtree<T>;
 
    public:
     QuadObject() = default;
@@ -23,6 +25,10 @@ class QuadObject {
     }
 
    protected:
+    virtual inline Vector2D<T> position() = 0;
+
+    virtual inline float rotation() = 0;
+
     virtual inline Wireframe2D *wireframe2D() = 0;
 
    private:

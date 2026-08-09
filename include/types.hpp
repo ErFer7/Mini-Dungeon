@@ -36,9 +36,10 @@ class Identified;
 template <typename Type>
 class Handle;
 
-}  // namespace utils
-
+template <Numeric NumType>
 class Quadtree;
+
+}  // namespace utils
 
 // Components
 class Component;

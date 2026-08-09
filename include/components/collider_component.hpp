@@ -17,7 +17,7 @@ struct ColliderComponentArgs {
 };
 
 // For now this is only a rect collider
-class ColliderComponent final : public Component, QuadObject {
+class ColliderComponent final : public Component, QuadObject<float> {
     friend class PhysicsManager;
 
    public:
@@ -55,6 +55,11 @@ class ColliderComponent final : public Component, QuadObject {
     Handle<CollisionEvent> get_collision_event() { return this->_collision_event.make_handle<CollisionEvent>(); }
 
     void debug_draw() override;
+
+   protected:
+    inline Vector2Df position() override { return this->_transform_component->get_position(); }
+
+    inline float rotation() override { return this->_transform_component->get_rotation(); }
 
    private:
     void _move(ColliderComponent &&other);

@@ -33,8 +33,6 @@ class PhysicsManager final : public Manager {
 
         CollisionRule collision_rule = (*this->_collision_rules)[this->_get_collison_group_pair(group_a, group_b)];
 
-        utils::log_warn(this, '[', group_a, ", ", group_b, "]: ", collision_rule);
-
         return collision_rule != UNDEFINED ? collision_rule : COLLIDE;
     }
 

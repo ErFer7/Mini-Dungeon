@@ -15,11 +15,17 @@ class Rectangle : Wireframe2D {
           _width(width),
           _height(height) {}
 
-    Rectangle(Vector2D<T> position, T width, T height)
+    Rectangle(Vector2D<T> position, T size)
         : Wireframe2D(Wireframe2DType::RECTANGLE),
           _position(position),
-          _width(width),
-          _height(height) {}
+          _width(size),
+          _height(size) {}
+
+    Rectangle(Vector2D<T> position, T width, T height)
+        : Wireframe2D(Wireframe2DType::RECTANGLE),
+        _position(position),
+        _width(width),
+        _height(height) {}
 
     ~Rectangle() = default;
 
